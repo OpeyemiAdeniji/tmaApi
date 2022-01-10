@@ -1,0 +1,31 @@
+[
+    {
+        "name": "superadmin",
+        "description": "Superadmin has all access to perform all operations on the platform ",
+        "slug": "super-admin"
+    },
+
+    {
+        "name": "admin",
+        "description": "admin has limited access to perform all operations on the platform",
+        "slug": "admin"
+    },
+
+    {
+        "name": "manager",
+        "description": "manager has limited access to perform all operations on the platform",
+        "slug": "manager"
+    },
+
+    {
+        "name": "business",
+        "description": "business role are considered as organizations",
+        "slug": "business"
+    },
+
+    {
+        "name": "user",
+        "description": "everyone on the platform are considered to be a user",
+        "slug": "user"
+    }
+]
