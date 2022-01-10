@@ -1,0 +1,31 @@
+{
+  "name": "tma-common-service",
+  "version": "1.0.0",
+  "description": "common code base for myrioi",
+  "main": "./build/index.js",
+  "files": [
+    "build/**/*"
+  ],
+    "scripts": {
+    "clean": "del-cli ./build/*",
+    "copy": "cp -R src/* build/",
+    "build": "npm run clean && mkdir build && npm run copy",
+    "pub": "npm run build && npm publish --access public"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "BTF",
+  "license": "MIT",
+
+  "dependencies": {
+    "colors": "^1.4.0",
+    "del-cli": "^3.0.1",
+    "dotenv": "^10.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "moment": "^2.29.1",
+    "mongoose": "^5.12.13",
+    "node-nats-streaming": "^0.3.2"
+  }
+}
