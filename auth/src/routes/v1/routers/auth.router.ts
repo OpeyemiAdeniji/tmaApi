@@ -13,7 +13,6 @@ import {
     sendResetLink,
     attachRole,
     detachRole,
-    sendUser
 
 } from '../../../controllers/auth.controller'
 
@@ -23,10 +22,10 @@ const router: Router = express.Router({ mergeParams: true });
 import { protect, authorize } from '../../../middleware/auth.mw';
 
 const roles = ['superadmin', 'admin']
-const allRoles = ['superadmin', 'admin', 'business', 'manager', 'user'];
+const allRoles = ['superadmin', 'admin', 'business', 'manager', 'talent', 'user'];
 
 router.post('/register', vcd, registerTalent);
-router.post('/register/manager', vcd, registerBusiness);
+router.post('/register-business', vcd, registerBusiness);
 router.post('/login', vcd, login);
 router.post('/logout', vcd, logout);
 router.get('/user/:id', vcd, protect, authorize(allRoles), getUser);
@@ -36,6 +35,5 @@ router.post('/reset-password/:token', vcd, resetPassword);
 router.post('/activate-account/:token', vcd, activateAccount);
 router.post('/attach-role/:id', vcd, protect, authorize(roles), attachRole);
 router.post('/detach-role/:id', vcd, protect, authorize(roles), detachRole);
-router.post('/sms', vcd, sendUser);
 
 export default router;

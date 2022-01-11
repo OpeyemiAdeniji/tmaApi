@@ -13,8 +13,7 @@ interface IStatusModel extends mongoose.Model<IStatusDoc> {
 interface IStatusDoc extends mongoose.Document{
 
     profile: boolean;
-    address: boolean;
-    identity: boolean;
+    application: boolean;
     activated: boolean;
 
     user: mongoose.Schema.Types.ObjectId | any
@@ -39,12 +38,11 @@ const StatusSchema = new mongoose.Schema (
         profile: {
             type: Boolean,
         },
-        address: {
+
+        application: {
             type: Boolean,
         },
-        identity: {
-            type: Boolean,
-        },
+
         activated: {
             type: Boolean,
         },

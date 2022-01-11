@@ -1,7 +1,7 @@
 import fs from 'fs'
 import colors from 'colors'
 
-// import Permission from '../../models/Permission.model'
+import Permission from '../../models/Permission.model'
 
 // read in the JSON file
 const permissions = JSON.parse(

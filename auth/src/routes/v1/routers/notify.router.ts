@@ -14,7 +14,7 @@ import { protect, authorize } from '../../../middleware/auth.mw';
 // variables
 //variables
 const roles = ['superadmin', 'admin']; 
-const allRoles = ['superadmin', 'admin', 'facilitator', 'mentor', 'user'];
+const allRoles = ['superadmin', 'admin', 'business', 'manager', 'talent', 'user'];
 
 router.get('/events', vcd, protect, authorize(allRoles), pushEvent);
 

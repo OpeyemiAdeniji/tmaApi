@@ -3,7 +3,7 @@ import mongoose, { ObjectId, Model } from 'mongoose';
 import { Request, Response, NextFunction } from 'express';
 import ErrorResponse from '../utils/error.util';
 import { sendGrid } from '../utils/email.util';
-import { asyncHandler, strIncludesEs6, strToArrayEs6, isString } from '@btffamily/concreapt'
+import { asyncHandler, strIncludesEs6, strToArrayEs6, isString } from '@btffamily/tmat'
 import { generate } from '../utils/random.util';
 import { userLogger } from '../config/wiston';
 import { sendSMS } from '../utils/sms.util'
@@ -14,6 +14,7 @@ dayjs.extend(customparse);
 
 // models
 import User from '../models/User.model'
+import Business from '../models/Business.model'
 import Role from '../models/Role.model'
 import Notification from '../models/Notification.model'
 import Status from '../models/Status.model'
@@ -89,7 +90,7 @@ export const registerTalent = asyncHandler(async (req: Request, res: Response, n
         email,
         password,
 		phoneNumber: phoneStr + phoneNumber.substring(1),
-        phoneCode,
+		userType: 'talent',
         isSuper: false,
 		isActivated: false,
 		isAdmin: false,
@@ -100,8 +101,13 @@ export const registerTalent = asyncHandler(async (req: Request, res: Response, n
 		isActive: true
     });
 
-	// attach the business role
+	// attach the user role
 	user.roles.push(role._id);
+	await user.save();
+
+	// attach the talent
+	const tRole = await Role.findOne({ name: 'talent' });
+	user.roles.push(tRole?._id);
 	await user.save();
 
     // send emails, publish nats and initialize notification
@@ -114,12 +120,12 @@ export const registerTalent = asyncHandler(async (req: Request, res: Response, n
                 template: 'welcome',
                 email: email,
                 preheaderText: 'welcome',
-                emailTitle: 'Welcome to Myrioi',
+                emailTitle: 'Welcome to MyRIOI',
                 emailSalute: `Hello ${user.firstName},`,
-                bodyOne: 'We\'re glad you signed up on Myrioi. Please login to your dashboard by clicking the button below',
+                bodyOne: 'We\'re glad you signed up on MyRIOI. Please login to your dashboard by clicking the button below',
                 buttonUrl: `${callback}/login`,
                 buttonText: 'Login to Dashboard',
-                fromName: 'Myrioi'
+                fromName: 'MyRIOI'
             }
             await sendGrid(emailData);
 
@@ -135,10 +141,10 @@ export const registerTalent = asyncHandler(async (req: Request, res: Response, n
                 preheaderText: 'activate account',
                 emailTitle: 'Activate your account',
                 emailSalute: `Hello Champ,`,
-                bodyOne: 'Activate your Myrioi account. Click the button below to activate your account',
+                bodyOne: 'Activate your MyRIOI account. Click the button below to activate your account',
                 buttonUrl: `${activateUrl}`,
                 buttonText: 'Activate Account',
-                fromName: 'Myrioi'
+                fromName: 'MyRIOI'
             }
             await sendGrid(activateData);
 
@@ -162,7 +168,7 @@ export const registerTalent = asyncHandler(async (req: Request, res: Response, n
             // publish nats
 
             // create notification
-            const superadmin = await User.findOne({ email: 'hello@myrioi.com' });
+            const superadmin = await User.findOne({ email: 'hello@MyRIOI.com' });
             const notiref = await generate(8, true);
 
             await Notification.create({
@@ -170,7 +176,7 @@ export const registerTalent = asyncHandler(async (req: Request, res: Response, n
                 body: `A new user ${user.email} just registered`,
                 status: 'new',
                 sender: {
-                    name: 'Myrioi',
+                    name: 'MyRIOI',
                     id: superadmin ? superadmin._id : ''
                 },
                 recipients: [`${superadmin?._id}`]
@@ -197,7 +203,7 @@ export const registerBusiness = asyncHandler(async (req: Request, res:Response, 
 	const notiref = await generate(8, false);
 
 	// find the default role first
-	const role = await Role.findByName('manager');
+	const role = await Role.findByName('user');
 	if (!role) {
 		return next(
 			new ErrorResponse(
@@ -244,18 +250,24 @@ export const registerBusiness = asyncHandler(async (req: Request, res:Response, 
 		password,
 		phoneNumber: phoneStr + phoneNumber.substring(1),
 		phoneCode,
+		userType: 'third-party',
 		isSuper: false,
 		isActivated: false,
 		isAdmin: false,
 		isTalent: false,
-		isBusiness: false,
-		isManager: true,
+		isBusiness: true,
+		isManager: false,
 		isUser: true,
 		isActive: true
 	});
 
 	// attach the 'user' role and address by default
 	user.roles.push(role._id);
+	await user.save();
+
+	// attach the talent
+	const bRole = await Role.findOne({ name: 'business' });
+	user.roles.push(bRole?._id);
 	await user.save();
 
 	//send welcome email
@@ -265,12 +277,12 @@ export const registerBusiness = asyncHandler(async (req: Request, res:Response, 
 			template: 'welcome',
 			email: email,
 			preheaderText: 'We are glad you signed up',
-			emailTitle: 'Welcome to MYrioi',
-			emailSalute: `Hi ${user.firstName},`,
-			bodyOne: "Welcome to Myrioi, we're glad to have you.",
+			emailTitle: 'Welcome to MyRIOI',
+			emailSalute: `Hello ${user.firstName},`,
+			bodyOne: "Welcome to MyRIOI, we're glad to have you.",
 			buttonUrl: `${callback}/login`,
 			buttonText: 'Login To Dashboard',
-			fromName: 'Myrioi'
+			fromName: 'MyRIOI'
 		};
 		await sendGrid(emailData);
 
@@ -286,10 +298,10 @@ export const registerBusiness = asyncHandler(async (req: Request, res:Response, 
 			preheaderText: 'Verify your account ownership',
 			emailTitle: 'Activate your account',
 			emailSalute: `Hi ${user.firstName},`,
-			bodyOne:'You just signed up on Myrioi. Activate your account for you to have access to more features on your account. Click the button below to verify your account',
+			bodyOne:'You just signed up on MyRIOI. Activate your account for you to have access to more features on your account. Click the button below to verify your account',
 			buttonUrl: `${activateUrl}`,
 			buttonText: 'Activate Account',
-			fromName: 'Myrioi'
+			fromName: 'MyRIOI'
 		};
 
 		await sendGrid(activateData);
@@ -323,7 +335,7 @@ export const registerBusiness = asyncHandler(async (req: Request, res:Response, 
 		body: `A new user ${user.email} just registered as a customer`,
 		status: 'new',
 		sender: {
-			name: 'Myrioi',
+			name: 'MyRIOI',
 			id: `${superadmin?._id}`
 		},
 		recipients: [`${superadmin?._id}`]
@@ -377,12 +389,12 @@ export const login = asyncHandler(async (req: Request, res:Response, next: NextF
 			user.isLocked = true;
 			await user.save();
 
-			return next(new ErrorResponse('Forbidden', 403, ['account currently locked for 24 hours']))
+			return next(new ErrorResponse('Forbidden', 403, ['account currently locked for 24 hours. Contact support']))
 		}
 
 		// return locked 
 		if((user.loginLimit === 3 || user.loginLimit > 3) && user.checkLockedStatus()){
-			return next(new ErrorResponse('Forbidden!', 403, ['account currently locked for 24 hours']));
+			return next(new ErrorResponse('Forbidden!', 403, ['account currently locked for 24 hours. Contact support']));
 		}
 
 		return next(new ErrorResponse('Invalid credentials', 403, ['invalid credentials']))
@@ -483,7 +495,7 @@ export const updatePassword = asyncHandler(async (req: Request, res:Response, ne
 			emailSalute: `Hi ${user.firstName}`,
 			bodyOne: 'Please verify your email using the code below',
 			bodyTwo: `${mailCode}`,
-			fromName: 'Myrioi'
+			fromName: 'MyRIOI'
 		}
 
 		await sendGrid(emailData);
@@ -575,7 +587,7 @@ export const sendResetLink = asyncHandler(async (req: Request, res:Response, nex
 			'You are receiving this email because you (or someone else) has requested the reset of your password. Click the button below to change your password or ignore this email if this wasn\'t you.',
 			buttonUrl: `${resetUrl}`,
 			buttonText: 'Change Password',
-			fromName: 'Myrioi'
+			fromName: 'MyRIOI'
 		};
 
 		await sendGrid(emailData);
@@ -878,15 +890,13 @@ const sendTokenResponse = async (user: any, message: string, statusCode: number,
 	if(!status){
 		result = {
 			profile: false,
-			address: false,
-			identity: false,
+			application: false,
 			activated: false
 		}
 	}else{
 		result = {
 			profile: status.profile ? status.profile  : false,
-			address: status.address ? status.address : false,
-			identity: status.identity ? status.identity : false,
+			address: status.application ? status.application : false,
 			activated: status.activated ? status.activated : false
 		};
 	}
@@ -919,28 +929,6 @@ const sendTokenResponse = async (user: any, message: string, statusCode: number,
 	});
 };
 
-
-export const sendUser = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
-
-	const _no = '+2348137031202'
-	const msg = 'From Concreap. You just recieve an order, please check and process the order';
-
-	const data = {
-		numbers: _no,
-		message: msg,
-	}
-
-	const resp = await sendSMS(data);
-
-	res.status(200).json({
-		error: false,
-		errors: [],
-		data: resp,
-		message: 'success',
-		status: 200,
-	});
-
-})
 
 /** 
  * snippet
