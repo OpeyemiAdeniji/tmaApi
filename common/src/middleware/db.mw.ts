@@ -1,9 +1,7 @@
 import mongoose, { Model, Schema } from 'mongoose';
 import colors from 'colors'
 
-const MONGODB_URI = 'mongodb+srv://Immanuel:WJUFgQQCSf94LTkZ@checkaam.hxnke.mongodb.net/tma-auth-db?retryWrites=true&w=majority'
-const MONGODB_PROD_URI = 'mongodb+srv://Immanuel:WJUFgQQCSf94LTkZ@checkaam.hxnke.mongodb.net/tma-authp-db?retryWrites=true&w=majority'
-const MONGODB_CLOUD_URI = 'mongodb+srv://Immanuel:vs8w16K2a4YfR530@cluster-btf-e2823008.mongo.ondigitalocean.com/tma-authp-db?authSource=admin&replicaSet=cluster-btf'
+
 let dbConn: any = null; //use global var
 
 const options: object = {

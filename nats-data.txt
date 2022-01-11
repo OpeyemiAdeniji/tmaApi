@@ -1,0 +1,108 @@
+NATS IP: 143.198.165.121
+SERVER IP: 
+
+MONGODB_CLOUD_URI=mongodb+srv://Immanuel:vs8w16K2a4YfR530@cluster-btf-e2823008.mongo.ondigitalocean.com/cp-auth-db?authSource=admin&replicaSet=cluster-btf
+
+npm i --force @btffamily/cconcreapt
+#command565/
+
+Dev: 
+git add . && git commit -m "made changes: fixed xd" && npm version patch && npm run pub
+git add . && git commit -m "made changes: fixed" && git push
+git add . && git commit -m "made changes: fixed" && git pull
+git add . && git commit -m "made changes: fixed" && git push heroku master
+
+Prod:
+git add . && git commit -m "made changes: fixed"
+
+# Know the size of a file ubuntu
+du -hs /path/to/directory
+# example du -hs checkaam.bd.res
+
+#PM2
+- pm2 start src/server.ts
+- pm2 restart [id]
+- pm2 flush // flush logs
+- pm2 logs 
+
+# HEROKU
+- heroku logs --tail
+
+// process.on('SIGINT', () => { nats.client.close() });  // watch for signal intercept or interruptions
+// process.on('SIGTERM', () => { nats.client.close() })  // watch for signal termination
+
+server {
+
+     listen 80;
+     server_name 165.227.210.160;
+
+     root /var/www/html;
+     index index.html;
+
+     location /api/identity {
+            rewrite ^/api/identity/?(.*)$ /$1 break;
+            proxy_pass http://localhost:5000/v1;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection 'upgrade';
+            proxy_set_header Host $host;
+            proxy_cache_bypass $http_upgrade;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_redirect off;
+
+            # First attempt to serve request as file, then
+            # as directory, then fall back to displaying a 404.
+            #try_files $uri $uri/ =404;
+    }
+
+    location /api/course {
+            rewrite ^/api/course/?(.*)$ /$1 break;
+            proxy_pass http://localhost:5002/v1;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection 'upgrade';
+            proxy_set_header Host $host;
+            proxy_cache_bypass $http_upgrade;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_redirect off;
+
+            # First attempt to serve request as file, then
+            # as directory, then fall back to displaying a 404.
+            #try_files $uri $uri/ =404;
+    }
+
+    location /api/resource {
+            rewrite ^/api/resource/?(.*)$ /$1 break;
+            proxy_pass http://localhost:5003/v1;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection 'upgrade';
+            proxy_set_header Host $host;
+            proxy_cache_bypass $http_upgrade;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_redirect off;
+
+            # First attempt to serve request as file, then
+            # as directory, then fall back to displaying a 404.
+            #try_files $uri $uri/ =404;
+    }
+
+}
+
+#env 
+export NODE_OPTIONS=--max_old_space_size=68000
+
+
+# create swap
+
+- sudo fallocate -l 4G /swapfile
+- sudo chmod 600 /swapfile
+- sudo mkswap /swapfile
+- sudo swapon /swapfile
+- echo "/swapfile none swap sw 0 0" | tee -a /etc/fstab
+
+# PM2
+npm install -g pm2@3.2.2
+pm2 startup ubuntu
+pm2 install typescript
+

@@ -1,6 +1,7 @@
 enum QueueGroupName {
-    Course = 'concreap.course-res.service',
-    Auth = 'concreap.auth-res.service',
+    Blog = 'tma.blog-res.service',
+    TMA = 'tma.app-res.service',
+    Auth = 'tma.auth-res.service',
 }
 
 export default QueueGroupName;

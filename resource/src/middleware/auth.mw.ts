@@ -1,7 +1,7 @@
 import ErrorResponse from '../utils/error.util';
 import { Request, Response, NextFunction } from 'express'
 
-import { asyncHandler, protect as AuthCheck, authorize as Authorize } from '@btffamily/concreapt';
+import { asyncHandler, protect as AuthCheck, authorize as Authorize } from '@btffamily/tmat';
 
 declare global {
     namespace Express{
@@ -56,7 +56,7 @@ export const authorize = (roles: Array<string>) => {
             return next (new ErrorResponse('unauthorized!', 401, ['user is not signed in']))
         }
 
-        await Authorize(roles, user.roles, process.env.AUTH_DB || 'development').then((resp: any) => {
+        await Authorize(roles, user.roles, process.env.AUTH_DB || 'development', process.env.MONGODB_URI || '').then((resp: any) => {
             authPermit = resp;
         });
 
