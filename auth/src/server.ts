@@ -9,7 +9,7 @@ const connect = async (): Promise<void> => {
     // connect to DB
     await connectDB();
 
-    // get heap statistics and log heap size //
+    // get heap statistics and log heap size 
     const heapSize = getMemoryStats()
     console.log(heapSize);
 
