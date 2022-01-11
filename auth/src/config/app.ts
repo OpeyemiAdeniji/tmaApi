@@ -85,7 +85,7 @@ app.get('/', (req: Request, res: Response, next: NextFunction) => {
         errors: [],
         message: 'successful',
         data: {
-            name: 'myrioi-identity-service',
+            name: 'MyRIOI-identity-service',
             version: '1.0.0'
         },
         status: 200
@@ -99,4 +99,3 @@ app.use('/api/identity/v1', v1Routes);
 app.use(errorHandler);
 
 export default app;
-

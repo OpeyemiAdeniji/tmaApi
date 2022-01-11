@@ -236,7 +236,7 @@ export const changePassword = asyncHandler(async (req: Request, res:Response, ne
 			emailSalute: 'Hi Champ',
 			bodyOne: 'Please verify your email using the code below',
 			bodyTwo: `${mailCode}`,
-			fromName: 'Checkaam'
+			fromName: 'MyRIOI'
 		}
 
 		await sendGrid(emailData);

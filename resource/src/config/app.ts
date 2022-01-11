@@ -81,7 +81,7 @@ app.get('/', (req: Request, res: Response, next: NextFunction) => {
         errors: [],
         message: 'successful',
         data: {
-            name: 'myrioi-resource-service',
+            name: 'MyRIOI-resource-service',
             version: '1.0.0'
         },
         status: 200

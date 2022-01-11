@@ -140,7 +140,7 @@ export const registerTalent = asyncHandler(async (req: Request, res: Response, n
                 email: email,
                 preheaderText: 'activate account',
                 emailTitle: 'Activate your account',
-                emailSalute: `Hello Champ,`,
+                emailSalute: `Hello ${user.firstName},`,
                 bodyOne: 'Activate your MyRIOI account. Click the button below to activate your account',
                 buttonUrl: `${activateUrl}`,
                 buttonText: 'Activate Account',
@@ -168,20 +168,20 @@ export const registerTalent = asyncHandler(async (req: Request, res: Response, n
             // publish nats
 
             // create notification
-            const superadmin = await User.findOne({ email: 'hello@MyRIOI.com' });
-            const notiref = await generate(8, true);
+            // const superadmin = await User.findOne({ email: 'hello@MyRIOI.com' });
+            // const notiref = await generate(8, true);
 
-            await Notification.create({
-                refId: notiref,
-                body: `A new user ${user.email} just registered`,
-                status: 'new',
-                sender: {
-                    name: 'MyRIOI',
-                    id: superadmin ? superadmin._id : ''
-                },
-                recipients: [`${superadmin?._id}`]
+            // await Notification.create({
+            //     refId: notiref,
+            //     body: `A new user ${user.email} just registered`,
+            //     status: 'new',
+            //     sender: {
+            //         name: 'MyRIOI',
+            //         id: superadmin ? superadmin._id : ''
+            //     },
+            //     recipients: [`${superadmin?._id}`]
 
-            });
+            // });
             
         } catch (err) {
             return next(new ErrorResponse('Error', 500, [`${err}`]));
@@ -328,18 +328,18 @@ export const registerBusiness = asyncHandler(async (req: Request, res:Response, 
 	// publish nats event
 
 	// create the notification with superadmin attached
-	const superadmin = await User.findOne({email: 'superadmin@gmail.com"'});
+	// const superadmin = await User.findOne({email: 'hello@MyRIOI.com'});
 
-	await Notification.create({
-		refId: notiref,
-		body: `A new user ${user.email} just registered as a customer`,
-		status: 'new',
-		sender: {
-			name: 'MyRIOI',
-			id: `${superadmin?._id}`
-		},
-		recipients: [`${superadmin?._id}`]
-	});
+	// await Notification.create({
+	// 	refId: notiref,
+	// 	body: `A new user ${user.email} just registered as a customer`,
+	// 	status: 'new',
+	// 	sender: {
+	// 		name: 'MyRIOI',
+	// 		id: `${superadmin?._id}`
+	// 	},
+	// 	recipients: [`${superadmin?._id}`]
+	// });
 
 })
 
