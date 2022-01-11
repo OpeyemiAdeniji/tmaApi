@@ -1,5 +1,5 @@
 import { Stan  } from 'node-nats-streaming';
-import { Publisher, Subjects } from '@btffamily/concreapt';
+import { Publisher, Subjects } from '@btffamily/tmat';
 
 class CountryFoundPublisher extends Publisher {
 

@@ -1,5 +1,5 @@
 import { Stan  } from 'node-nats-streaming';
-import { Publisher, Subjects } from '@btffamily/checkaamt';
+import { Publisher, Subjects } from '@btffamily/tmat';
 
 class LocationSavedPublisher extends Publisher {
 

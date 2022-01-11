@@ -5,7 +5,7 @@ import nats from '../events/nats';
 import UserCreated from '../events/listeners/user-created';
 
 const cert = `${__dirname.split('config')[0]}_data/ca-certificate.crt`;
-const cloudDBString = process.env.MONGODB_CLOUD_URI + `&tls=true&tlsCAFile=${cert}`
+const cloudDBString = process.env.MONGODB_URI + `&tls=true&tlsCAFile=${cert}`
 
 mongoose.Promise = global.Promise;
 
@@ -70,8 +70,17 @@ const connectDB = async (): Promise<void> => {
     await listenNats();
 
     //connect to mongoose
-    const dbConn = await mongoose.connect(process.env.MONGODB_URI || '', options);
-    console.log(colors.cyan.bold.underline(`Database connected: ${dbConn.connection.host}`));
+    if(process.env.AUTH_DB === 'cloud'){
+
+        const dbConn = await mongoose.connect(cloudDBString || '', options);
+        console.log(colors.cyan.bold.underline(`Database connected: ${dbConn.connection.host}`));
+        
+    }else{
+
+        const dbConn = await mongoose.connect(process.env.MONGODB_URI || '', options);
+        console.log(colors.cyan.bold.underline(`Database connected: ${dbConn.connection.host}`));
+
+    }
 
 }
 
