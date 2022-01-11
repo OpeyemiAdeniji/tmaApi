@@ -11,6 +11,8 @@ import Country from './src/models/Country.model'
 import Notification from './src/models/Notification.model'
 import User from './src/models/User.model'
 import Status from './src/models/Status.model'
+import Business from './src/models/Business.model'
+import Talent from './src/models/Talent.model'
 
 const options: object = {
 

@@ -7,20 +7,26 @@
 
     {
         "name": "admin",
-        "description": "admin has limited access to perform all operations on the platform",
+        "description": "admin has limited access to perform operations on the platform",
         "slug": "admin"
     },
 
     {
         "name": "manager",
-        "description": "manager has limited access to perform all operations on the platform",
+        "description": "manager manages talents and organizations on the platform",
         "slug": "manager"
     },
 
     {
         "name": "business",
-        "description": "business role are considered as organizations",
+        "description": "businesses are considered as organizations",
         "slug": "business"
+    },
+
+    {
+        "name": "talent",
+        "description": "talents are resources assigned to organizations on the platform",
+        "slug": "talent"
     },
 
     {

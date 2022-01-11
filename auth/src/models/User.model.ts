@@ -27,6 +27,7 @@ interface IUserDoc extends mongoose.Document {
 	password: string;
 	passwordType: string;
 	savedPassword: string;
+	userType: string;
 
 	activationToken: string | undefined;
 	activationTokenExpire: Date | undefined;
@@ -49,8 +50,9 @@ interface IUserDoc extends mongoose.Document {
 
 	// relationships
 	country: mongoose.Schema.Types.ObjectId | any;
+	talent: mongoose.Schema.Types.ObjectId | any;
+	business: mongoose.Schema.Types.ObjectId | any;
 	roles: Array<mongoose.Schema.Types.ObjectId | any>;
-	accounts: Array<mongoose.Schema.Types.ObjectId>;
 
     // time stamps
     createdAt: string;
@@ -115,6 +117,11 @@ const UserSchema = new mongoose.Schema(
 			type: String
 		},
 
+		userType: {
+			type: String,
+			enum: ['business', 'third-party', 'talent', 'manager']
+		},
+
         activationToken: String,
 		activationTokenExpire: Date,
 		resetPasswordToken: String,
@@ -175,6 +182,16 @@ const UserSchema = new mongoose.Schema(
         country: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'Country',
+		},
+
+		talent: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Talent',
+		},
+
+		business: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Business',
 		},
 
         roles: [

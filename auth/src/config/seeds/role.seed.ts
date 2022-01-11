@@ -1,7 +1,7 @@
 import fs from 'fs'
 import colors from 'colors'
 
-// import Role from '../../models/Role.model'
+import Role from '../../models/Role.model'
 
 // read in the JSON file
 const roles = JSON.parse(
