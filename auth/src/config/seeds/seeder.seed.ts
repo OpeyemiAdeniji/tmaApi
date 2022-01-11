@@ -1,19 +1,17 @@
 import Role from '../../models/Role.model'
 import Permission from '../../models/Permission.model'
-import Resource from '../../models/Resource.model'
 import User from '../../models/User.model'
 import colors from 'colors';
 
 import { seedRoles } from './role.seed'
 import { seedPermissions } from './permission.seed'
-import { seedResources } from './resource.seed'
 import { seedUsers } from './user.seed'
 
 
 // role functions
 const attachSuperRole = async (): Promise<void> => {
 
-    const superadmin = await User.findOne({ email: 'hello@concreap.com' });
+    const superadmin = await User.findOne({ email: 'superadmin@gmail.com"' });
     const role = await Role.findOne({ name: 'superadmin' });
 
 

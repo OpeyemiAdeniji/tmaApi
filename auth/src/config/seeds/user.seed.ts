@@ -1,7 +1,7 @@
 import fs from 'fs'
 import colors from 'colors'
 
-// import User from '../../models/User.model'
+import User from '../../models/User.model'
 
 // read in the JSON file
 const users = JSON.parse(

@@ -265,7 +265,7 @@ export const registerBusiness = asyncHandler(async (req: Request, res:Response, 
 			template: 'welcome',
 			email: email,
 			preheaderText: 'We are glad you signed up',
-			emailTitle: 'Welcome to Checkaam',
+			emailTitle: 'Welcome to MYrioi',
 			emailSalute: `Hi ${user.firstName},`,
 			bodyOne: "Welcome to Myrioi, we're glad to have you.",
 			buttonUrl: `${callback}/login`,
@@ -275,7 +275,6 @@ export const registerBusiness = asyncHandler(async (req: Request, res:Response, 
 		await sendGrid(emailData);
 
 		// send activation email
-		// Get reset token
 		const activateToken = user.getActivationToken();
 		await user.save({ validateBeforeSave: false });
 
@@ -287,7 +286,7 @@ export const registerBusiness = asyncHandler(async (req: Request, res:Response, 
 			preheaderText: 'Verify your account ownership',
 			emailTitle: 'Activate your account',
 			emailSalute: `Hi ${user.firstName},`,
-			bodyOne:'You just signed up on Checkaam. Activate your account for you to have access to more features on your account. Click the button below to verify your account',
+			bodyOne:'You just signed up on Myrioi. Activate your account for you to have access to more features on your account. Click the button below to verify your account',
 			buttonUrl: `${activateUrl}`,
 			buttonText: 'Activate Account',
 			fromName: 'Myrioi'
@@ -317,14 +316,14 @@ export const registerBusiness = asyncHandler(async (req: Request, res:Response, 
 	// publish nats event
 
 	// create the notification with superadmin attached
-	const superadmin = await User.findOne({email: 'superadmin@checkaam.com'});
+	const superadmin = await User.findOne({email: 'superadmin@gmail.com"'});
 
 	await Notification.create({
 		refId: notiref,
 		body: `A new user ${user.email} just registered as a customer`,
 		status: 'new',
 		sender: {
-			name: 'Checkaam',
+			name: 'Myrioi',
 			id: `${superadmin?._id}`
 		},
 		recipients: [`${superadmin?._id}`]
