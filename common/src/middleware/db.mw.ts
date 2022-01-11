@@ -24,25 +24,24 @@ const options: object = {
 }
 
 const cert = `${__dirname.split('middleware')[0]}src/ca-certificate.crt`;
-const cloudDBString = MONGODB_CLOUD_URI + `&tls=true&tlsCAFile=${cert}`
 // console.log(__dirname);
 
-export const connectDB = (authType: string): void => {
+export const connectDB = (authType: string, authDB: string): void => {
 
     if(authType === 'development'){
 
-        dbConn = mongoose.createConnection(MONGODB_URI, options);
+        dbConn = mongoose.createConnection(authDB, options);
         // console.log('Auth (dev) database connected');
 
     }else if(authType === 'production'){
 
         // vs8w16K2a4YfR530
-        dbConn = mongoose.createConnection(MONGODB_PROD_URI, options);
+        dbConn = mongoose.createConnection(authDB, options);
         // console.log('Auth (prod) database connected');
 
     }else if(authType === 'cloud'){
 
-        // vs8w16K2a4YfR530
+        const cloudDBString = authDB + `&tls=true&tlsCAFile=${cert}`;
         dbConn = mongoose.createConnection(cloudDBString, options);
         // console.log('Auth (prod) database connected');
 
@@ -52,9 +51,9 @@ export const connectDB = (authType: string): void => {
 
 }
 
-export const getRoleModel = async (authType: string): Model<Schema> => {
+export const getRoleModel = async (authType: string, authDB: string): Model<Schema> => {
 
-    await connectDB(authType);
+    await connectDB(authType, authDB);
     
     const model = await dbConn.collection('roles');
     return model;

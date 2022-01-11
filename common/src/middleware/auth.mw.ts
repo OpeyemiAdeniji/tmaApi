@@ -33,12 +33,12 @@ export const protect = (req: Request, secret: string): string | JwtPayload => {
 
 }
 
-export const authorize = async (roles: Array<string>, userRoles: Array<string>, authType: string): Promise<boolean> => {
+export const authorize = async (roles: Array<string>, userRoles: Array<string>, authType: string, authDB: string): Promise<boolean> => {
 
     let allRoles: any = [];
     let resultFlag: boolean = false;
 
-    await getRolesByName(roles, authType).then((resp) => {
+    await getRolesByName(roles, authType, authDB).then((resp) => {
         allRoles = [...resp];
     });
 
