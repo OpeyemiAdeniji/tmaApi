@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import mongoose, { ObjectId } from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { generate } from '../utils/random.util'
 
 import Role from './Role.model';
 
@@ -10,6 +11,7 @@ interface IUserModel extends mongoose.Model<IUserDoc> {
 	getSignedJwtToken(): any,
 	matchPassword(password: string): any,
 	matchEmailCode(code: string): boolean,
+	matchInviteLink(code: string): boolean,
 	increaseLoginLimit(): number,
 	checkLockedStatus(): boolean,
 	getResetPasswordToken(): any,
@@ -35,6 +37,8 @@ interface IUserDoc extends mongoose.Document {
 	resetPasswordTokenExpire: Date | undefined;
 	emailCode: string | undefined;
 	emailCodeExpire: Date | undefined;
+	inviteLink: string | any;
+	inviteLinkExpire: Date | undefined;
 
 	isSuper: boolean;
 	isActivated: boolean;
@@ -66,6 +70,7 @@ interface IUserDoc extends mongoose.Document {
 	getSignedJwtToken(): any,
 	matchPassword(password: string): any,
 	matchEmailCode(code: string): boolean,
+	matchInviteLink(link: string): boolean,
 	increaseLoginLimit(): number,
 	checkLockedStatus(): boolean,
 	getResetPasswordToken(): any,
@@ -128,6 +133,8 @@ const UserSchema = new mongoose.Schema(
 		resetPasswordTokenExpire: Date,
 		emailCode: String,
 		emailCodeExpire: Date,
+		inviteLink: String,
+		inviteLinkExpire: Date,
 
         isSuper: {
 			type: Boolean,
@@ -251,6 +258,11 @@ UserSchema.methods.matchPassword = async function (pass: any) {
 // Match email verification code
 UserSchema.methods.matchEmailCode = function (code: any) {
 	return this.emailCode === code ? true : false;
+}
+
+// Match invite link
+UserSchema.methods.matchInviteLink = function (link: any) {
+	return this.inviteLink === link ? true : false;
 }
 
 // increase login limit

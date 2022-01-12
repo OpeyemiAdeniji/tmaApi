@@ -168,6 +168,175 @@ export const changePassword = asyncHandler(async (req: Request, res:Response, ne
 
 })
 
+
+// @desc        Add Business manager
+// @route       POST /api/identity/v1/users/add-manager?invite=false
+// @access      Private
+export const addManager = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
+
+	const { firstName, lastName, email, phoneNumber, phoneCode, callback} = req.body;
+	const { invite } = req.query;
+
+	if(!callback){
+		return next(new ErrorResponse('Error', 400, ['invite callback url is required']));
+	}
+
+	// validate
+	if(!firstName){
+		return next(new ErrorResponse('Error', 400, ['first name is required']));
+	}
+
+	if(!lastName){
+		return next(new ErrorResponse('Error', 400, ['last name is required']));
+	}
+
+	if(!email){
+		return next(new ErrorResponse('Error', 400, ['email is required']));
+	}
+
+	const existing = await User.findOne({email: email});
+
+	if(!existing){
+		return next(new ErrorResponse('Error', 403, ['email is already existing']));
+	}
+
+	if(!phoneNumber){
+		return next(new ErrorResponse('Error', 400, ['phone number is required']));
+	}
+
+	if(!phoneCode){
+		return next(new ErrorResponse('Error', 400, ['phone code is required']));
+	}
+
+	if(!strIncludesEs6(phoneCode, '+')){
+        return next(new ErrorResponse('Error', 400, ['phone code is must include \'+\' sign']));
+    }
+
+	// format phone number
+	let phoneStr: string;
+	if(strIncludesEs6(phoneCode, '-')){
+		phoneStr = phoneCode.substring(3);
+	}else{
+		phoneStr = phoneCode.substring(1);
+	}
+
+	const phoneExists = await User.findOne({ phoneNumber: phoneStr + phoneNumber.substring(1) });
+
+	if(phoneExists){
+		return next(new ErrorResponse('Error', 400, ['phone number already exists']));
+	}
+
+	const role = await Role.findOne({ name: 'manager' });
+
+	const password = await generate(8, true);
+
+	const user = await User.create({
+
+		firstName,
+		lastName,
+        email,
+        password: password,
+		passwordType: 'generated',
+		savedPassword: password,
+		phoneNumber: phoneStr + phoneNumber.substring(1),
+		userType: 'manager',
+        isSuper: false,
+		isActivated: false,
+		isAdmin: false,
+		isTalent: false,
+		isBusiness: false,
+		isManager: true,
+		isUser: true,
+
+	})
+
+	// generate invite link
+	const inviteLink = await generate(16, true);
+	const expire = ( Date.now() + (60 * 24) * 60 * 1000 as unknown) as Date // 24 hours
+
+	user.roles.push(role?._id);
+	user.inviteLink = inviteLink.toString();
+	user.inviteLinkExpire = expire;
+	await user.save();
+
+	if(invite && invite.toString() === 'true'){
+
+		let emailData = {
+			template: 'welcome',
+			email: user.email,
+			preheaderText: 'MyRIOI Invitation',
+			emailTitle: 'MyRIOI invited you to join them as a business manager',
+			emailSalute: 'Hello ' + user.firstName + ',',
+			bodyOne: 'MyRIOI has invited you to join them as a business manager on their talent management platform.',
+			bodyTwo: 'You can accept invitation by clicking the button below or ignore this email to decline. Invitation expires in 24 hours',
+			buttonUrl: `${callback}/${inviteLink}`,
+			buttonText: 'Accept Invite',
+			fromName: 'MyRIOI'
+		}
+
+		await sendGrid(emailData);
+	}
+
+	const returnData = {
+		firstName: user.firstName,
+		lastName: user.lastName,
+        email: user.email,
+		phoneNumber: user.phoneNumber,
+		phoneCode: phoneCode,
+		role: {
+			_id: role?._id,
+			name: role?.name
+		},
+		invite: user.inviteLink,
+		userType: user.userType
+	}
+
+	res.status(206).json({
+		error: true,
+		errors: [],
+		data: returnData,
+		message: 'successful',
+		status: 206
+	})
+
+})
+
+
+// @desc        Accept Invite
+// @route       PUT /api/identity/v1/users/accept-invite
+// @access      Private
+export const acceptInvite = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
+
+
+	const { token } = req.body;
+
+	if(!token){
+		return new ErrorResponse('Error', 400, ['token is required'])
+	}
+
+	const linkMatched = await User.findOne({ inviteLink: token, inviteLinkExpire: { $gt: new Date() } }) 
+
+	if(!linkMatched){
+		return next(new ErrorResponse('invalid token', 400, ['invite link expired']))
+	}
+
+	linkMatched.inviteLink = undefined;
+	linkMatched.inviteLinkExpire = undefined;
+	await linkMatched.save();
+	
+	res.status(206).json({
+		error: true,
+		errors: [],
+		data: null,
+		message: 'successful',
+		status: 206
+	})
+
+
+})
+
+
+
 /** 
  * snippet
  * **/

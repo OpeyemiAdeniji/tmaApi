@@ -5,6 +5,7 @@ import {
     registerTalent,
     registerBusiness,
     login,
+    forcePassword,
     logout,
     getUser,
     updatePassword,
@@ -29,6 +30,7 @@ router.post('/register-business', vcd, registerBusiness);
 router.post('/login', vcd, login);
 router.post('/logout', vcd, logout);
 router.get('/user/:id', vcd, protect, authorize(allRoles), getUser);
+router.post('/force-password', vcd, protect, authorize(allRoles), forcePassword);
 router.post('/change-password/:id', vcd, protect, authorize(allRoles), updatePassword);
 router.post('/forgot-password', vcd, sendResetLink);
 router.post('/reset-password/:token', vcd, resetPassword);

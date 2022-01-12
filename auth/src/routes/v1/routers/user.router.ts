@@ -5,7 +5,9 @@ import {
     getUsers,
     getUser,
     changePassword,
-    getUserStatus
+    getUserStatus,
+    addManager,
+    acceptInvite
 } from '../../../controllers/user.controller';
 
 import advanced from '../../../middleware/adanced.mw'
@@ -22,6 +24,8 @@ const allRoles = ['superadmin', 'admin', 'business', 'manager', 'talent', 'user'
 router.get('/', vcd, protect, authorize(roles), advanced(User), getUsers);
 router.get('/:id', vcd, protect, authorize(allRoles), getUser);
 router.get('/status/:id', vcd, protect, authorize(allRoles), getUserStatus);
+router.post('/add-manager', vcd, protect, authorize(roles), addManager);
+router.put('/accept-invite', vcd, acceptInvite);
 router.put('/change-password/:id', vcd, protect, authorize(allRoles), changePassword);
 
 export default router;
