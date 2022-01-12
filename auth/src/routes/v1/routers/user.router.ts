@@ -4,9 +4,6 @@ import express, { Router } from 'express'
 import {
     getUsers,
     getUser,
-    getTalents,
-    getBusinesses,
-    getOrganizations,
     changePassword,
     getUserStatus
 } from '../../../controllers/user.controller';
@@ -25,9 +22,6 @@ const allRoles = ['superadmin', 'admin', 'business', 'manager', 'talent', 'user'
 router.get('/', vcd, protect, authorize(roles), advanced(User), getUsers);
 router.get('/:id', vcd, protect, authorize(allRoles), getUser);
 router.get('/status/:id', vcd, protect, authorize(allRoles), getUserStatus);
-router.put('/get-talents', vcd, protect, authorize(allRoles), getTalents);
-router.put('/get-businesses', vcd, protect, authorize(allRoles), getBusinesses);
-router.put('/get-organizations', vcd, protect, authorize(allRoles), getOrganizations);
 router.put('/change-password/:id', vcd, protect, authorize(allRoles), changePassword);
 
 export default router;

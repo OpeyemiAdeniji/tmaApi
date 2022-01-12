@@ -14,14 +14,13 @@ dayjs.extend(customparse);
 
 // models
 import User from '../models/User.model'
-import Business from '../models/Business.model'
 import Role from '../models/Role.model'
 import Notification from '../models/Notification.model'
 import Status from '../models/Status.model'
 
 // nats 
-// import nats from '../events/nats';
-// import UserCreated from '../events/publishers/user-created';
+import nats from '../events/nats';
+import UserCreated from '../events/publishers/user-created';
 
 
 declare global {
@@ -166,6 +165,7 @@ export const registerTalent = asyncHandler(async (req: Request, res: Response, n
             })
 
             // publish nats
+			await new UserCreated(nats.client).publish({ user: user, userType: user.userType });
 
             // create notification
             // const superadmin = await User.findOne({ email: 'hello@MyRIOI.com' });
@@ -325,7 +325,8 @@ export const registerBusiness = asyncHandler(async (req: Request, res:Response, 
 		status: 200
 	});
 
-	// publish nats event
+	// publish natss
+	await new UserCreated(nats.client).publish({ user: user, userType: user.userType });
 
 	// create the notification with superadmin attached
 	// const superadmin = await User.findOne({email: 'hello@MyRIOI.com'});
