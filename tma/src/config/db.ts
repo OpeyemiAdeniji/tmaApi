@@ -70,8 +70,17 @@ const connectDB = async (): Promise<void> => {
     await listenNats();
 
     //connect to mongoose
-    const dbConn = await mongoose.connect(process.env.MONGODB_URI || '', options);
-    console.log(colors.cyan.bold.underline(`Database connected: ${dbConn.connection.host}`));
+    if(process.env.AUTH_DB === 'cloud'){
+
+        const dbConn = await mongoose.connect(cloudDBString || '', options);
+        console.log(colors.cyan.bold.underline(`Database connected: ${dbConn.connection.host}`));
+        
+    }else{
+
+        const dbConn = await mongoose.connect(process.env.MONGODB_URI || '', options);
+        console.log(colors.cyan.bold.underline(`Database connected: ${dbConn.connection.host}`));
+
+    }
 
 }
 

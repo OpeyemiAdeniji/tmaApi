@@ -17,13 +17,10 @@ interface IUserDoc extends mongoose.Document{
     firstName: string;
     lastName: string;
 	middleName: string;
-    username: string;
     email: string;
     phoneNumber: string;
-
-    tracks: Array<string>;
-    courses: Array<mongoose.Schema.Types.ObjectId | any>;
-    transactions: Array<mongoose.Schema.Types.ObjectId | any>;
+    userType: string;
+    isActive: Boolean;
 
     // time stamps
     createdAt: string;
@@ -63,10 +60,6 @@ const UserSchema = new mongoose.Schema (
             type: String,
         },
 
-        username: {
-            type: String,
-        },
-
         userType: {
             type: String,
         },
@@ -79,32 +72,9 @@ const UserSchema = new mongoose.Schema (
 			type: String
 		},
 
-        tracks: [
-            {
-                type: String
-            }
-        ],
-
-        courses: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Course'
-            }
-        ],
-
-        transactions: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Transactions'
-            }
-        ],
-
-        cards: [
-			{
-                type: mongoose.Schema.Types.ObjectId,
-           	    ref: 'User'
-            }
-		],
+        isActive: {
+			type: Boolean
+		}
 
     },
 

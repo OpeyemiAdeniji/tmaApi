@@ -15,7 +15,7 @@ class UserCreatedListener extends Listener {
 
     async onMessage(data: any, msg: any){
 
-        const { user } = data;
+        const { user, userType } = data;
 
         const find = await User.findOne({ userId: user._id });
 
@@ -26,12 +26,12 @@ class UserCreatedListener extends Listener {
                 _id: user._id,
                 id: user._id,
                 userId: user._id,
-                username: user.email,
                 phoneNumber: user.phoneNumber,
                 email: user.email,
                 firstName: user.firstName,
                 lastName: user.lastName,
-                middleName: user.middleName
+                middleName: user.middleName,
+                userType: userType
 
             })
 

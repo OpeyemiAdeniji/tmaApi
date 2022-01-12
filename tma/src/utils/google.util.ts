@@ -1,44 +1,44 @@
 import { join } from 'path'
 import { google } from 'googleapis';
-import { OAuth2Client } from 'google-auth-library'
+// import { OAuth2Client } from 'google-auth-library'
 import { Storage } from '@google-cloud/storage'
 
-const client = new OAuth2Client(process.env.GOOGLE_OAUTH_CLIENT_ID);
+// const client = new OAuth2Client(process.env.GOOGLE_OAUTH_CLIENT_ID);
 const BUCKET_NAME: string | any = process.env.GOOGLE_BUCKET_NAME || 'concreap-buckets';
 const gcKeyPath = `${__dirname.split('utils')[0]}_data/gc-concreap-key.json`;
 
-export const verify = async (t: any) => {
+// export const verify = async (t: any) => {
 
-    let data = null;
+//     let data = null;
 
-    const ticket = await client.verifyIdToken({
-        idToken: t,
-        audience: process.env.GOOGLE_OAUTH_CLIENT_ID
-    });
+//     const ticket = await client.verifyIdToken({
+//         idToken: t,
+//         audience: process.env.GOOGLE_OAUTH_CLIENT_ID
+//     });
 
-    console.log('the', ticket);
+//     console.log('the', ticket);
 
-    const payload = ticket.getPayload();
+//     const payload = ticket.getPayload();
 
-    // const userid = payload['sub'];
-    // If request specified a G Suite domain:
-    // const domain = payload['hd'];
+//     // const userid = payload['sub'];
+//     // If request specified a G Suite domain:
+//     // const domain = payload['hd'];
 
-    if(payload){
+//     if(payload){
 
 
-        if(payload.aud === process.env.GOOGLE_OAUTH_CLIENT_ID && (payload.iss === 'accounts.google.com' 
-        || payload.iss === 'https://accounts.google.com')){
-            data = payload;
-        }else{
-            data = null;
-        }
+//         if(payload.aud === process.env.GOOGLE_OAUTH_CLIENT_ID && (payload.iss === 'accounts.google.com' 
+//         || payload.iss === 'https://accounts.google.com')){
+//             data = payload;
+//         }else{
+//             data = null;
+//         }
 
-    }
+//     }
 
-    return data;
+//     return data;
 
-}
+// }
 
 export const uploadBase64File = async (data: object | any): Promise<any> => {
 

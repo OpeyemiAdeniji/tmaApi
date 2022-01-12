@@ -24,7 +24,7 @@ const PORT = process.env.PORT || 5002;
 
 // create server
 const server = app.listen(PORT, () => {
-    console.log(colors.yellow.bold(`Course service running in ${process.env.NODE_ENV} mode on port ${PORT}`))
+    console.log(colors.yellow.bold(`Tma service running in ${process.env.NODE_ENV} mode on port ${PORT}`))
 })
 
 // catch unhandled promise rejections
