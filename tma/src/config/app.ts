@@ -12,7 +12,6 @@ import xss from 'xss-advanced';
 import { limitRequests } from '../middleware/rateLimiter.mw';
 import hpp from 'hpp';
 import cors from 'cors';
-import userAgent from 'express-useragent';
 
 // files
 import errorHandler from '../middleware/error.mw'
@@ -74,9 +73,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 // set static folder
 app.use(express.static(path.join(__dirname, 'public')));
 
-// user agent
-app.use(userAgent.express());
-
 // mount routers
 app.get('/', (req: Request, res: Response, next: NextFunction) => {
 
@@ -85,7 +81,7 @@ app.get('/', (req: Request, res: Response, next: NextFunction) => {
         errors: [],
         message: 'successful',
         data: {
-            name: 'tma-identity-service',
+            name: 'tma-app-service',
             version: '1.0.0'
         },
         status: 200
@@ -93,9 +89,10 @@ app.get('/', (req: Request, res: Response, next: NextFunction) => {
 
 });
 
-app.use('/api/identity/v1', v1Routes);
+app.use('/api/course/v1', v1Routes);
 
 // mount error handlers. This must be after you mount routers
 app.use(errorHandler);
 
 export default app;
+

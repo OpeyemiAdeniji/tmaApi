@@ -2,12 +2,9 @@ import express, { Router } from 'express'
 
 
 import {
-    getUsers,
-    getUser,
-    changePassword,
-    getUserStatus,
-    addManager,
-    acceptInvite
+    getTalents,
+    getBusinesses,
+    getOrganizations
 } from '../../../controllers/user.controller';
 
 import advanced from '../../../middleware/adanced.mw'
@@ -21,11 +18,8 @@ import { validateChannels as vcd } from '../../../middleware/header.mw';
 const roles = ['superadmin', 'admin'];
 const allRoles = ['superadmin', 'admin', 'business', 'manager', 'talent', 'user'];
 
-router.get('/', vcd, protect, authorize(roles), advanced(User), getUsers);
-router.get('/:id', vcd, protect, authorize(allRoles), getUser);
-router.get('/status/:id', vcd, protect, authorize(allRoles), getUserStatus);
-router.post('/add-manager', vcd, protect, authorize(roles), addManager);
-router.put('/accept-invite', vcd, acceptInvite);
-router.put('/change-password/:id', vcd, protect, authorize(allRoles), changePassword);
+router.put('/get-talents', vcd, protect, authorize(allRoles), getTalents);
+router.put('/get-businesses', vcd, protect, authorize(allRoles), getBusinesses);
+router.put('/get-organizations', vcd, protect, authorize(allRoles), getOrganizations);
 
 export default router;

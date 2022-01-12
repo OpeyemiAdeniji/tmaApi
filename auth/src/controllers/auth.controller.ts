@@ -14,14 +14,13 @@ dayjs.extend(customparse);
 
 // models
 import User from '../models/User.model'
-import Business from '../models/Business.model'
 import Role from '../models/Role.model'
 import Notification from '../models/Notification.model'
 import Status from '../models/Status.model'
 
 // nats 
-// import nats from '../events/nats';
-// import UserCreated from '../events/publishers/user-created';
+import nats from '../events/nats';
+import UserCreated from '../events/publishers/user-created';
 
 
 declare global {
@@ -89,6 +88,8 @@ export const registerTalent = asyncHandler(async (req: Request, res: Response, n
 		lastName,
         email,
         password,
+		passwordType: 'self',
+		savedPassword: password,
 		phoneNumber: phoneStr + phoneNumber.substring(1),
 		userType: 'talent',
         isSuper: false,
@@ -166,6 +167,7 @@ export const registerTalent = asyncHandler(async (req: Request, res: Response, n
             })
 
             // publish nats
+			await new UserCreated(nats.client).publish({ user: user, userType: user.userType });
 
             // create notification
             // const superadmin = await User.findOne({ email: 'hello@MyRIOI.com' });
@@ -248,6 +250,8 @@ export const registerBusiness = asyncHandler(async (req: Request, res:Response, 
 		lastName,
 		email,
 		password,
+		passwordType: 'self',
+		savedPassword: password,
 		phoneNumber: phoneStr + phoneNumber.substring(1),
 		phoneCode,
 		userType: 'third-party',
@@ -325,7 +329,8 @@ export const registerBusiness = asyncHandler(async (req: Request, res:Response, 
 		status: 200
 	});
 
-	// publish nats event
+	// publish natss
+	await new UserCreated(nats.client).publish({ user: user, userType: user.userType });
 
 	// create the notification with superadmin attached
 	// const superadmin = await User.findOne({email: 'hello@MyRIOI.com'});
@@ -414,6 +419,52 @@ export const login = asyncHandler(async (req: Request, res:Response, next: NextF
 
 	const message = 'successful';
 	sendTokenResponse(user, message, 200, res);
+
+})
+
+// @desc        Force change password 
+// @route       POST /api/identity/v1/auth/force-password
+// @access      Public
+export const forcePassword = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
+
+    const { email, password } = req.body;
+
+	if(!password || !email){
+		return next(new ErrorResponse('Error!', 404, ['password is required', 'email is required']));
+	}
+
+	const user = await User.findOne({ email: email });
+
+	if(!user){
+		return next(new ErrorResponse('Error', 404, ['user does not exist']));
+	}
+
+	if(user.passwordType !== 'generated'){
+		return next(new ErrorResponse('Error', 403, ['password is self generated or self-changed']));
+	}
+
+	// match user password with regex
+	const match =  /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/;
+	const matched: boolean = match.test(password);
+
+	if(!matched){
+		return next(new ErrorResponse('Error', 400, ['password must contain at least 8 characters, 1 lowercase letter, 1 uppercase letter, 1 special character and 1 number']))
+	}
+
+	user.password = password;
+    user.passwordType = 'self-changed';
+	user.savedPassword = password;
+    await user.save();
+
+	res.status(200).json({
+        error: false,
+        errors: [],
+        data: null,
+        message: 'successful',
+        status: 200
+    })
+
+	//TODO: send password changed email
 
 })
 

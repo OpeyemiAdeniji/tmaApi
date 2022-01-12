@@ -1,20 +1,17 @@
 import express, { Request, Response, NextFunction } from 'express';
 
 // import route files
-import authRoutes from './routers/auth.router'
-import emailRoutes from './routers/email.router'
-import notifyRoutes from './routers/notify.router'
+import businessRoutes from './routers/business.router'
+import talentRoutes from './routers/talent.router'
 import userRoutes from './routers/user.router'
-
 
 // create router
 const router = express.Router();
 
 // define routes
-router.use('/auth', authRoutes);
-router.use('/emails', emailRoutes);
-router.use('/notify', notifyRoutes);
 router.use('/users', userRoutes);
+router.use('/talents', talentRoutes);
+router.use('/businesses', businessRoutes);
 
 router.get('/', (req: Request, res: Response, next: NextFunction) => {
 
@@ -23,7 +20,7 @@ router.get('/', (req: Request, res: Response, next: NextFunction) => {
         errors: [],
         message: 'successful',
         data: {
-            name: 'tma-identity-service',
+            name: 'tma-app-service',
             version: '1.0.0'
         },
         status: 200

@@ -1,6 +1,6 @@
-# MyRIOI TMA API
+# MyRIOI TMA-API
 
-> Backend API for the MyRIOI TMA Auth service
+> Backend API for the MyRIOI TMA Blog Service 
 
 ## Usage
 
@@ -8,7 +8,7 @@ Rename the ".env.example" file to .env and update the values/settings to your ow
 
 ## Install Dependences
 ```
-npm install
+npm install --force
 ```
 ## Run App
 ```
