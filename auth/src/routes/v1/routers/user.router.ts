@@ -25,9 +25,9 @@ const allRoles = ['superadmin', 'admin', 'business', 'manager', 'talent', 'user'
 router.get('/', vcd, protect, authorize(roles), advanced(User), getUsers);
 router.get('/:id', vcd, protect, authorize(allRoles), getUser);
 router.get('/status/:id', vcd, protect, authorize(allRoles), getUserStatus);
-router.put('/get-talents', vcd, protect, authorize(allRoles), getTalents);
-router.put('/get-businesses', vcd, protect, authorize(allRoles), getBusinesses);
-router.put('/get-organizations', vcd, protect, authorize(allRoles), getOrganizations);
+router.get('/get-talents', vcd, protect, authorize(allRoles), getTalents);
+router.get('/get-businesses', vcd, protect, authorize(allRoles), getBusinesses);
+router.get('/get-organizations', vcd, protect, authorize(allRoles), getOrganizations);
 router.put('/change-password/:id', vcd, protect, authorize(allRoles), changePassword);
 
 export default router;
