@@ -4,7 +4,7 @@
 
 ## Usage
 
-Rename the " to ".env.example" and update the values/settings to your own
+Rename the ".env.example" file to .env and update the values/settings to your own
 
 ## Install Dependences
 ```

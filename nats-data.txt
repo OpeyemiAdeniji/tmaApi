@@ -1,6 +1,8 @@
 NATS IP: 143.198.165.121
 SERVER IP: 
 
+Github token: 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
+
 MONGODB_CLOUD_URI=mongodb+srv://Immanuel:vs8w16K2a4YfR530@cluster-btf-e2823008.mongo.ondigitalocean.com/cp-auth-db?authSource=admin&replicaSet=cluster-btf
 
 npm i --force @btffamily/cconcreapt
