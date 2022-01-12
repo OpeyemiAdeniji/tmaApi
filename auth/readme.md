@@ -1,6 +1,6 @@
-# DevCamper API
+# MyRIOI TMA API
 
-> Backend API for the MyRIOI TMA application (software)
+> Backend API for the MyRIOI TMA Auth service
 
 ## Usage
 
