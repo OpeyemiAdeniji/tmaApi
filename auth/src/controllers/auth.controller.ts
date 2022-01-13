@@ -980,7 +980,6 @@ const sendTokenResponse = async (user: any, message: string, statusCode: number,
 	});
 };
 
-
 /** 
  * snippet
  * **/

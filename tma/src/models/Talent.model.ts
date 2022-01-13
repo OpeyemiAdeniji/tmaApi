@@ -17,6 +17,8 @@ interface ITalentDoc extends mongoose.Document{
     firstName: string;
     lastName: string;
     middleName: string;
+    gender: string,
+    phoneNumber: string,
     slug: string;
 
     businesses: Array<mongoose.Schema.Types.ObjectId | any>;
@@ -55,6 +57,73 @@ const TalentSchema = new mongoose.Schema (
             type: String
         },
 
+        gender: {
+            type: String,                            
+            enum: ['male', 'female'],
+            required: [true, 'gender is required']
+        },
+
+        phoneNumber: {
+            type: String
+        },
+
+        address: {
+            type: String
+        },
+
+        level: {
+            type: String,
+            enum: ['junior', 'intermediate', 'expert'],
+            required: [true, 'level is required']
+        },
+        
+        band: {
+            type: String
+        },
+
+        type: {
+            type: String,
+            enum: ['frontend', 'backend']
+        },
+
+        currentSalary: {
+            type: String
+        },
+
+        employmentStatus: {
+            type: String
+        },
+
+        email: {
+			type: String,
+			required: [true, 'email is required'],
+			unique: [true, 'email already exist'],
+			match: [
+				/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+				'a valid email is required',
+			],
+		},
+
+        linkedinUrl: {
+            type: String
+        },
+
+        githubUrl: {
+            type: String
+        },
+
+        dribbleUrl: {
+            type: String
+        },
+
+        portfolioUrl: {
+            type: String
+        },
+
+        resumeUrl: {
+            type: String
+        },
+
         slug: String,
 
         businesses: [
@@ -64,7 +133,7 @@ const TalentSchema = new mongoose.Schema (
             }
         ],
 
-        user: [
+        users: [
             {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'User'

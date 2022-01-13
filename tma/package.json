@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "NODE_ENV=production NODE_OPTIONS='--max_old_space_size=19000' ts-node src/server.ts",
-    "dev": "NODE_OPTIONS='--max_old_space_size=18000' ts-node-dev src/server.ts",
+    "dev": "ts-node-dev src/server.ts",
     "seed-d": "ts-node-dev remover.ts -d",
     "pretest": "NODE_ENV=test npm run seed-d",
     "test": "NODE_ENV=test jest --watchAll --no-cache --testTimeout=30000"
