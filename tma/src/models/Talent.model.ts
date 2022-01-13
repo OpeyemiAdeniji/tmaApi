@@ -1,4 +1,4 @@
-import mongoose, { ObjectId } from 'mongoose'
+    import mongoose, { ObjectId } from 'mongoose'
 import slugify from 'slugify'
 
 // interface that describes the properties the model has
@@ -16,7 +16,7 @@ interface ITalentDoc extends mongoose.Document{
 
     firstName: string;
     lastName: string;
-    middleName: string;
+    middleName: string; 
     gender: string,
     phoneNumber: string,
     slug: string;
