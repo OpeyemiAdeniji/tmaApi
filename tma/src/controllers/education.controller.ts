@@ -48,6 +48,7 @@ export const getEducation = asyncHandler(async (req: Request, res: Response, nex
 export const createEducation = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     
     const { institutionName, degree, startDate, endDate } = req.body;
+    
     const { user_id } = req.query;
 
     const user = await User.findOne({ userId: user_id })
