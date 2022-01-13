@@ -48,21 +48,21 @@ export const getEducation = asyncHandler(async (req: Request, res: Response, nex
 export const createEducation = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     
     const { institutionName, degree, startDate, endDate } = req.body;
-    
+
     const { user_id } = req.query;
 
     const user = await User.findOne({ userId: user_id })
 
     if (!user) {
-        return next(new ErrorResponse('Error', 404, ['user does not exist']))
+        return next(new ErrorResponse('Error', 404, ['user does not exist'])) 
     }
 
     if (!institutionName) {
-        return next(new ErrorResponse('Error', 404, ['user_id is required as a url params']))
+        return next(new ErrorResponse('Error', 404, ['institution name is required']))
     }
 
     if (!user_id) {
-        return next(new ErrorResponse('Error', 404, ['institution name is required']))
+        return next(new ErrorResponse('Error', 404, ['user_id is required as a url params']))
     }
 
     if (!degree) {
