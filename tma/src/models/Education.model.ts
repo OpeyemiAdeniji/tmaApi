@@ -7,7 +7,6 @@ interface IEducationModel extends mongoose.Model<IEducationDoc> {
     
     // functions
     getAllEducation(): any;
-    findByEducationId(id: ObjectId): IEducationDoc;
 
 }
 
@@ -31,7 +30,6 @@ interface IEducationDoc extends mongoose.Document{
 
     // functions
     getAllEducation(): any;
-    findByEducationId(id: ObjectId): IEducationDoc;
 
 }
 
@@ -66,7 +64,7 @@ const EducationSchema = new mongoose.Schema(
 
         user: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: User
+            ref: 'User'
         }
     },
     {
@@ -80,7 +78,7 @@ const EducationSchema = new mongoose.Schema(
     }
 )
 
-EducationSchema.set('toJSON', { getters: true, vituals: true });
+EducationSchema.set('toJSON', { getters: true, virtuals: true });
 
 EducationSchema.pre('save', async function (next) {
     this.slug = slugify(this.institutionName, { lower: true });

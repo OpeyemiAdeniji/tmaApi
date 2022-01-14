@@ -5,9 +5,7 @@ import slugify from 'slugify';
 interface ISkillModel extends mongoose.Model<ISkillDoc>{
 
     // functions
-    getPrimaryLanguage(): any;
-    getPrimaryFramework(id: ObjectId): ISkillDoc;
-    getAllSkills(id: ObjectId): ISkillDoc;
+    getAllSkills(): any
 }
 
 // interface that describes the properties the doc has
@@ -30,9 +28,7 @@ interface ISkillDoc extends mongoose.Document{
     id: mongoose.Schema.Types.ObjectId;
 
     // functions
-    getPrimaryLanguage(): any;
-    getPrimaryFramework(id: ObjectId): ISkillDoc;
-    getAllSkills(id: ObjectId): ISkillDoc;
+    getAllSkills(): any
 
 }
 
@@ -63,6 +59,11 @@ const SkillSchema = new mongoose.Schema(
         },
 
         slug: String,
+
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }
     },
     {
         timestamps: true,
