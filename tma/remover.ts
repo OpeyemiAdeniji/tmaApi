@@ -6,11 +6,9 @@ import { config } from 'dotenv'
 config();
 
 // models
-import Role from './src/models/Role.model'
-import Country from './src/models/Country.model'
-import Notification from './src/models/Notification.model'
+import Business from './src/models/Business.model'
+import Talent from './src/models/Talent.model'
 import User from './src/models/User.model'
-import Status from './src/models/Status.model'
 
 const options: object = {
 
@@ -49,11 +47,9 @@ const deleteData = async () : Promise<void> => {
 
         await connectDB();
 
-        await Role.deleteMany();
+        await Business.deleteMany();
+        await Talent.deleteMany();
         await User.deleteMany();
-        await Notification.deleteMany();
-        await Country.deleteMany();
-        await Status.deleteMany();
 
         console.log(colors.red.inverse('data destroyed successfully...'));
         process.exit();

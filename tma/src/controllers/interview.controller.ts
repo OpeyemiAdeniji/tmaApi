@@ -12,7 +12,7 @@ export const getInterviews = asyncHandler(async (req: Request, res: Response, ne
     res.status(200).json(res.advancedResults);
 })
 
-// @desc           Get an Interviews
+// @desc           Get an Interview
 // @route          GET /api/v1/interviews/:id
 // @access         Private/Superadmin/Admin
 export const getInterview = asyncHandler(async (req: Request, res: Response, next: NextFunction)=> {

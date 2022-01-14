@@ -16,6 +16,7 @@ interface IPreselectDoc extends mongoose.Document{
 
     talents: Array<mongoose.Schema.Types.ObjectId | any>;
     businesses: Array<mongoose.Schema.Types.ObjectId | any>;
+    createdBy: mongoose.Schema.Types.ObjectId | any;
 
     // timestamps
     createdAt: string;
@@ -52,7 +53,7 @@ const PreselectSchema = new mongoose.Schema(
 
         createdBy: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: ''
+            ref: 'Business'
         },
 
         slug: String,

@@ -30,7 +30,7 @@ export const getEducation = asyncHandler(async (req: Request, res: Response, nex
     const education = await Education.findById(req.params.id);
 
     if (!education) {
-        return next(new ErrorResponse('Error', 404, ['Education not found']))
+        return next(new ErrorResponse('Error', 404, ['Education does not exist']))
     }
 
     res.status(200).json({

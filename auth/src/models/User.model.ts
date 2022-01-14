@@ -119,7 +119,7 @@ const UserSchema = new mongoose.Schema(
 		},
 
 		savedPassword: {
-			type: String 
+			type: String
 		},
 
 		userType: {
