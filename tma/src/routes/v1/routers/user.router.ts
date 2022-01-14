@@ -18,8 +18,8 @@ import { validateChannels as vcd } from '../../../middleware/header.mw';
 const roles = ['superadmin', 'admin'];
 const allRoles = ['superadmin', 'admin', 'business', 'manager', 'talent', 'user'];
 
-router.put('/get-talents', vcd, protect, authorize(allRoles), getTalents);
-router.put('/get-businesses', vcd, protect, authorize(allRoles), getBusinesses);
-router.put('/get-organizations', vcd, protect, authorize(allRoles), getOrganizations);
+router.get('/get-talents', vcd, protect, authorize(allRoles), getTalents);
+router.get('/get-businesses', vcd, protect, authorize(allRoles), getBusinesses);
+router.get('/get-organizations', vcd, protect, authorize(allRoles), getOrganizations);
 
 export default router;
