@@ -16,6 +16,7 @@ interface IPreselectDoc extends mongoose.Document{
 
     talents: Array<mongoose.Schema.Types.ObjectId | any>;
     businesses: Array<mongoose.Schema.Types.ObjectId | any>;
+    createdBy: mongoose.Schema.Types.ObjectId | any;
 
     // timestamps
     createdAt: string;
