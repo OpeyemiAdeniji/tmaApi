@@ -52,7 +52,7 @@ const PreselectSchema = new mongoose.Schema(
 
         createdBy: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: ''
+            ref: 'Business'
         },
 
         slug: String,
