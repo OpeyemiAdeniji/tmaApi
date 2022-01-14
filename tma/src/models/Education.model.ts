@@ -7,7 +7,6 @@ interface IEducationModel extends mongoose.Model<IEducationDoc> {
     
     // functions
     getAllEducation(): any;
-    findById(id: ObjectId): IEducationDoc;
 
 }
 
@@ -31,7 +30,6 @@ interface IEducationDoc extends mongoose.Document{
 
     // functions
     getAllEducation(): any;
-    findById(id: ObjectId): IEducationDoc;
 
 }
 
@@ -66,7 +64,7 @@ const EducationSchema = new mongoose.Schema(
 
         user: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: User
+            ref: 'User'
         }
     },
     {

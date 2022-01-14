@@ -8,14 +8,14 @@ import Language from '../models/Language.model';
 //  @desc   Get all language
 //  @route  GET /api/tma/v1/languages
 //  @access Public
-export const getLanguages = asyncHandler(async (req, res, next) => {
+export const getLanguages = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     res.status(200).json(res.advancedResults);
 });
 
 //  @desc   Get a language
 //  @route  /api/tma/v1/languages/:id
 //  Public
-export const getLanguage = asyncHandler(async(req, res, next) => {
+export const getLanguage = asyncHandler(async(req: Request, res: Response, next: NextFunction) => {
 
     const language = await Language.findById(req.params.id);
 
