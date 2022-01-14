@@ -117,23 +117,28 @@ const TalentSchema = new mongoose.Schema (
 		},
 
         linkedinUrl: {
-            type: String
+            type: String,
+            required: [true, 'linkedinUrl is required']
         },
 
         githubUrl: {
-            type: String
+            type: String,
+            required: [true, 'githubUrl is required']
         },
 
         dribbleUrl: {
-            type: String
+            type: String,
+            required: [true, 'dribbleUrl is required']
         },
 
         portfolioUrl: {
-            type: String
+            type: String,
+            required: [true, 'portfolioUrl is required']
         },
 
         resumeUrl: {
-            type: String
+            type: String,
+            required: [true, 'resumeUrl is required']
         },
 
         slug: String,
