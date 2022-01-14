@@ -19,6 +19,18 @@ interface ITalentDoc extends mongoose.Document{
     middleName: string;
     gender: string,
     phoneNumber: string,
+    address: string,
+    level: string,
+    band: number,
+    type: string,
+    currentSalary: string,
+    employmentStatus: string,
+    email: string,
+    linkedinUrl: string,
+    githubUrl: string,
+    dribbleUrl: string,
+    portfolioUrl: string,
+    resumeUrl: string,
     slug: string;
 
     businesses: Array<mongoose.Schema.Types.ObjectId | any>;
@@ -78,7 +90,7 @@ const TalentSchema = new mongoose.Schema (
         },
         
         band: {
-            type: String
+            type: Number
         },
 
         type: {
@@ -133,12 +145,10 @@ const TalentSchema = new mongoose.Schema (
             }
         ],
 
-        users: [
-            {
+        user: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'User'
             }
-        ]
 
     },
 

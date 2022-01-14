@@ -22,6 +22,10 @@ interface IUserDoc extends mongoose.Document{
     userType: string;
     isActive: Boolean;
 
+    talents: Array<mongoose.Schema.Types.ObjectId | any>,
+    educations: Array<mongoose.Schema.Types.ObjectId | any>,
+    works: Array<mongoose.Schema.Types.ObjectId | any>
+
     // time stamps
     createdAt: string;
     updatedAt: string;
@@ -74,7 +78,28 @@ const UserSchema = new mongoose.Schema (
 
         isActive: {
 			type: Boolean
-		}
+		},
+
+        talents: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Talent'
+            }
+        ],
+
+        educations: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Education'
+            }
+        ],
+
+        works: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Work'
+            }
+        ]
 
     },
 

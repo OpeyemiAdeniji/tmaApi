@@ -18,14 +18,14 @@ import Business from '../models/Business.model';
 
 
 // @desc           Get all businesses
-// @route          GET /api/v1/businesses
+// @route          GET /api/tma/v1/businesses
 // @access         Private
 export const getBusinesses = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
 	res.status(200).json(res.advancedResults);   
 })
 
 // @desc    Get a business
-// @route   GET /api/v1/businesses/get-business/:id
+// @route   GET /api/tma/v1/businesses/get-business/:id
 // @access  Private/Superadmin/Admin
 export const getBusiness = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
 	
@@ -53,7 +53,7 @@ export const getBusiness = asyncHandler(async (req: Request, res:Response, next:
 
 
 // @desc    Get a third party org.
-// @route   GET /api/v1/businesses/get-organization/:id
+// @route   GET /api/tma/v1/businesses/get-organization/:id
 // @access  Private/Superadmin/Admin
 export const getOrganization = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
 	

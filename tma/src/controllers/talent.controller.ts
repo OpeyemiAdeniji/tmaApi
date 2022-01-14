@@ -24,7 +24,7 @@ export const getTalents = asyncHandler(async (req: Request, res:Response, next: 
 	res.status(200).json(res.advancedResults);   
 })
 
-// @desc    Get a user
+// @desc    Get a talent
 // @route   GET /api/v1/talents/:id
 // @access  Private/Superadmin/Admin
 export const getTalent = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
