@@ -7,6 +7,7 @@ import userRoutes from './routers/user.router'
 import languageRoutes from './routers/language.router';
 import educationRoutes from './routers/education.router';
 import interviewRoutes from './routers/interview.router';
+import preselectRoutes from './routers/preselect.router';
 import skillRoutes from './routers/skill.router';
 
 // create router
@@ -19,6 +20,7 @@ router.use('/languages', languageRoutes);
 router.use('/businesses', businessRoutes);
 router.use('/education', educationRoutes);
 router.use('/interviews', interviewRoutes);
+router.use('/preselects', preselectRoutes);
 router.use('/skills', skillRoutes);
 
 router.get('/', (req: Request, res: Response, next: NextFunction) => {
