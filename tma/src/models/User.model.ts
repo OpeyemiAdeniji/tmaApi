@@ -12,7 +12,7 @@ interface IUserModel extends mongoose.Model<IUserDoc> {
 // interface that describes the properties that the Doc has
 interface IUserDoc extends mongoose.Document{
 
-
+    
     userId: mongoose.Schema.Types.ObjectId | any;
     firstName: string;
     lastName: string;
