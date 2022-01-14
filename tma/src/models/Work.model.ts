@@ -36,12 +36,14 @@ const WorkSchema = new mongoose.Schema(
     {
         companyName: {
             type: String,
-            required: [true, 'please enter your company"s name']
+            required: [true, 'company name is required']
         },
+
         companyUrl: {
             type: String,
-            required: [true, 'please enter your company"s website url or linkedin url']
+            required: [true, 'company url is required']
         },
+
         role: {
             type: String
         },
@@ -69,7 +71,7 @@ const WorkSchema = new mongoose.Schema(
     },
 
     {
-        timestamps: true,,
+        timestamps: true,
         versionKey: '_version',
         toJSON: {
             transform(doc, ret) {
@@ -81,8 +83,8 @@ const WorkSchema = new mongoose.Schema(
 
 WorkSchema.set('toJSON', {getters: true, virtuals: true});
 
-WorkSchema.pre<IWorkModel>('save', async function (next) {
-    this.slug = slugify(this.CompanyName, { lower: true });
+WorkSchema.pre<IWorkDoc>('save', async function (next) {
+    this.slug = slugify(this.companyName, { lower: true });
     next();
 });
 

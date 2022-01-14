@@ -8,22 +8,22 @@ import { userLogger } from '../config/wiston';
 // models
 import Skill from '../models/Skill.model';
 
-//  @desc   Get all skills
-//  @route  GET /api/tma/v1/skills
-//  @access Private superadmin/admin
-export const getAllSkills = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+// @desc           Get all Skills
+// @route          GET /api/tma/v1/skills
+// @access         Private
+export const getSkills = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     res.status(200).json(res.advancedResults);
 });
 
-//  @desc   Get a skills
-//  @route  GET /api/tma/v1/skills/:id
-//  @access Private superadmin/admin
+// @desc           Get all Skills
+// @route          GET /api/tma/v1/skills
+// @access         Private/Superadmin/Admin
 export const getSkill = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     
     const skill = await Skill.findById(req.params.id);
 
     if (!skill) {
-        return next(new ErrorResponse('Error', 404, ['cannot find skill']))
+        return next(new ErrorResponse('Error', 404, ['skill does not exist']))
     }
 
     res.status(200).json({
@@ -34,9 +34,3 @@ export const getSkill = asyncHandler(async (req: Request, res: Response, next: N
         status: 200
     });
 });
-
-//  @desc   Get all skills
-//  @route  GET /api/tma/v1/skills
-//  @access Private superadmin/admin
-
-

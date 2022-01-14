@@ -5,7 +5,6 @@ import slugify from 'slugify'
 interface IFrameworkModel extends mongoose.Model<IFrameworkDoc> {
 
     // functions
-    getPayment(id: ObjectId): IFrameworkDoc;
 
 }
 
@@ -13,7 +12,8 @@ interface IFrameworkModel extends mongoose.Model<IFrameworkDoc> {
 interface IFrameworkDoc extends mongoose.Document{
     name: string;
     description: string;
-    inDemand: Boolean
+    inDemand: Boolean;
+    slug: string
 
     // timestamps
     createdAt: string;
@@ -23,7 +23,6 @@ interface IFrameworkDoc extends mongoose.Document{
     id: mongoose.Schema.Types.ObjectId;
 
       // functions
-      getPayment(id: ObjectId): IFrameworkDoc;
 
 }
 
@@ -32,15 +31,18 @@ const FrameworkSchema = new mongoose.Schema (
     {
         name: {
             type: String,
-            required: [true, 'please enter your framework']
         },
+
         description: {
             type: String
         },
+
         inDemand: {
             type: Boolean,
             default: false
-        }
+        },
+
+        slug: String
     },
 
     {
@@ -61,10 +63,6 @@ FrameworkSchema.pre<IFrameworkDoc>('save', async function (next) {
     next();
 });
 
-FrameworkSchema.statics.getPayment = function (id) {
-    return this.findById(id);
-};
+const Framework = mongoose.model<IFrameworkDoc, IFrameworkModel>('Framework', FrameworkSchema);
 
-const framework = mongoose.model<IFrameworkDoc, IFrameworkModel>('Framework', FrameworkSchema);
-
-export default framework;
+export default Framework;

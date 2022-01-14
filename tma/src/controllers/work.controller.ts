@@ -7,9 +7,9 @@ dayjs.extend(customParse)
 
 import Work from "../models/Work.model";
 
-// @desc    Get All Works 
-// @ route  GET /api/tma/v1/works
-// @ access Private
+// @desc           Get all Works
+// @route          GET /api/tma/v1/works
+// @access         Private
 export const getWorks = asyncHandler(async(req: Request, res: Response, next: NextFunction) => {
     res.status(200).json(res.advancedResults);
 })

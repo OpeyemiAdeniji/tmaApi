@@ -6,14 +6,13 @@ interface ICloudModel extends mongoose.Model<ICloudDoc> {
 
     // functions
     
-    findByName(name: String): ICloudDoc;
-
 }
 
 // interface that describes the properties that the Doc
 interface ICloudDoc extends mongoose.Document{
     name: string;
     description: string;
+    slug: string;
 
     // timestamps
     createdAt: string;
@@ -23,7 +22,6 @@ interface ICloudDoc extends mongoose.Document{
     id: mongoose.Schema.Types.ObjectId;
 
       // functions
-      findByName(name: String): ICloudDoc;
 }
 
 const CloudSchema = new mongoose.Schema (
@@ -33,6 +31,7 @@ const CloudSchema = new mongoose.Schema (
             type: String,
             required: [true, 'please enter your cloud']
         },
+
         description: {
             type: String
         }
@@ -56,10 +55,6 @@ CloudSchema.pre<ICloudDoc>('save', async function (next) {
     next();
 });
 
-CloudSchema.statics.getPayment = function (id) {
-    return this.findById(id);
-};
+const Cloud = mongoose.model<ICloudDoc, ICloudModel>('Cloud', CloudSchema);
 
-const cloud = mongoose.model<ICloudDoc, ICloudModel>('Cloud', CloudSchema);
-
-export default cloud;
+export default Cloud;

@@ -5,7 +5,6 @@ import slugify from 'slugify'
 interface IIndustryModel extends mongoose.Model<IIndustryDoc> {
 
     // functions
-    getPayment(id: ObjectId): IIndustryDoc;
 
 }
 
@@ -13,6 +12,7 @@ interface IIndustryModel extends mongoose.Model<IIndustryDoc> {
 interface IIndustryDoc extends mongoose.Document{
     name: string;
     description: string;
+    slug: string
 
     // timestamps
     createdAt: string;
@@ -22,7 +22,6 @@ interface IIndustryDoc extends mongoose.Document{
     id: mongoose.Schema.Types.ObjectId;
 
       // functions
-      getPayment(id: ObjectId): IIndustryDoc;
 
       
 }
@@ -34,6 +33,7 @@ const IndustrySchema = new mongoose.Schema (
             type: String,
             required: [true, 'please enter your cloud']
         },
+        
         description: {
             type: String
         }
@@ -57,10 +57,6 @@ IndustrySchema.pre<IIndustryDoc>('save', async function (next) {
     next();
 });
 
-IndustrySchema.statics.getPayment = function (id) {
-    return this.findById(id);
-};
+const Industry = mongoose.model<IIndustryDoc, IIndustryModel>('Industry', IndustrySchema);
 
-const industry = mongoose.model<IIndustryDoc, IIndustryModel>('Industry', IndustrySchema);
-
-export default industry;
+export default Industry;
