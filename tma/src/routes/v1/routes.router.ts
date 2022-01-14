@@ -4,6 +4,9 @@ import express, { Request, Response, NextFunction } from 'express';
 import businessRoutes from './routers/business.router'
 import talentRoutes from './routers/talent.router'
 import userRoutes from './routers/user.router'
+import languageRoutes from './routers/language.router';
+import educationRoutes from './routers/education.router';
+import skillRoutes from './routers/skill.router';
 
 // create router
 const router = express.Router();
@@ -12,6 +15,9 @@ const router = express.Router();
 router.use('/users', userRoutes);
 router.use('/talents', talentRoutes);
 router.use('/businesses', businessRoutes);
+router.use('/languages', languageRoutes);
+router.use('/education', educationRoutes);
+router.use('/skills', skillRoutes);
 
 router.get('/', (req: Request, res: Response, next: NextFunction) => {
 

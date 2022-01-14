@@ -306,8 +306,7 @@ export const addManager = asyncHandler(async (req: Request, res:Response, next: 
 // @route       PUT /api/identity/v1/users/accept-invite
 // @access      Private
 export const acceptInvite = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
-
-
+	
 	const { token } = req.body;
 
 	if(!token){

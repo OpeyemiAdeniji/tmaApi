@@ -89,7 +89,7 @@ app.get('/', (req: Request, res: Response, next: NextFunction) => {
 
 });
 
-app.use('/api/course/v1', v1Routes);
+app.use('/api/tma/v1', v1Routes);
 
 // mount error handlers. This must be after you mount routers
 app.use(errorHandler);

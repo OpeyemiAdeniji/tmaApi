@@ -1,4 +1,4 @@
-import mongoose, { ObjectId } from 'mongoose'
+    import mongoose, { ObjectId } from 'mongoose'
 import slugify from 'slugify'
 
 // interface that describes the properties the model has
@@ -16,7 +16,21 @@ interface ITalentDoc extends mongoose.Document{
 
     firstName: string;
     lastName: string;
-    middleName: string;
+    middleName: string; 
+    gender: string,
+    phoneNumber: string,
+    address: string,
+    level: string,
+    band: number,
+    type: string,
+    currentSalary: string,
+    employmentStatus: string,
+    email: string,
+    linkedinUrl: string,
+    githubUrl: string,
+    dribbleUrl: string,
+    portfolioUrl: string,
+    resumeUrl: string,
     slug: string;
 
     businesses: Array<mongoose.Schema.Types.ObjectId | any>;
@@ -55,6 +69,78 @@ const TalentSchema = new mongoose.Schema (
             type: String
         },
 
+        gender: {
+            type: String,                            
+            enum: ['male', 'female'],
+            required: [true, 'gender is required']
+        },
+
+        phoneNumber: {
+            type: String
+        },
+
+        address: {
+            type: String
+        },
+
+        level: {
+            type: String,
+            enum: ['junior', 'intermediate', 'expert'],
+            required: [true, 'level is required']
+        },
+        
+        band: {
+            type: Number
+        },
+
+        type: {
+            type: String,
+            enum: ['frontend', 'backend']
+        },
+
+        currentSalary: {
+            type: String
+        },
+
+        employmentStatus: {
+            type: String
+        },
+
+        email: {
+			type: String,
+			required: [true, 'email is required'],
+			unique: [true, 'email already exist'],
+			match: [
+				/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+				'a valid email is required',
+			],
+		},
+
+        linkedinUrl: {
+            type: String,
+            required: [true, 'linkedinUrl is required']
+        },
+
+        githubUrl: {
+            type: String,
+            required: [true, 'githubUrl is required']
+        },
+
+        dribbleUrl: {
+            type: String,
+            required: [true, 'dribbleUrl is required']
+        },
+
+        portfolioUrl: {
+            type: String,
+            required: [true, 'portfolioUrl is required']
+        },
+
+        resumeUrl: {
+            type: String,
+            required: [true, 'resumeUrl is required']
+        },
+
         slug: String,
 
         businesses: [
@@ -64,12 +150,10 @@ const TalentSchema = new mongoose.Schema (
             }
         ],
 
-        user: [
-            {
+        user: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'User'
             }
-        ]
 
     },
 

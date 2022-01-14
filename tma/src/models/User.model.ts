@@ -12,7 +12,7 @@ interface IUserModel extends mongoose.Model<IUserDoc> {
 // interface that describes the properties that the Doc has
 interface IUserDoc extends mongoose.Document{
 
-
+    
     userId: mongoose.Schema.Types.ObjectId | any;
     firstName: string;
     lastName: string;
@@ -21,6 +21,10 @@ interface IUserDoc extends mongoose.Document{
     phoneNumber: string;
     userType: string;
     isActive: Boolean;
+
+    talents: Array<mongoose.Schema.Types.ObjectId | any>,
+    educations: Array<mongoose.Schema.Types.ObjectId | any>,
+    works: Array<mongoose.Schema.Types.ObjectId | any>
 
     // time stamps
     createdAt: string;
@@ -74,7 +78,28 @@ const UserSchema = new mongoose.Schema (
 
         isActive: {
 			type: Boolean
-		}
+		},
+
+        talents: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Talent'
+            }
+        ],
+
+        educations: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Education'
+            }
+        ],
+
+        works: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Work'
+            }
+        ]
 
     },
 
