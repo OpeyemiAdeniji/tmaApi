@@ -24,9 +24,9 @@ export const getBusinesses = asyncHandler(async (req: Request, res:Response, nex
 	res.status(200).json(res.advancedResults);   
 })
 
-// @desc    Get a business
-// @route   GET /api/tma/v1/businesses/get-business/:id
-// @access  Private/Superadmin/Admin
+// @desc           Get a businesses
+// @route          GET /api/tma/v1/businesses
+// @access         Private/Superadmin/Admin
 export const getBusiness = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
 	
 	const business = await Business.findOne({ user: req.params.id }).populate([{ path: 'user' }])
@@ -52,9 +52,9 @@ export const getBusiness = asyncHandler(async (req: Request, res:Response, next:
 })
 
 
-// @desc    Get a third party org.
-// @route   GET /api/tma/v1/businesses/get-organization/:id
-// @access  Private/Superadmin/Admin
+// @desc    	Get a third party org.
+// @route   	GET /api/v1/businesses/get-organization/:id
+// @access  	Private/Superadmin/Admin
 export const getOrganization = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
 	
 	const business = await Business.findOne({ user: req.params.id }).populate([{ path: 'user' }])

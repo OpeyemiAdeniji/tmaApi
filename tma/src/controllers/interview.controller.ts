@@ -17,7 +17,7 @@ export const getInterviews = asyncHandler(async (req: Request, res: Response, ne
 // @access         Private/Superadmin/Admin
 export const getInterview = asyncHandler(async (req: Request, res: Response, next: NextFunction)=> {
 
-    const interview = await Interview.findOne({ talent: req.params.id}).populate([ {path: 'talent'} ]);
+    const interview = await Interview.findById(req.params.id).populate([ {path: 'talent'} ]);
 
     if (!interview){
         return next(new ErrorResponse('Error!', 404, ['interview does not exist']))

@@ -15,15 +15,15 @@ dayjs.extend(customparse);
 import Education from '../models/Education.model';
 import User from '../models/User.model';
 
-// @desc           Get all educations
+// @desc           Get Educations
 // @route          GET /api/tma/v1/educations
 // @access         Private
 export const getEducations = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     res.status(200).json(res.advancedResults);
 });
 
-// @desc           Get an education
-// @route          GET /api/tma/v1/educations
+// @desc           Get an Education
+// @route          GET /api/tma/v1/education/.:id
 // @access         Private/Superadmin/admin
 export const getEducation = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     

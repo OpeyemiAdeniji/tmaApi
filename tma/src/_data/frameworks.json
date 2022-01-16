@@ -1,0 +1,235 @@
+[
+    {
+        "name": "AngularJS",
+        "description": "Javascript frontend Framework"
+    },
+    {
+        "name": "Ember",
+        "description": "Javascript frontend Framework"
+    },
+    {
+        "name": "jQuery",
+        "description": "Javascript frontend Framework"
+    },
+    {
+        "name": "VueJs",
+        "description": "Javascript frontend Framework"
+    },
+    {
+        "name": "NextJs",
+        "description": "Javascript frontend Framework"
+    },
+    {
+        "name": "ReactJs",
+        "description": "Javascript frontend Framework"
+    },
+    {
+        "name": "SvelteJs",
+        "description": "Javascript frontend Framework"
+    },
+    {
+        "name": "GatsbyJs",
+        "description": "Javascript frontend Framework"
+    },
+    {
+        "name": "NuxtJs",
+        "description": "Javascript frontend Framework"
+    },
+    {
+        "name": "BootStrap",
+        "description": "Javascript frontend Framework"
+    },
+    {
+        "name": "Ember",
+        "description": "Javascript frontend Framework"
+    },
+    {
+        "name": "NodeJs",
+        "description": "Javascript backend Framework"
+    },
+    {
+        "name": "Spring Boot",
+        "description": "Javascript backend Framework"
+    },
+    {
+        "name": "Express Js",
+        "description": "Javascript backend Framework"
+    },
+    {
+        "name": "Micronaut",
+        "description": "Javascript backend Framework"
+    },
+    {
+        "name": "Mocha Js",
+        "description": "Javascript testing Framework"
+    },
+    {
+        "name": "Jasmine",
+        "description": "Javascript testing Framework"
+    },
+    {
+        "name": "Jest",
+        "description": "Javascript testing Framework"
+    },
+    {
+        "name": "Bottle",
+        "description": "Python Framework"
+    },
+    {
+        "name": "CherryPy",
+        "description": "Python Framework"
+    },
+    {
+        "name": "AIOHTTP",
+        "description": "Python Framework"
+    },
+    {
+        "name": "Bottle",
+        "description": "Python Framework"
+    },
+    {
+        "name": "Dash",
+        "description": "Python Framework"
+    },
+    {
+        "name": "Falcon",
+        "description": "Python Framework"
+    },
+    {
+        "name": "Flask",
+        "description": "Python Framework"
+    },
+    {
+        "name": "Giotto",
+        "description": "Python Framework"
+    },
+    {
+        "name": "Django",
+        "description": "Python Framework"
+    },
+    {
+        "name": "Growler",
+        "description": "Python Framework"
+    },
+    {
+        "name": "Uvloop",
+        "description": "Python Framework"
+    },
+    {
+        "name": "Sanic",
+        "description": "Python Framework"
+    },
+    {
+        "name": "MorePath",
+        "description": "Python Framework"
+    },
+    {
+        "name": "Picnic",
+        "description": "Python Framework"
+    },
+    {
+        "name": "Pyramid",
+        "description": "Python Framework"
+    },
+    {
+        "name": "TurboGears",
+        "description": "Python Framework"
+    },
+    {
+        "name": "Web2py",
+        "description": "Python Framework"
+    },
+    {
+        "name": "Hug",
+        "description": "Python Framework"
+    },
+    {
+        "name": "CubicWeb",
+        "description": "Python Framework"
+    },
+    {
+        "name": "Swashbuckle",
+        "description": ".Net core Framework"
+    },
+    {
+        "name": "Polly",
+        "description": ".Net core Framework"
+    },
+    {
+        "name": "AutoMapper",
+        "description": ".Net core Framework"
+    },
+    {
+        "name": "Diagnostics.HealthChecks",
+        "description": ".Net core Framework"
+    },
+    {
+        "name": "MAilKit",
+        "description": ".Net core Framework"
+    },
+    {
+        "name": "CacheManager",
+        "description": ".Net core Framework"
+    },
+    {
+        "name": "Dapper",
+        "description": ".Net core Framework"
+    },
+    {
+        "name": "Ocelot",
+        "description": ".Net core Framework"
+    },
+    {
+        "name": "NLog",
+        "description": ".Net core Framework"
+    },
+    {
+        "name": "Smidge",
+        "description": ".Net core Framework"
+    },
+    {
+        "name": "Bcrypt.net",
+        "description": ".Net core Framework"
+    },
+    {
+        "name": "FluentEmail",
+        "description": ".Net core Framework"
+    },
+    {
+        "name": "UnitConversion",
+        "description": ".Net core Framework"
+    },
+    {
+        "name": "FashReport",
+        "description": ".Net core Framework"
+    },
+    {
+        "name": "AutoComplete",
+        "description": ".Net core Framework"
+    },
+    {
+        "name": "AppMetrics",
+        "description": ".Net core Framework"
+    },
+    {
+        "name": "SharpCompress",
+        "description": ".Net core Framework"
+    },
+    {
+        "name": "NopCommerce",
+        "description": ".Net core Framework"
+    },
+    {
+        "name": "Cscore",
+        "description": ".Net core Framework"
+    },
+    {
+        "name": "NetOffice",
+        "description": ".Net core Framework"
+    },
+    {
+        "name": "SignalIR",
+        "description": ".Net core Framework"
+    }
+    
+]
