@@ -6,7 +6,7 @@ interface ITalentModel extends mongoose.Model<ITalentDoc> {
 
     // functions
     findByName(name: string): ITalentDoc;
-    getTalentName(id: ObjectId): ITalentDoc;
+    getTalentName(id: any): ITalentDoc;
     getAllTalents(): any
 
 }
@@ -45,7 +45,7 @@ interface ITalentDoc extends mongoose.Document{
 
     // functions
     findByName(name: string): ITalentDoc;
-    getTalentName(id: ObjectId): ITalentDoc;
+    getTalentName(id: any): ITalentDoc;
     getAllTalents(): any
 
 
@@ -71,8 +71,7 @@ const TalentSchema = new mongoose.Schema (
 
         gender: {
             type: String,                            
-            enum: ['male', 'female'],
-            required: [true, 'gender is required']
+            enum: ['male', 'female']
         },
 
         phoneNumber: {
@@ -95,7 +94,7 @@ const TalentSchema = new mongoose.Schema (
 
         type: {
             type: String,
-            enum: ['frontend', 'backend']
+            enum: ['fullstack', 'mobile', 'backend', 'frontend', 'qa-analyst']
         },
 
         currentSalary: {
@@ -107,38 +106,31 @@ const TalentSchema = new mongoose.Schema (
         },
 
         email: {
-			type: String,
-			required: [true, 'email is required'],
-			unique: [true, 'email already exist'],
-			match: [
-				/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-				'a valid email is required',
-			],
+			type: String
 		},
 
         linkedinUrl: {
             type: String,
-            required: [true, 'linkedinUrl is required']
+            required: [true, 'linkedin url is required']
         },
 
         githubUrl: {
             type: String,
-            required: [true, 'githubUrl is required']
+            required: [true, 'github url is required']
         },
 
         dribbleUrl: {
             type: String,
-            required: [true, 'dribbleUrl is required']
+            required: [true, 'dribble url is required']
         },
 
         portfolioUrl: {
-            type: String,
-            required: [true, 'portfolioUrl is required']
+            type: String
         },
 
         resumeUrl: {
             type: String,
-            required: [true, 'resumeUrl is required']
+            required: [true, 'resume url is required']
         },
 
         slug: String,
@@ -151,9 +143,9 @@ const TalentSchema = new mongoose.Schema (
         ],
 
         user: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'User'
-            }
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }
 
     },
 

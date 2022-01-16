@@ -10,11 +10,13 @@ interface IInterviewModel extends mongoose.Model<IInterviewDoc>{
 // interface that describes the properties the Doc has
 interface IInterviewDoc extends mongoose.Document{
 
-    scheduledAt: Date;
-    startTime: Date;
+    scheduledAt: Date | string; 
+    startTime: Date | string;
     duration: string;
     type: string;
+    location: string;
     address: string;
+    interviewUrl: string;
     isActive: boolean,
     slug: string,
 
@@ -48,10 +50,14 @@ const InterviewSchema = new mongoose.Schema(
         type: {
             type: String,
             enum: ['virtual', 'on-site'],
-            required: [true, 'please select an interiew type']
+            required: [true, 'interview type is required']
         },
 
         address: {
+            type: String
+        },
+
+        interviewUrl: {
             type: String
         },
 
@@ -91,7 +97,6 @@ const InterviewSchema = new mongoose.Schema(
 InterviewSchema.set('toJSON', { getters: true, virtuals: true });
 
 InterviewSchema.pre<IInterviewDoc>('save', async function(next){
-    this.slug = slugify('interview', { lower: true });
     next();
 })
 

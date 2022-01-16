@@ -36,7 +36,9 @@ const IndustrySchema = new mongoose.Schema (
         
         description: {
             type: String
-        }
+        },
+
+        slug: String
     },
 
     {

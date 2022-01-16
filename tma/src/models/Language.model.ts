@@ -56,7 +56,7 @@ const LanguageSchema = new mongoose.Schema(
 
 LanguageSchema.set('toJSON', { getters: true, virtuals: true });
 
-LanguageSchema.pre('save', async function (next) {
+LanguageSchema.pre<ILanguageDoc>('save', async function (next) {
     this.slug = slugify(this.name, { lower: true });
     next();
 });

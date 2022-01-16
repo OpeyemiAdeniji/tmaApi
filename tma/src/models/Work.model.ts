@@ -14,12 +14,13 @@ interface IWorkDoc extends mongoose.Document{
     companyUrl: string;
     description: string;
     role: string;
-    startDate: string;
-    endDate: string;
+    startDate: Date | string;
+    endDate: Date | string;
     isCurrent: Boolean;
     slug: string;
 
     user: mongoose.Schema.Types.ObjectId | any;
+    talent: mongoose.Schema.Types.ObjectId | any;
 
     // timestamps
     createdAt: string;
@@ -45,17 +46,22 @@ const WorkSchema = new mongoose.Schema(
         },
 
         role: {
-            type: String
+            type: String,
+            required: [true, 'role is required']
         },
+
         description: {
             type: String
         },
+
         startDate: {
-            type: String
+            type: Date
         },
+
         endDate: {
-            type: String
+            type: Date
         },
+
         isCurrent: {
             type: Boolean,
             default: false
@@ -66,6 +72,11 @@ const WorkSchema = new mongoose.Schema(
         user: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'
+        },
+
+        talent: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Talent'
         },
 
     },

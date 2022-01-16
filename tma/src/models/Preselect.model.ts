@@ -1,3 +1,4 @@
+import crypto from 'crypto'
 import mongoose, { ObjectId } from 'mongoose'
 import slugify from 'slugify'
 
@@ -6,16 +7,20 @@ interface IPreselectModel extends mongoose.Model<IPreselectDoc> {
 
     // functions
     getAllPreselected(): any
+    getPreselectToken(): any
 }
 
 // interface that describes the properties the Doc has
 interface IPreselectDoc extends mongoose.Document{
 
     description: string,
-    slug: string
+    slug: string;
+
+    preselectToken: string | undefined;
+    preselectTokenExpire: Date | string | undefined;
 
     talents: Array<mongoose.Schema.Types.ObjectId | any>;
-    businesses: Array<mongoose.Schema.Types.ObjectId | any>;
+    business: mongoose.Schema.Types.ObjectId | any;
     createdBy: mongoose.Schema.Types.ObjectId | any;
 
     // timestamps
@@ -27,6 +32,7 @@ interface IPreselectDoc extends mongoose.Document{
 
     // functions
     getAllPreselected(): any
+    getPreselectToken(): any
 }
 
 const PreselectSchema = new mongoose.Schema(
@@ -44,22 +50,20 @@ const PreselectSchema = new mongoose.Schema(
             }
         ],
      
-        businesses: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Business'
-            }
-        ],
-
-        createdBy: {
+        business: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Business'
         },
 
+        createdBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        },
+
         slug: String,
         
-        preselectedToken: String,
-        preselectedTokenExpire: Date
+        preselectToken: String,
+        preselectTokenExpire: Date
     },
 
     {
@@ -83,6 +87,23 @@ PreselectSchema.pre<IPreselectDoc>('save', async function(next){
 PreselectSchema.statics.getAllPreselected = () => {
     return Preselect.find({});
 }
+
+//Generate and hash activation token
+PreselectSchema.methods.getPreselectToken = function () {
+	// Generate token
+	const token = crypto.randomBytes(20).toString('hex');
+
+	// Hash the token and set to preselectToken field
+	this.preselectToken = crypto
+		.createHash('sha256')
+		.update(token)
+		.digest('hex');
+
+	// Set expire
+	this.preselectTokenExpire = Date.now() + 4320 * 60 * 1000; // 72 hours 
+
+	return token;
+};
 
 // define the model constant
 const Preselect = mongoose.model<IPreselectDoc, IPreselectModel>('Preselect', PreselectSchema);

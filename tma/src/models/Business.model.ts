@@ -23,7 +23,9 @@ interface IBusinessDoc extends mongoose.Document{
     slug: string;
 
     talents: Array<mongoose.Schema.Types.ObjectId | any>;
-    user: mongoose.Schema.Types.ObjectId | any
+    user: mongoose.Schema.Types.ObjectId | any;
+    interviews: Array<mongoose.Schema.Types.ObjectId | any>;
+    preselects: Array<mongoose.Schema.Types.ObjectId | any>;
 
     // time stamps
     createdAt: string;
@@ -75,11 +77,12 @@ const BusinessSchema = new mongoose.Schema (
 
         address: {
             type: String,
-            required: [true, 'name is required']
+            required: [true, 'address is required']
         },
 
         businessType: {
-            type: String
+            type: String,
+            enum: ['business', 'third-party']
         },
 
         slug: String,
@@ -94,7 +97,21 @@ const BusinessSchema = new mongoose.Schema (
         user: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'
-        }
+        },
+
+        interviews: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Interview'
+            }
+        ],
+
+        preselects: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Preselect'
+            }
+        ],
 
     },
 

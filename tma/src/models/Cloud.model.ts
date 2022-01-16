@@ -34,7 +34,9 @@ const CloudSchema = new mongoose.Schema (
 
         description: {
             type: String
-        }
+        },
+        
+        slug: String
     },
 
     {

@@ -12,17 +12,16 @@ interface IUserModel extends mongoose.Model<IUserDoc> {
 // interface that describes the properties that the Doc has
 interface IUserDoc extends mongoose.Document{
 
-    
     userId: mongoose.Schema.Types.ObjectId | any;
     firstName: string;
     lastName: string;
-	middleName: string;
     email: string;
     phoneNumber: string;
     userType: string;
     isActive: Boolean;
 
-    talents: Array<mongoose.Schema.Types.ObjectId | any>,
+    talent: mongoose.Schema.Types.ObjectId | any;
+    skill: mongoose.Schema.Types.ObjectId | any;
     educations: Array<mongoose.Schema.Types.ObjectId | any>,
     works: Array<mongoose.Schema.Types.ObjectId | any>
 
@@ -44,12 +43,7 @@ const UserSchema = new mongoose.Schema (
     {
 
         userId: {
-            type: mongoose.Schema.Types.ObjectId,
-            required: true
-        },
-
-        recipientCode: {
-            type: String,
+            type: mongoose.Schema.Types.ObjectId
         },
 
         firstName: {
@@ -57,10 +51,6 @@ const UserSchema = new mongoose.Schema (
         },
 
         lastName: {
-            type: String,
-        },
-
-        middleName: {
             type: String,
         },
 
@@ -80,12 +70,15 @@ const UserSchema = new mongoose.Schema (
 			type: Boolean
 		},
 
-        talents: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Talent'
-            }
-        ],
+        talents: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Talent'
+        },
+
+        skill: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Skill'
+        },
 
         educations: [
             {
@@ -117,7 +110,7 @@ const UserSchema = new mongoose.Schema (
 
 UserSchema.set('toJSON', { getters: true, virtuals: true });
 
-UserSchema.pre('save', async function(next){
+UserSchema.pre<IUserDoc>('save', async function(next){
     next();
 });
 

@@ -14,12 +14,13 @@ interface IEducationModel extends mongoose.Model<IEducationDoc> {
 interface IEducationDoc extends mongoose.Document{
     institutionName: string;
     degree: string;
-    startDate: string;
-    endDate: string;
+    startDate: Date | string;
+    endDate: Date | string;
     isCurrent: Boolean;
     slug: string;
 
     user: mongoose.Schema.Types.ObjectId | any;
+    talent: mongoose.Schema.Types.ObjectId | any;
 
     // timestamps
     createdAt: string;
@@ -37,7 +38,7 @@ const EducationSchema = new mongoose.Schema(
     {
         institutionName: {
             type: String,
-            required: [true, 'Institution name is required']
+            required: [true, 'institution name is required']
         },
         
         degree: {
@@ -46,13 +47,11 @@ const EducationSchema = new mongoose.Schema(
         },
 
         startDate: {
-            type: String,
-            required: [true, 'start date is required']
+            type: Date,
         },
 
         endDate: {
-            type: String,
-            required: [true, 'end date is required']
+            type: Date,
         },
 
         isCurrent: {
@@ -65,7 +64,13 @@ const EducationSchema = new mongoose.Schema(
         user: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'
+        },
+
+        talent: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Talent'
         }
+
     },
     {
         timestamps: true,
@@ -80,7 +85,7 @@ const EducationSchema = new mongoose.Schema(
 
 EducationSchema.set('toJSON', { getters: true, virtuals: true });
 
-EducationSchema.pre('save', async function (next) {
+EducationSchema.pre<IEducationDoc>('save', async function (next) {
     this.slug = slugify(this.institutionName, { lower: true });
     next();
 });

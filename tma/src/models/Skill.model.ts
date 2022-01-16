@@ -13,12 +13,14 @@ interface ISkillDoc extends mongoose.Document{
 
     primaryLanguage: string;
     secondaryLanguage: string;
-    otherLanguages: Array<object>;
     primaryFramework: string;
     secondaryFramework: string;
     primaryCloud: string;
     secondaryCloud: string;
     slug: string;
+
+    languages: Array<mongoose.Schema.Types.ObjectId | any>;
+    frameworks: Array<mongoose.Schema.Types.ObjectId | any>;
 
     // timestamps
     createdAt: string;
