@@ -11,6 +11,7 @@ interface ICloudModel extends mongoose.Model<ICloudDoc> {
 // interface that describes the properties that the Doc
 interface ICloudDoc extends mongoose.Document{
     name: string;
+    code: string;
     description: string;
     slug: string;
 
@@ -30,6 +31,10 @@ const CloudSchema = new mongoose.Schema (
         name: {
             type: String,
             required: [true, 'please enter your cloud']
+        },
+
+        code: {
+            type: String,
         },
 
         description: {

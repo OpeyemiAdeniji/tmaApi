@@ -1,6 +1,6 @@
 [
     {
-        "name": "AngularJS",
+        "name": "Angular JS",
         "description": "Javascript frontend Framework"
     },
     {
@@ -12,27 +12,27 @@
         "description": "Javascript frontend Framework"
     },
     {
-        "name": "VueJs",
+        "name": "Vue Js",
         "description": "Javascript frontend Framework"
     },
     {
-        "name": "NextJs",
+        "name": "Next Js",
         "description": "Javascript frontend Framework"
     },
     {
-        "name": "ReactJs",
+        "name": "React Js",
         "description": "Javascript frontend Framework"
     },
     {
-        "name": "SvelteJs",
+        "name": "Svelte Js",
         "description": "Javascript frontend Framework"
     },
     {
-        "name": "GatsbyJs",
+        "name": "Gatsby Js",
         "description": "Javascript frontend Framework"
     },
     {
-        "name": "NuxtJs",
+        "name": "Nuxt Js",
         "description": "Javascript frontend Framework"
     },
     {
@@ -44,7 +44,7 @@
         "description": "Javascript frontend Framework"
     },
     {
-        "name": "NodeJs",
+        "name": "Node Js",
         "description": "Javascript backend Framework"
     },
     {
@@ -76,7 +76,7 @@
         "description": "Python Framework"
     },
     {
-        "name": "CherryPy",
+        "name": "Cherry Py",
         "description": "Python Framework"
     },
     {

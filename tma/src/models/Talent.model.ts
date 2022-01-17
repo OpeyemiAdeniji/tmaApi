@@ -19,11 +19,12 @@ interface ITalentDoc extends mongoose.Document{
     middleName: string; 
     gender: string,
     phoneNumber: string,
+    location: string,
     address: string,
     level: string,
     band: number,
     type: string,
-    currentSalary: string,
+    currentSalary: number,
     employmentStatus: string,
     email: string,
     linkedinUrl: string,
@@ -34,7 +35,10 @@ interface ITalentDoc extends mongoose.Document{
     slug: string;
 
     businesses: Array<mongoose.Schema.Types.ObjectId | any>;
-    user: mongoose.Schema.Types.ObjectId | any
+    user: mongoose.Schema.Types.ObjectId | any;
+    skill: mongoose.Schema.Types.ObjectId | any;
+    educations: Array<mongoose.Schema.Types.ObjectId | any>,
+    works: Array<mongoose.Schema.Types.ObjectId | any>
 
     // time stamps
     createdAt: string;
@@ -78,6 +82,10 @@ const TalentSchema = new mongoose.Schema (
             type: String
         },
 
+        location: {
+            type: String
+        },
+
         address: {
             type: String
         },
@@ -98,7 +106,7 @@ const TalentSchema = new mongoose.Schema (
         },
 
         currentSalary: {
-            type: String
+            type: Number
         },
 
         employmentStatus: {
@@ -116,12 +124,10 @@ const TalentSchema = new mongoose.Schema (
 
         githubUrl: {
             type: String,
-            required: [true, 'github url is required']
         },
 
         dribbleUrl: {
             type: String,
-            required: [true, 'dribble url is required']
         },
 
         portfolioUrl: {
@@ -145,7 +151,27 @@ const TalentSchema = new mongoose.Schema (
         user: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'
-        }
+        },
+
+        skill: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Skill'
+        },
+
+        educations: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Education'
+            }
+        ],
+
+        works: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Work'
+            }
+        ]
+        
 
     },
 

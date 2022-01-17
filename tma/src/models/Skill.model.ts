@@ -21,6 +21,8 @@ interface ISkillDoc extends mongoose.Document{
 
     languages: Array<mongoose.Schema.Types.ObjectId | any>;
     frameworks: Array<mongoose.Schema.Types.ObjectId | any>;
+    clouds: Array<mongoose.Schema.Types.ObjectId | any>;
+    user: mongoose.Schema.Types.ObjectId | any;
 
     // timestamps
     createdAt: string;
@@ -37,28 +39,61 @@ interface ISkillDoc extends mongoose.Document{
 const SkillSchema = new mongoose.Schema(
     {
         primaryLanguage: {
-            type: String,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Language',
             required: [true, 'primary language is required']
         },
+
         secondaryLanguage: {
-            type: String,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Language',
             required: [true, 'secondary language is required']
         },
-        otherLanguage: [{
-            type: String,
-        }],
+
+        languages: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Language',
+            }
+        ],
+
         primaryFramework: {
-            type: String
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Framework',
+            required: [true, 'primary framework is required']
         },
+
         secondaryFramework: {
-            type: String
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Framework',
+            required: [true, 'secondary framework is required']
         },
+
+        frameworks: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Framework'
+            }
+        ],
+
         primaryCloud: {
-            type: String,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Cloud',
+            required: [true, 'primary cloud platform is required']
         },
+
         secondaryCloud: {
-            type: String
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Cloud',
+            required: [true, 'secondary cloud platform is required']
         },
+        
+        clouds: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Cloud'
+            }
+        ],
 
         slug: String,
 

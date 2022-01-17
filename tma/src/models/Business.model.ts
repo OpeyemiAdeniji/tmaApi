@@ -21,6 +21,7 @@ interface IBusinessDoc extends mongoose.Document{
     address: string;
     businessType: string;
     slug: string;
+    websiteUrl: string;
 
     talents: Array<mongoose.Schema.Types.ObjectId | any>;
     user: mongoose.Schema.Types.ObjectId | any;
@@ -83,6 +84,10 @@ const BusinessSchema = new mongoose.Schema (
         businessType: {
             type: String,
             enum: ['business', 'third-party']
+        },
+
+        websiteUrl: {
+            type: String,
         },
 
         slug: String,

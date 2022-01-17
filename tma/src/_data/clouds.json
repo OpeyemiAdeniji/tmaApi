@@ -1,86 +1,48 @@
 [
     {
-        "name": "AWS",
-        "description": "Amazon Web Services"
-    },
-    {
-        "name": "EC2",
-        "description": "Amazon Web Services"
-    },
-    {
-        "name": "S3",
-        "description": "Amazon Web Services"
-    },
-    {
-        "name": "Lambda",
-        "description": "Amazon Web Services"
-    },
-    {
-        "name": "RDS",
-        "description": "Amazon Web Services"
-    },
-    {
-        "name": "VPC",
-        "description": "Amazon Web Services"
-    },
-    {
-        "name": "LightSail",
-        "description": "Amazon Web Services"
-    },
-    {
-        "name": "SageMaker",
+        "name": "Amazon Web Services",
+"code": "AWS",
         "description": "Amazon Web Services"
     },
     {
         "name": "Microsoft Azure",
+"code": "MAS",
         "description": "Microsoft Azure Services"
     },
     {
         "name": "Google Cloud",
+"code": "GCS",
         "description": "Google Cloud Services"
     },
     {
         "name": "Alibaba Cloud",
-        "description": "Amazon cloud Services"
+"code": "ACS",
+        "description": "Alibaba cloud Services"
     },
     {
         "name": "IBM Cloud",
+"code": "ICS",
         "description": "IBM cloud Services"
     },
     {
-        "name": "Oracle",
+        "name": "Oracle Cloud",
+"code": "OCS",
         "description": "Oracle cloud Services"
     },
+    
     {
-        "name": "SaaS",
-        "description": "Oracle cloud Services"
-    },
-    {
-        "name": "PaaS",
-        "description": "Oracle cloud Services"
-    },
-    {
-        "name": "laaS",
-        "description": "Oracle cloud Services"
-    },
-    {
-        "name": "DaaS",
-        "description": "Oracle cloud Services"
-    },
-    {
-        "name": "Salesforce",
+        "name": "Salesforce Cloud",
+"code": "SWS",
         "description": "Salesforce Web Services"
     },
     {
-        "name": "SAP",
+        "name": "SaP Cloud",
+"code": "SAP",
         "description": "SaP Cloud Services"
     },
     {
         "name": "Rackspace Cloud",
-        "description": "Rackspace CloudServices"
-    },
-    {
-        "name": "VMWare",
-        "description": "VMWare Cloud Services"
+"code": "RCS",
+        "description": "Rackspace Cloud Services"
     }
 ]
