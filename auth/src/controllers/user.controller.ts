@@ -301,6 +301,275 @@ export const addManager = asyncHandler(async (req: Request, res:Response, next: 
 
 })
 
+// @desc        Add Talent
+// @route       POST /api/identity/v1/users/add-talent?invite=false
+// @access      Private
+export const addTalent = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+
+	const { firstName, lastName, email, phoneNumber, phoneCode, callback } = req.body;
+
+	const {invite} = req.query;
+
+	if(!callback){
+		return next(new ErrorResponse('Error', 400, ['invite callback url is required']));
+	}
+
+	// validate
+	if(!firstName){
+		return next(new ErrorResponse('Error', 400, ['first name is required']));
+	}
+
+	if(!lastName){
+		return next(new ErrorResponse('Error', 400, ['last name is required']));
+	}
+
+	if(!email){
+		return next(new ErrorResponse('Error', 400, ['email is required']));
+	}
+
+	const existing = await User.findOne({email: email});
+
+	if(!existing){
+		return next(new ErrorResponse('Error', 403, ['email is already existing']));
+	}
+
+	if(!phoneNumber){
+		return next(new ErrorResponse('Error', 400, ['phone number is required']));
+	}
+
+	if(!phoneCode){
+		return next(new ErrorResponse('Error', 400, ['phone code is required']));
+	}
+
+	if(!strIncludesEs6(phoneCode, '+')){
+        return next(new ErrorResponse('Error', 400, ['phone code is must include \'+\' sign']));
+    }
+
+	// format phone number
+	let phoneStr: string
+	if(strIncludesEs6(phoneCode, '_')){
+		phoneStr = phoneCode.subString(3);
+	}else{
+		phoneStr = phoneCode.subString(1)
+	}
+
+	// check if number exist
+	const phoneExists = await User.findOne({ phoneNumber: phoneStr + phoneNumber.substring(1)});
+	
+	if(phoneExists){
+		return next(new ErrorResponse('Error', 400, ['phone number already exists']));
+	}
+
+	// find role
+	const role = await Role.findOne({ name: 'talent' })
+
+	// generate password
+	const password = await generate(8, true);
+
+	const user = await User.create({
+		firstName, 
+		lastName, 
+		email, 
+		password, 
+		passwordType: 'generated',
+		savedPassword: password,
+		phoneNumber: phoneStr + phoneNumber.subString(1), 
+		userType: 'talent',
+        isSuper: false,
+		isActivated: false,
+		isAdmin: false,
+		isTalent: true,
+		isBusiness: false,
+		isManager: false,
+		isUser: true,
+	})
+
+	// generate an invite link
+	const inviteLink = await generate(16, true);
+	const expire = ( Date.now() + (60 * 24) * 60 * 1000 as unknown) as Date
+
+	user.roles.push(role?._id);
+	user.inviteLink = inviteLink.toString();
+	user.inviteLinkExpire = expire;
+	user.save();
+
+	if(invite && inviteLink.toString() === 'true'){
+
+		let emailData = {
+			template: 'welcome',
+			email: user.email,
+			preheaderText: 'MyRIOI Invitation',
+			emailTitle: 'MyRIOI invited you to join them as a talent',
+			emailSalute: 'Hello ' + user.firstName + ',',
+			bodyOne: 'MyRIOI has invited you to join them as a talent on their talent management platform.',
+			bodyTwo: 'You can accept invitation by clicking the button below or ignore this email to decline. Invitation expires in 24 hours',
+			buttonUrl: `${callback}/${inviteLink}`,
+			buttonText: 'Accept Invite',
+			fromName: 'MyRIOI'
+		}
+
+		sendGrid(emailData);
+	}
+
+		const returnData = {
+			firstName: user.firstName,
+			lastName: user.lastName,
+			phoneNumber: user.phoneNumber,
+			email: user.email,
+			phoneCode: phoneCode,
+			role: {
+				_id: role?._id,
+				name: role?.name
+			},
+
+			invite: user.inviteLink,
+			userType: user.userType
+		}
+
+		res.status(206).json({
+			error: true,
+			errors: [],
+			data: returnData,
+			message: 'successful',
+			status: 206
+		})
+
+})
+
+// @desc        Add Business
+// @route       POST /api/identity/v1/users/add-business?invite=false
+// @access      Private
+export const addBusiness = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+
+	const { firstName, lastName, email, phoneNumber, phoneCode, callback } = req.body;
+
+	const {invite} = req.query;
+
+	if(!callback){
+		return next(new ErrorResponse('Error', 400, ['invite callback url is required']));
+	}
+
+	// validate
+	if(!firstName){
+		return next(new ErrorResponse('Error', 400, ['first name is required']));
+	}
+
+	if(!lastName){
+		return next(new ErrorResponse('Error', 400, ['last name is required']));
+	}
+
+	if(!email){
+		return next(new ErrorResponse('Error', 400, ['email is required']));
+	}
+
+	const existing = await User.findOne({email: email});
+
+	if(!existing){
+		return next(new ErrorResponse('Error', 403, ['email is already existing']));
+	}
+
+	if(!phoneNumber){
+		return next(new ErrorResponse('Error', 400, ['phone number is required']));
+	}
+
+	if(!phoneCode){
+		return next(new ErrorResponse('Error', 400, ['phone code is required']));
+	}
+
+	if(!strIncludesEs6(phoneCode, '+')){
+        return next(new ErrorResponse('Error', 400, ['phone code is must include \'+\' sign']));
+    }
+
+	// format phone number
+	let phoneStr: string
+	if(strIncludesEs6(phoneCode, '_')){
+		phoneStr = phoneCode.subString(3);
+	}else{
+		phoneStr = phoneCode.subString(1)
+	}
+
+	// check if number exist
+	const phoneExists = await User.findOne({ phoneNumber: phoneStr + phoneNumber.substring(1)});
+	
+	if(phoneExists){
+		return next(new ErrorResponse('Error', 400, ['phone number already exists']));
+	}
+
+	// find role
+	const role = await Role.findOne({ name: 'business' })
+
+	// generate password
+	const password = await generate(8, true);
+
+	const user = await User.create({
+		firstName, 
+		lastName, 
+		email, 
+		password, 
+		passwordType: 'generated',
+		savedPassword: password,
+		phoneNumber: phoneStr + phoneNumber.subString(1), 
+		userType: 'talent',
+        isSuper: false,
+		isActivated: false,
+		isAdmin: false,
+		isTalent: true,
+		isBusiness: false,
+		isManager: false,
+		isUser: true,
+	})
+
+	// generate an invite link
+	const inviteLink = await generate(16, true);
+	const expire = ( Date.now() + (60 * 24) * 60 * 1000 as unknown) as Date
+
+	user.roles.push(role?._id);
+	user.inviteLink = inviteLink.toString();
+	user.inviteLinkExpire = expire;
+	user.save();
+
+	if(invite && inviteLink.toString() === 'true'){
+
+		let emailData = {
+			template: 'welcome',
+			email: user.email,
+			preheaderText: 'MyRIOI Invitation',
+			emailTitle: 'MyRIOI invited you to join them as a business',
+			emailSalute: 'Hello ' + user.firstName + ',',
+			bodyOne: 'MyRIOI has invited you to join them as a business on their talent management platform.',
+			bodyTwo: 'You can accept invitation by clicking the button below or ignore this email to decline. Invitation expires in 24 hours',
+			buttonUrl: `${callback}/${inviteLink}`,
+			buttonText: 'Accept Invite',
+			fromName: 'MyRIOI'
+		}
+
+		sendGrid(emailData);
+	}
+
+		const returnData = {
+			firstName: user.firstName,
+			lastName: user.lastName,
+			phoneNumber: user.phoneNumber,
+			email: user.email,
+			phoneCode: phoneCode,
+			role: {
+				_id: role?._id,
+				name: role?.name
+			},
+
+			invite: user.inviteLink,
+			userType: user.userType
+		}
+
+		res.status(206).json({
+			error: true,
+			errors: [],
+			data: returnData,
+			message: 'successful',
+			status: 206
+		})
+
+})
 
 // @desc        Accept Invite
 // @route       PUT /api/identity/v1/users/accept-invite
