@@ -67,7 +67,8 @@ const deleteData = async () : Promise<void> => {
         await Skill.deleteMany();
         await Talent.deleteMany();
         await User.deleteMany();
-
+        await Work.deleteMany();
+        
         console.log(colors.red.inverse('data destroyed successfully...'));
         process.exit();
         
