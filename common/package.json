@@ -1,6 +1,6 @@
 {
-  "name": "@btffamily/tmat",
-  "version": "1.0.2",
+  "name": "@btffamily/tmaapp",
+  "version": "1.0.3",
   "description": "common code base for myrioi-tma-web-and-blog-app",
   "main": "./build/index.js",
   "types": "./build/index.d.ts",
