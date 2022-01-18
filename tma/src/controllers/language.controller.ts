@@ -15,7 +15,7 @@ export const getLanguages = asyncHandler(async (req: Request, res: Response, nex
 // @desc           Get a Language
 // @route          GET /api/tam/v1/languages/:id
 // @access         Private/Superadmin/Admin
-export const getLanguage = asyncHandler(async(req: Request, res: Response, next: NextFunction) => {
+export const getLanguage = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
 
     const language = await Language.findById(req.params.id);
 
@@ -30,4 +30,4 @@ export const getLanguage = asyncHandler(async(req: Request, res: Response, next:
         message: 'successful',
         status: 200
     });
-})  
+});
