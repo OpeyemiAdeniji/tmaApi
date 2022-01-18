@@ -2,7 +2,7 @@
     {
         "firstName": "Super",
         "lastName": "Administrator",
-        "email": "admin@myrioi.co",
+        "email": "admin@MYRIOI.co",
         "password": "#_sonofGod1",
         "isSuper": true,
         "isActivated": true,

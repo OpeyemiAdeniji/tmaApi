@@ -121,12 +121,12 @@ export const registerTalent = asyncHandler(async (req: Request, res: Response, n
                 template: 'welcome',
                 email: email,
                 preheaderText: 'welcome',
-                emailTitle: 'Welcome to MyRIOI',
+                emailTitle: 'Welcome to MYRIOI',
                 emailSalute: `Hello ${user.firstName},`,
-                bodyOne: 'We\'re glad you signed up on MyRIOI. Please login to your dashboard by clicking the button below',
+                bodyOne: 'We\'re glad you signed up on MYRIOI. Please login to your dashboard by clicking the button below',
                 buttonUrl: `${callback}/login`,
                 buttonText: 'Login to Dashboard',
-                fromName: 'MyRIOI'
+                fromName: 'MYRIOI'
             }
             await sendGrid(emailData);
 
@@ -142,10 +142,10 @@ export const registerTalent = asyncHandler(async (req: Request, res: Response, n
                 preheaderText: 'activate account',
                 emailTitle: 'Activate your account',
                 emailSalute: `Hello ${user.firstName},`,
-                bodyOne: 'Activate your MyRIOI account. Click the button below to activate your account',
+                bodyOne: 'Activate your MYRIOI account. Click the button below to activate your account',
                 buttonUrl: `${activateUrl}`,
                 buttonText: 'Activate Account',
-                fromName: 'MyRIOI'
+                fromName: 'MYRIOI'
             }
             await sendGrid(activateData);
 
@@ -167,10 +167,10 @@ export const registerTalent = asyncHandler(async (req: Request, res: Response, n
             })
 
             // publish nats
-			await new UserCreated(nats.client).publish({ user: user, userType: user.userType });
+			await new UserCreated(nats.client).publish({ user: user, userType: user.userType, phoneCode: phoneCode });
 
             // create notification
-            // const superadmin = await User.findOne({ email: 'hello@MyRIOI.com' });
+            // const superadmin = await User.findOne({ email: 'hello@MYRIOI.com' });
             // const notiref = await generate(8, true);
 
             // await Notification.create({
@@ -178,7 +178,7 @@ export const registerTalent = asyncHandler(async (req: Request, res: Response, n
             //     body: `A new user ${user.email} just registered`,
             //     status: 'new',
             //     sender: {
-            //         name: 'MyRIOI',
+            //         name: 'MYRIOI',
             //         id: superadmin ? superadmin._id : ''
             //     },
             //     recipients: [`${superadmin?._id}`]
@@ -281,12 +281,12 @@ export const registerBusiness = asyncHandler(async (req: Request, res:Response, 
 			template: 'welcome',
 			email: email,
 			preheaderText: 'We are glad you signed up',
-			emailTitle: 'Welcome to MyRIOI',
+			emailTitle: 'Welcome to MYRIOI',
 			emailSalute: `Hello ${user.firstName},`,
-			bodyOne: "Welcome to MyRIOI, we're glad to have you.",
+			bodyOne: "Welcome to MYRIOI, we're glad to have you.",
 			buttonUrl: `${callback}/login`,
 			buttonText: 'Login To Dashboard',
-			fromName: 'MyRIOI'
+			fromName: 'MYRIOI'
 		};
 		await sendGrid(emailData);
 
@@ -302,10 +302,10 @@ export const registerBusiness = asyncHandler(async (req: Request, res:Response, 
 			preheaderText: 'Verify your account ownership',
 			emailTitle: 'Activate your account',
 			emailSalute: `Hi ${user.firstName},`,
-			bodyOne:'You just signed up on MyRIOI. Activate your account for you to have access to more features on your account. Click the button below to verify your account',
+			bodyOne:'You just signed up on MYRIOI. Activate your account for you to have access to more features on your account. Click the button below to verify your account',
 			buttonUrl: `${activateUrl}`,
 			buttonText: 'Activate Account',
-			fromName: 'MyRIOI'
+			fromName: 'MYRIOI'
 		};
 
 		await sendGrid(activateData);
@@ -333,14 +333,14 @@ export const registerBusiness = asyncHandler(async (req: Request, res:Response, 
 	await new UserCreated(nats.client).publish({ user: user, userType: user.userType });
 
 	// create the notification with superadmin attached
-	// const superadmin = await User.findOne({email: 'hello@MyRIOI.com'});
+	// const superadmin = await User.findOne({email: 'hello@MYRIOI.com'});
 
 	// await Notification.create({
 	// 	refId: notiref,
 	// 	body: `A new user ${user.email} just registered as a customer`,
 	// 	status: 'new',
 	// 	sender: {
-	// 		name: 'MyRIOI',
+	// 		name: 'MYRIOI',
 	// 		id: `${superadmin?._id}`
 	// 	},
 	// 	recipients: [`${superadmin?._id}`]
@@ -546,7 +546,7 @@ export const updatePassword = asyncHandler(async (req: Request, res:Response, ne
 			emailSalute: `Hi ${user.firstName}`,
 			bodyOne: 'Please verify your email using the code below',
 			bodyTwo: `${mailCode}`,
-			fromName: 'MyRIOI'
+			fromName: 'MYRIOI'
 		}
 
 		await sendGrid(emailData);
@@ -638,7 +638,7 @@ export const sendResetLink = asyncHandler(async (req: Request, res:Response, nex
 			'You are receiving this email because you (or someone else) has requested the reset of your password. Click the button below to change your password or ignore this email if this wasn\'t you.',
 			buttonUrl: `${resetUrl}`,
 			buttonText: 'Change Password',
-			fromName: 'MyRIOI'
+			fromName: 'MYRIOI'
 		};
 
 		await sendGrid(emailData);

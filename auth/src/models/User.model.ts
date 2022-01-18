@@ -16,6 +16,7 @@ interface IUserModel extends mongoose.Model<IUserDoc> {
 	checkLockedStatus(): boolean,
 	getResetPasswordToken(): any,
 	getActivationToken(): any,
+	getInviteToken(): any;
 	hasRole(role: any, roles: Array<ObjectId>): boolean,
 	findByEmail(email: string): IUserDoc,
 }
@@ -37,8 +38,8 @@ interface IUserDoc extends mongoose.Document {
 	resetPasswordTokenExpire: Date | undefined;
 	emailCode: string | undefined;
 	emailCodeExpire: Date | undefined;
-	inviteLink: string | any;
-	inviteLinkExpire: Date | undefined;
+	inviteToken: string | undefined | any;
+	inviteTokenExpire: Date | undefined;
 
 	isSuper: boolean;
 	isActivated: boolean;
@@ -75,6 +76,7 @@ interface IUserDoc extends mongoose.Document {
 	checkLockedStatus(): boolean,
 	getResetPasswordToken(): any,
 	getActivationToken(): any,
+	getInviteToken(): any;
 	hasRole(role: any, roles: Array<ObjectId>): Promise<boolean>,
 	findByEmail(email: string): IUserDoc,
 
@@ -133,8 +135,8 @@ const UserSchema = new mongoose.Schema(
 		resetPasswordTokenExpire: Date,
 		emailCode: String,
 		emailCodeExpire: Date,
-		inviteLink: String,
-		inviteLinkExpire: Date,
+		inviteToken: String,
+		inviteTokenExpire: Date,
 
         isSuper: {
 			type: Boolean,
@@ -260,11 +262,6 @@ UserSchema.methods.matchEmailCode = function (code: any) {
 	return this.emailCode === code ? true : false;
 }
 
-// Match invite link
-UserSchema.methods.matchInviteLink = function (link: any) {
-	return this.inviteLink === link ? true : false;
-}
-
 // increase login limit
 UserSchema.methods.increaseLoginLimit = function () {
 	const limit = this.loginLimit + 1
@@ -306,6 +303,23 @@ UserSchema.methods.getActivationToken = function () {
 
 	// Set expire
 	this.activationTokenExpire = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+	return token;
+};
+
+//Generate and hash invite token
+UserSchema.methods.getInviteToken = function () {
+	// Generate token
+	const token = crypto.randomBytes(20).toString('hex');
+
+	// Hash the token and set to resetPasswordToken field
+	this.inviteToken = crypto
+		.createHash('sha256')
+		.update(token)
+		.digest('hex');
+
+	// Set expire
+	this.inviteTokenExpire = Date.now() + (60 * 24) * 60 * 1000; // 24 hours
 
 	return token;
 };

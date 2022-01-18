@@ -25,7 +25,7 @@ router.get('/', (req: Request, res: Response, next: NextFunction) => {
 	res.status(200).json({
 		status: 'success',
 		data: {
-			name: 'myrioi-resource-service',
+			name: 'MYRIOI-resource-service',
 			version: '0.1.0'
 		}
 	})
