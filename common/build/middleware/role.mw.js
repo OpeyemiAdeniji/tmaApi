@@ -45,6 +45,7 @@ var findByName = function (model, name) { return __awaiter(void 0, void 0, void 
             case 0: return [4 /*yield*/, model.findOne({ name: name })];
             case 1:
                 role = _a.sent();
+                console.log(role);
                 return [2 /*return*/, role];
         }
     });
@@ -61,24 +62,21 @@ var getRoleName = function (model, id) { return __awaiter(void 0, void 0, void 0
     });
 }); };
 var getRolesByName = function (roles, authType, authDB) { return __awaiter(void 0, void 0, void 0, function () {
-    var Role, resultArr, allRoles, i, j;
+    var Role, result, authorized;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, (0, db_mw_1.getRoleModel)(authType, authDB)];
             case 1:
                 Role = _a.sent();
-                resultArr = [];
-                return [4 /*yield*/, Role.find({})];
-            case 2:
-                allRoles = _a.sent();
-                for (i = 0; i < roles.length; i++) {
-                    for (j = 0; j < allRoles.length; j++) {
-                        if (roles[i].toString() === allRoles[j].eventNames.toString()) {
-                            resultArr.push(allRoles[j]);
-                        }
+                console.log(Role);
+                result = roles.map(function (r) { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, findByName(Role, r)];
+                        case 1: return [2 /*return*/, _a.sent()];
                     }
-                }
-                return [2 /*return*/, resultArr];
+                }); }); });
+                authorized = Promise.all(result);
+                return [2 /*return*/, authorized];
         }
     });
 }); };
