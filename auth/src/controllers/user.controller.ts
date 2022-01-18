@@ -618,10 +618,50 @@ export const acceptInvite = asyncHandler(async (req: Request, res:Response, next
 		status: 206
 	})
 
-
 })
 
 
+// @desc        Add Talent
+// @route       PUT /api/identity/v1/users/add-talent
+// @access      Private/superadmin/admin
+export const AddTalent = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+	const {
+		firstName,
+		lastName,
+		phoneNumber,
+		email,
+		userType
+	} = req.body;
+
+	if (!firstName) {
+		return next(new ErrorResponse('Error', 400, ['first name is required']))
+	}
+
+	if (!lastName) {
+		return next(new ErrorResponse('Error', 400, ['last name is required']))
+	}
+
+	if (!phoneNumber) {
+		return next(new ErrorResponse('Error', 400, ['phone number is required']))
+	}
+
+	const talent = await User.create({
+		firstName: firstName,
+		lastName: lastName,
+		phoneNumber: phoneNumber,
+		email: email,
+		userType: 'talent'
+	})
+
+	res.status(200).json({
+		error: false,
+		errors: [],
+		data: talent,
+		message: 'successful',
+		status: 200
+	});
+
+})
 
 /** 
  * snippet

@@ -1,6 +1,5 @@
 import express, { Router } from 'express'
 
-
 import {
     getInterviews,
     getInterview
