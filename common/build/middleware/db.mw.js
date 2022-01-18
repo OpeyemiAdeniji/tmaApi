@@ -74,25 +74,37 @@ var options = {
 };
 var cert = "".concat(__dirname.split('middleware')[0], "src/ca-certificate.crt");
 // console.log(__dirname);
-var connectDB = function (authType, authDB) {
-    if (authType === 'development') {
-        dbConn = mongoose_1.default.createConnection(authDB, options);
-        // console.log('Auth (dev) database connected');
-    }
-    else if (authType === 'production') {
-        // vs8w16K2a4YfR530
-        dbConn = mongoose_1.default.createConnection(authDB, options);
-        // console.log('Auth (prod) database connected');
-    }
-    else if (authType === 'cloud') {
-        var cloudDBString = authDB + "&tls=true&tlsCAFile=".concat(cert);
-        dbConn = mongoose_1.default.createConnection(cloudDBString, options);
-        // console.log('Auth (prod) database connected');
-    }
-    else {
-        console.log('Authentication type is required');
-    }
-};
+var connectDB = function (authType, authDB) { return __awaiter(void 0, void 0, void 0, function () {
+    var cloudDBString;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                if (!(authType === 'development')) return [3 /*break*/, 1];
+                dbConn = mongoose_1.default.createConnection(authDB, options);
+                return [3 /*break*/, 4];
+            case 1:
+                if (!(authType === 'production')) return [3 /*break*/, 3];
+                return [4 /*yield*/, mongoose_1.default.createConnection(authDB, options)];
+            case 2:
+                // vs8w16K2a4YfR530
+                dbConn = _a.sent();
+                console.log(dbConn);
+                ;
+                return [3 /*break*/, 4];
+            case 3:
+                if (authType === 'cloud') {
+                    cloudDBString = authDB + "&tls=true&tlsCAFile=".concat(cert);
+                    dbConn = mongoose_1.default.createConnection(cloudDBString, options);
+                    // console.log('Auth (prod) database connected');
+                }
+                else {
+                    console.log('Authentication type is required');
+                }
+                _a.label = 4;
+            case 4: return [2 /*return*/];
+        }
+    });
+}); };
 exports.connectDB = connectDB;
 var getRoleModel = function (authType, authDB) { return __awaiter(void 0, void 0, mongoose_1.Model, function () {
     var model;
