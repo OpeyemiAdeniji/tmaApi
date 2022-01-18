@@ -58,7 +58,6 @@ export const getBusiness = asyncHandler(async (req: Request, res:Response, next:
 
 })
 
-
 /** 
  * snippet
  * **/
