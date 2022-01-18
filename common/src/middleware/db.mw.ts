@@ -24,18 +24,17 @@ const options: object = {
 const cert = `${__dirname.split('middleware')[0]}src/ca-certificate.crt`;
 // console.log(__dirname);
 
-export const connectDB = (authType: string, authDB: string): void => {
+export const connectDB = async (authType: string, authDB: string): Promise<void> => {
 
     if(authType === 'development'){
 
         dbConn = mongoose.createConnection(authDB, options);
-        // console.log('Auth (dev) database connected');
 
     }else if(authType === 'production'){
 
         // vs8w16K2a4YfR530
-        dbConn = mongoose.createConnection(authDB, options);
-        // console.log('Auth (prod) database connected');
+        dbConn = await mongoose.createConnection(authDB, options);
+        console.log(dbConn);;
 
     }else if(authType === 'cloud'){
 

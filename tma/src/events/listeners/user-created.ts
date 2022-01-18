@@ -1,5 +1,5 @@
 import { Stan } from 'node-nats-streaming'
-import { Listener, Subjects } from '@btffamily/tmat';
+import { Listener, Subjects } from '@btffamily/tmaapp';
 import QueueGroupName from '../groupName';
 
 import User from '../../models/User.model';

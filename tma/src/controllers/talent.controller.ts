@@ -3,7 +3,7 @@ import mongoose, { ObjectId, Model } from 'mongoose';
 import { Request, Response, NextFunction } from 'express';
 import ErrorResponse from '../utils/error.util';
 import { sendGrid } from '../utils/email.util';
-import { asyncHandler, arrayIncludes, strIncludesEs6 } from '@btffamily/tmat'
+import { asyncHandler, arrayIncludes, strIncludesEs6 } from '@btffamily/tmaapp'
 import { generate } from '../utils/random.util';
 import { userLogger } from '../config/wiston';
 import { uploadBase64File } from '../utils/google.util'

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import ErrorResponse from '../utils/error.util';
-import { asyncHandler, strIncludesEs6, strToArrayEs6, isString, isObject } from '@btffamily/tmat';
+import { asyncHandler, strIncludesEs6, strToArrayEs6, isString, isObject } from '@btffamily/tmaapp';
 import { uploadBase64File } from '../utils/google.util'
 
 // import models

@@ -1,5 +1,5 @@
 import ErrorResponse from "../utils/error.util";
-import { asyncHandler, strIncludesEs6, strToArrayEs6, isString } from '@btffamily/tmat'
+import { asyncHandler, strIncludesEs6, strToArrayEs6, isString } from '@btffamily/tmaapp'
 import {Request, Response, NextFunction } from "express";
 
 import Industry from "../models/Industry.model";
