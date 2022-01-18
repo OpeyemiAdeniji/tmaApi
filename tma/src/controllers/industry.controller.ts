@@ -29,3 +29,65 @@ export const getIndustry = asyncHandler(async (req: Request, res: Response, next
         status: 200
     })
 })
+
+// @desc           Add an Industry
+// @route          POST /api/tma/v1/industries
+// @access         Private
+export const addIndustry = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+
+    const { name, description } = req.body;
+
+    if(!name){
+        return next(new ErrorResponse('Error', 404, ['name is required']))
+    }
+
+    if(!description){
+        return next(new ErrorResponse('Error', 404, ['description is required']))
+    }
+
+    const exists = await Industry.findOne({ name: name });
+
+    if(exists){
+        return next(new ErrorResponse('Error!', 400, ['industry already exist']));
+    }
+
+    const industry = await Industry.create({
+        name,
+        description
+    })
+
+    res.status(200).json({
+        error: false,
+        errors: [],
+        data: industry,
+        message: 'succesful',
+        status: 200
+    })
+})
+
+// @desc           Update an Industry
+// @route          PUT /api/tma/v1/industries/:id
+// @access         Private
+export const updateIndustry = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+
+    const { name, description } = req.body;
+
+    const industry = await Industry.findById(req.params.id);
+
+    if(!industry){
+        return next(new ErrorResponse('Error', 404, ['industry does not exist']))
+    }
+
+    industry.name = name ? name : industry.name;
+    industry.description = description ? description : industry.description;
+    industry.save();
+
+    res.status(200).json({
+        error: false,
+        errors: [],
+        data: industry,
+        message: 'succesful',
+        status: 200
+    })
+
+})

@@ -30,3 +30,67 @@ export const getCloud = asyncHandler(async(req: Request, res: Response, next: Ne
         status: 200
     })
 })
+
+// @desc           Add a Cloud
+// @route          POST /api/tma/v1/clouds
+// @access         Private
+export const addCloud = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+
+    const { name, code, description } = req.body;
+
+    if(!name){
+        return next(new ErrorResponse('Error', 404, ['name is required']))
+    }
+
+    if(!description){
+        return next(new ErrorResponse('Error', 404, ['description is required']))
+    }
+
+    const exists = await Cloud.findOne({ name: name });
+
+    if(exists){
+        return next(new ErrorResponse('Error!', 400, ['framwork already exist']));
+    }
+
+    const cloud = await Cloud.create({
+        name,
+        code,
+        description
+    })
+
+    res.status(200).json({
+        error: false,
+        errors: [],
+        data: cloud,
+        message: 'succesful',
+        status: 200
+    })
+})
+
+// @desc           Update a Cloud
+// @route          PUT /api/tma/v1/clouds/:id
+// @access         Private
+export const updateCloud = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+
+    const { name, code, description } = req.body;
+
+    const cloud = await Cloud.findById(req.params.id);
+
+    if(!cloud){
+        return next(new ErrorResponse('Error', 404, ['cloud does not exist']))
+    }
+
+    cloud.name = name ? name : cloud.name;
+    cloud.code = code ? code : cloud.code;
+    cloud.description = description ? description : cloud.description;
+    cloud.save();
+
+    res.status(200).json({
+        error: false,
+        errors: [],
+        data: cloud,
+        message: 'succesful',
+        status: 200
+    })
+
+})

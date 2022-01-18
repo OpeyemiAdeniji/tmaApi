@@ -30,4 +30,72 @@ export const getLanguage = asyncHandler(async(req: Request, res: Response, next:
         message: 'successful',
         status: 200
     });
-})  
+}) 
+
+// @desc           Add a Language
+// @route          POST /api/tma/v1/languages
+// @access         Private
+export const addLanguage = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+
+    const { name, code, description } = req.body;
+
+    if(!name){
+        return next(new ErrorResponse('Error', 404, ['name is required']))
+    }
+
+    if(!code){
+        return next(new ErrorResponse('Error', 404, ['code is required']))
+    }
+
+    if(!description){
+        return next(new ErrorResponse('Error', 404, ['description is required']))
+    }
+
+    const exists = await Language.findOne({ name: name });
+
+    if(exists){
+        return next(new ErrorResponse('Error!', 400, ['language already exist']));
+    }
+
+    const language = await Language.create({
+        name,
+        code,
+        description
+    })
+
+    res.status(200).json({
+        error: false,
+        errors: [],
+        data: language,
+        message: 'succesful',
+        status: 200
+    })
+})
+
+// @desc           Update a Language
+// @route          PUT /api/tma/v1/languages/:id
+// @access         Private
+export const updateLanguage = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+
+    const { name, code, description } = req.body;
+
+    const language = await Language.findById(req.params.id);
+
+    if(!language){
+        return next(new ErrorResponse('Error', 404, ['language does not exist']))
+    }
+
+    language.name = name ? name : language.name;
+    language.code = code ? code : language.code;
+    language.description = description ? description : language.description;
+    language.save();
+
+    res.status(200).json({
+        error: false,
+        errors: [],
+        data: language,
+        message: 'succesful',
+        status: 200
+    })
+
+})

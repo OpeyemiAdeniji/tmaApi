@@ -4,7 +4,7 @@ import express, { Router } from 'express'
 import {
     getTalents,
     getTalent,
-    createTalent
+    apply
 } from '../../../controllers/talent.controller';
 
 
@@ -17,6 +17,6 @@ const allRoles = ['superadmin', 'admin', 'business', 'manager', 'talent', 'user'
 
 router.get('/', vcd, protect, authorize(roles), getTalents);
 router.get('/:id', vcd, protect, authorize(roles), getTalent);
-router.get('/', vcd, protect, authorize(allRoles), createTalent);
+router.get('/', vcd, protect, authorize(allRoles), apply);
 
 export default router;

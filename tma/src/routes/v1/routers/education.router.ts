@@ -2,8 +2,7 @@ import express, {Router} from 'express';
 
 import {
     getEducations,
-    getEducation,
-    createEducation
+    getEducation
 } from '../../../controllers/education.controller';
 
 import Education from '../../../models/Education.model';
@@ -18,6 +17,5 @@ const allRoles = ['superadmin', 'admin', 'business', 'manager', 'talent', 'user'
 
 router.get('/', vcd, advancedResults(Education), getEducations);
 router.get('/:id', vcd, getEducation);
-router.post('/', vcd, protect, authorize(allRoles), createEducation);
 
 export default router;

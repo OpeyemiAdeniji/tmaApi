@@ -30,3 +30,66 @@ export const getFramework = asyncHandler(async(req: Request, res: Response, next
         status: 200
     })
 })
+
+// @desc           Add a Framework
+// @route          POST /api/tma/v1/frameworks
+// @access         Private
+export const addFramework = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+
+    const { name, description } = req.body;
+
+    if(!name){
+        return next(new ErrorResponse('Error', 404, ['name is required']))
+    }
+
+    if(!description){
+        return next(new ErrorResponse('Error', 404, ['description is required']))
+    }
+
+    const exists = await Framework.findOne({ name: name });
+
+    if(exists){
+        return next(new ErrorResponse('Error!', 400, ['framwork already exist']));
+    }
+
+    const framework = await Framework.create({
+        name,
+        description
+    })
+
+    res.status(200).json({
+        error: false,
+        errors: [],
+        data: framework,
+        message: 'succesful',
+        status: 200
+    })
+})
+
+// @desc           Update a Framework
+// @route          PUT /api/tma/v1/frameworks/:id
+// @access         Private
+export const updateFramework = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+
+    const { name, description } = req.body;
+
+    const framework = await Framework.findById(req.params.id);
+
+
+    if(!framework){
+        return next(new ErrorResponse('Error', 404, ['framework does not exist']))
+    }
+
+    framework.name = name ? name : framework.name;
+    framework.description = description ? description : framework.description;
+    framework.save();
+
+    res.status(200).json({
+        error: false,
+        errors: [],
+        data: framework,
+        message: 'succesful',
+        status: 200
+    })
+
+})
