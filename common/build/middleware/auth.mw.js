@@ -35,15 +35,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -77,12 +68,10 @@ var authorize = function (roles, userRoles, authType, authDB) { return __awaiter
             case 0:
                 allRoles = [];
                 resultFlag = false;
-                return [4 /*yield*/, (0, role_mw_1.getRolesByName)(roles, authType, authDB).then(function (resp) {
-                        console.log(resp);
-                        allRoles = __spreadArray([], resp, true);
-                    })];
+                return [4 /*yield*/, (0, role_mw_1.getRolesByName)(roles, authType, authDB)];
             case 1:
-                _a.sent();
+                allRoles = _a.sent();
+                console.log(allRoles);
                 ids = allRoles.map(function (e) { return e._id; });
                 return [4 /*yield*/, checkRole(ids, userRoles)];
             case 2:

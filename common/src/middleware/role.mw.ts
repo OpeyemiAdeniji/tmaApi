@@ -3,6 +3,7 @@ import mongoose, { Model, Schema } from 'mongoose'
 
 const findByName = async (model: Model<Schema>, name: string): Promise<any> => {
     const role = await model.findOne({ name: name });
+    console.log(role)
     return role;
 }
 
@@ -14,23 +15,11 @@ const getRoleName = async (model: Model<Schema>, id: string): Promise<any> => {
 export const getRolesByName = async (roles: Array<string>, authType: string, authDB: string): Promise<any> => {
 
     const Role = await getRoleModel(authType, authDB);
+    console.log(Role);
 
-    let resultArr: Array<any> = [];
-    const allRoles = await Role.find({});
-
-    for (let i = 0; i < roles.length; i++){
-
-        for(let j = 0; j < allRoles.length; j++){
-
-            if(roles[i].toString() === allRoles[j].eventNames.toString()){
-                resultArr.push(allRoles[j]);
-            }
-
-        }
-        
-    }
-
-    return resultArr;
+    const result = roles.map( async (r) => await findByName(Role, r));
+    const authorized = Promise.all(result);
+    return authorized;
 }
 
 // export const getRoleNames = async (roleIDs: Array<string>): Promise<any> => {
