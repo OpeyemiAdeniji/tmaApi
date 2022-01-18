@@ -1,5 +1,5 @@
 NATS IP: 143.198.165.121
-SERVER IP: 
+SERVER IP: None
 
 Github token: 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
 
