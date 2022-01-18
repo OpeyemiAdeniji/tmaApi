@@ -79,22 +79,19 @@ var connectDB = function (authType, authDB) { return __awaiter(void 0, void 0, v
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                if (!(authType === 'development')) return [3 /*break*/, 2];
-                return [4 /*yield*/, mongoose_1.default.createConnection(authDB, options)];
+                if (!(authType === 'development')) return [3 /*break*/, 1];
+                dbConn = mongoose_1.default.createConnection(authDB, options);
+                return [3 /*break*/, 4];
             case 1:
-                dbConn = _a.sent();
-                console.log('Auth (dev) database connected');
-                return [3 /*break*/, 5];
-            case 2:
-                if (!(authType === 'production')) return [3 /*break*/, 4];
+                if (!(authType === 'production')) return [3 /*break*/, 3];
                 return [4 /*yield*/, mongoose_1.default.createConnection(authDB, options)];
-            case 3:
+            case 2:
                 // vs8w16K2a4YfR530
                 dbConn = _a.sent();
                 console.log(dbConn);
                 ;
-                return [3 /*break*/, 5];
-            case 4:
+                return [3 /*break*/, 4];
+            case 3:
                 if (authType === 'cloud') {
                     cloudDBString = authDB + "&tls=true&tlsCAFile=".concat(cert);
                     dbConn = mongoose_1.default.createConnection(cloudDBString, options);
@@ -103,8 +100,8 @@ var connectDB = function (authType, authDB) { return __awaiter(void 0, void 0, v
                 else {
                     console.log('Authentication type is required');
                 }
-                _a.label = 5;
-            case 5: return [2 /*return*/];
+                _a.label = 4;
+            case 4: return [2 /*return*/];
         }
     });
 }); };

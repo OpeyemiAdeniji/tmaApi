@@ -12,10 +12,17 @@ const getRoleName = async (model: Model<Schema>, id: string): Promise<any> => {
 }
 
 export const getRolesByName = async (roles: Array<string>, authType: string, authDB: string): Promise<any> => {
+
     const Role = await getRoleModel(authType, authDB);
-    const result = roles.map( async (r) => await findByName(Role, r));
-    const authorized = Promise.all(result);
-    return authorized;
+
+    const resultArr = roles.map(async (r) => {
+        const role = await Role.findOne({name: r});
+        if(role){
+            return role;
+        }
+    })
+
+    return resultArr;
 }
 
 // export const getRoleNames = async (roleIDs: Array<string>): Promise<any> => {

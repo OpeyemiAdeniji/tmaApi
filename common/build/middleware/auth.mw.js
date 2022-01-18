@@ -78,6 +78,7 @@ var authorize = function (roles, userRoles, authType, authDB) { return __awaiter
                 allRoles = [];
                 resultFlag = false;
                 return [4 /*yield*/, (0, role_mw_1.getRolesByName)(roles, authType, authDB).then(function (resp) {
+                        console.log(resp);
                         allRoles = __spreadArray([], resp, true);
                     })];
             case 1:
