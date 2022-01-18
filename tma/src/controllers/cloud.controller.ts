@@ -42,20 +42,22 @@ export const addCloud = asyncHandler(async (req: Request, res: Response, next: N
         return next(new ErrorResponse('Error', 404, ['name is required']))
     }
 
-    if(!description){
-        return next(new ErrorResponse('Error', 404, ['description is required']))
+    const existsByName = await Cloud.findOne({ name: name });
+
+    if(existsByName){
+        return next(new ErrorResponse('Error!', 400, ['cloud platform already exist. user another name']));
     }
 
-    const exists = await Cloud.findOne({ name: name });
+    const existsByCode = await Cloud.findOne({ code: code });
 
-    if(exists){
-        return next(new ErrorResponse('Error!', 400, ['framwork already exist']));
+    if(existsByCode){
+        return next(new ErrorResponse('Error!', 400, ['cloud platform already exist. user another code']));
     }
 
     const cloud = await Cloud.create({
         name,
         code,
-        description
+        description: description ? description : ''
     })
 
     res.status(200).json({
@@ -80,10 +82,22 @@ export const updateCloud = asyncHandler(async (req: Request, res: Response, next
         return next(new ErrorResponse('Error', 404, ['cloud does not exist']))
     }
 
+    const existsByName = await Cloud.findOne({ name: name });
+
+    if(existsByName){
+        return next(new ErrorResponse('Error!', 400, ['cloud platform already exist. user another name']));
+    }
+
+    const existsByCode = await Cloud.findOne({ code: code });
+
+    if(existsByCode){
+        return next(new ErrorResponse('Error!', 400, ['cloud platform already exist. user another code']));
+    }
+
     cloud.name = name ? name : cloud.name;
     cloud.code = code ? code : cloud.code;
     cloud.description = description ? description : cloud.description;
-    cloud.save();
+    await cloud.save();
 
     res.status(200).json({
         error: false,

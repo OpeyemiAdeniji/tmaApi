@@ -15,9 +15,10 @@ import { protect, authorize } from '../../../middleware/auth.mw'
 import { validateChannels as vcd } from '../../../middleware/header.mw';
 
 const roles = ['superadmin', 'admin'];
+const limRoles = ['superadmin', 'admin', 'manager'];
 const allRoles = ['superadmin', 'admin', 'business', 'manager', 'talent', 'user'];
 
 router.get('/', vcd, protect, authorize(allRoles), advanced(Interview), getInterviews);
-router.get('/get-interview', vcd, protect, authorize(allRoles), getInterview);
+router.get('/:id', vcd, protect, authorize(allRoles), getInterview);
 
 export default router;

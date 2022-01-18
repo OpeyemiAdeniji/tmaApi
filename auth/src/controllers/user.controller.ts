@@ -254,6 +254,7 @@ export const addManager = asyncHandler(async (req: Request, res:Response, next: 
 		isBusiness: false,
 		isManager: true,
 		isUser: true,
+		isActive: true
 
 	})
 
@@ -393,6 +394,7 @@ export const addTalent = asyncHandler(async (req: Request, res: Response, next: 
 		isBusiness: false,
 		isManager: false,
 		isUser: true,
+		isActive: true
 	})
 
 	user.roles.push(role?._id);
@@ -453,7 +455,19 @@ export const addTalent = asyncHandler(async (req: Request, res: Response, next: 
 // @access      Private
 export const addBusiness = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
 
-	const { businessName, email, phoneNumber, phoneCode, callback } = req.body;
+	const { 
+		businessName, 
+		email, 
+		phoneNumber, 
+		phoneCode, 
+		callback, 
+		industry,
+		location,
+		address,
+		websiteUrl,
+
+	} = req.body;
+
 	const { type } = req.query;
 
 	if(!callback){
@@ -528,6 +542,7 @@ export const addBusiness = asyncHandler(async (req: Request, res: Response, next
 		isBusiness: true,
 		isManager: false,
 		isUser: true,
+		isActive: true
 	})
 
 	let emailData = {
@@ -553,7 +568,12 @@ export const addBusiness = asyncHandler(async (req: Request, res: Response, next
 			_id: role?._id,
 			name: role?.name
 		},
-		userType: user.userType
+		userType: user.userType,
+		industry: industry,
+		location: location,
+		address: address,
+		websiteUrl: websiteUrl
+
 	}
 
 	// publish to NATS

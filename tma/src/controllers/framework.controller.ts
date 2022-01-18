@@ -42,19 +42,15 @@ export const addFramework = asyncHandler(async (req: Request, res: Response, nex
         return next(new ErrorResponse('Error', 404, ['name is required']))
     }
 
-    if(!description){
-        return next(new ErrorResponse('Error', 404, ['description is required']))
-    }
-
     const exists = await Framework.findOne({ name: name });
 
     if(exists){
-        return next(new ErrorResponse('Error!', 400, ['framwork already exist']));
+        return next(new ErrorResponse('Error!', 400, ['framwork already exist. use another name']));
     }
 
     const framework = await Framework.create({
         name,
-        description
+        description: description ? description : ''
     })
 
     res.status(200).json({
@@ -75,14 +71,19 @@ export const updateFramework = asyncHandler(async (req: Request, res: Response, 
 
     const framework = await Framework.findById(req.params.id);
 
-
     if(!framework){
         return next(new ErrorResponse('Error', 404, ['framework does not exist']))
     }
 
+    const exists = await Framework.findOne({ name: name });
+
+    if(exists){
+        return next(new ErrorResponse('Error!', 400, ['framwork already exist. use another name']));
+    }
+
     framework.name = name ? name : framework.name;
     framework.description = description ? description : framework.description;
-    framework.save();
+    await framework.save();
 
     res.status(200).json({
         error: false,

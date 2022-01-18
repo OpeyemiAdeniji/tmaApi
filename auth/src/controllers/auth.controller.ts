@@ -196,16 +196,16 @@ export const registerTalent = asyncHandler(async (req: Request, res: Response, n
 
 });
 
-// @desc    Register User (business manager)
-// @route   POST /api/identity/v1/auth/register/manager
+// @desc    Register User (third party business)
+// @route   POST /api/identity/v1/auth/register/business
 // @access  Public
 export const registerBusiness = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
 
-	const { firstName, lastName, phoneCode, phoneNumber, email, password, callback } = req.body;
+	const { businessName, phoneCode, phoneNumber, email, password, callback } = req.body;
 	const notiref = await generate(8, false);
 
 	// find the default role first
-	const role = await Role.findByName('user');
+	const role = await Role.findByName('business');
 	if (!role) {
 		return next(
 			new ErrorResponse(
@@ -246,8 +246,8 @@ export const registerBusiness = asyncHandler(async (req: Request, res:Response, 
 
 	// Create a new user
 	const user = await User.create({
-		firstName,
-		lastName,
+		firstName: businessName,
+		lastName: businessName,
 		email,
 		password,
 		passwordType: 'self',
@@ -265,13 +265,8 @@ export const registerBusiness = asyncHandler(async (req: Request, res:Response, 
 		isActive: true
 	});
 
-	// attach the 'user' role and address by default
+	// attach the 'business' role
 	user.roles.push(role._id);
-	await user.save();
-
-	// attach the talent
-	const bRole = await Role.findOne({ name: 'business' });
-	user.roles.push(bRole?._id);
 	await user.save();
 
 	//send welcome email
@@ -315,6 +310,9 @@ export const registerBusiness = asyncHandler(async (req: Request, res:Response, 
 
 	const u = await User.findOne({ email: user.email});
 
+	// publish natss
+	await new UserCreated(nats.client).publish({ user: user, userType: user.userType, phoneCode: phoneCode });
+
 	res.status(200).json({
 		error: false,
 		errors: [],
@@ -328,9 +326,6 @@ export const registerBusiness = asyncHandler(async (req: Request, res:Response, 
 		},
 		status: 200
 	});
-
-	// publish natss
-	await new UserCreated(nats.client).publish({ user: user, userType: user.userType });
 
 	// create the notification with superadmin attached
 	// const superadmin = await User.findOne({email: 'hello@MYRIOI.com'});

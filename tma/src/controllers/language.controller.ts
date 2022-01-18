@@ -39,28 +39,22 @@ export const addLanguage = asyncHandler(async (req: Request, res: Response, next
 
     const { name, code, description } = req.body;
 
-    if(!name){
-        return next(new ErrorResponse('Error', 404, ['name is required']))
+    const existsByName = await Language.findOne({ name: name });
+
+    if(existsByName){
+        return next(new ErrorResponse('Error!', 400, ['language already exist. use another name']));
     }
 
-    if(!code){
-        return next(new ErrorResponse('Error', 404, ['code is required']))
-    }
+    const existsByCode = await Language.findOne({ code: code });
 
-    if(!description){
-        return next(new ErrorResponse('Error', 404, ['description is required']))
-    }
-
-    const exists = await Language.findOne({ name: name });
-
-    if(exists){
-        return next(new ErrorResponse('Error!', 400, ['language already exist']));
+    if(existsByCode){
+        return next(new ErrorResponse('Error!', 400, ['language already exist. use another code']));
     }
 
     const language = await Language.create({
         name,
         code,
-        description
+        description: description ? description : ''
     })
 
     res.status(200).json({
@@ -85,10 +79,22 @@ export const updateLanguage = asyncHandler(async (req: Request, res: Response, n
         return next(new ErrorResponse('Error', 404, ['language does not exist']))
     }
 
+    const existsByName = await Language.findOne({ name: name });
+
+    if(existsByName){
+        return next(new ErrorResponse('Error!', 400, ['language already exist. use another name']));
+    }
+
+    const existsByCode = await Language.findOne({ code: code });
+
+    if(existsByCode){
+        return next(new ErrorResponse('Error!', 400, ['language already exist. use another code']));
+    }
+
     language.name = name ? name : language.name;
     language.code = code ? code : language.code;
     language.description = description ? description : language.description;
-    language.save();
+    await language.save();
 
     res.status(200).json({
         error: false,

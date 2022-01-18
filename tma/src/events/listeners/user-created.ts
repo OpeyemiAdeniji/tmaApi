@@ -3,6 +3,7 @@ import { Listener, Subjects } from '@btffamily/tmat';
 import QueueGroupName from '../groupName';
 
 import User from '../../models/User.model';
+import Business from '../../models/Business.model';
 
 class UserCreatedListener extends Listener {
 
@@ -33,7 +34,26 @@ class UserCreatedListener extends Listener {
                 middleName: user.middleName,
                 userType: userType
 
-            })
+            });
+
+            if(userType === 'business' || userType === 'third-party'){
+
+                await Business.create({
+
+                    name: uc.firstName,
+                    industry: user.industry,
+                    email: uc.email,
+                    phoneNumber: uc.phoneNumber,
+                    websiteUrl: user.websiteUrl,
+                    businessType: userType,
+                    location: user.location.label,
+                    placeId: user.location.value.place_id,
+                    address: user.address,
+                    user: uc._id
+
+                });
+
+            }
 
         }
 
