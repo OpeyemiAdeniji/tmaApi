@@ -29,7 +29,6 @@ export const connectDB = async (authType: string, authDB: string): Promise<void>
     if(authType === 'development'){
 
         dbConn = mongoose.createConnection(authDB, options);
-        // console.log('Auth (dev) database connected');
 
     }else if(authType === 'production'){
 

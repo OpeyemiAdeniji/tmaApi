@@ -39,6 +39,7 @@ export const authorize = async (roles: Array<string>, userRoles: Array<string>, 
     let resultFlag: boolean = false;
 
     await getRolesByName(roles, authType, authDB).then((resp) => {
+        console.log(resp)
         allRoles = [...resp];
     });
 
