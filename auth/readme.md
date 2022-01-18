@@ -1,10 +1,10 @@
-# DevCamper API
+# MYRIOI TMA API
 
-> Backend API for the MyRIOI TMA application (software)
+> Backend API for the MYRIOI TMA Auth service
 
 ## Usage
 
-Rename the " to ".env.example" and update the values/settings to your own
+Rename the ".env.example" file to .env and update the values/settings to your own
 
 ## Install Dependences
 ```

@@ -57,7 +57,7 @@ export const addLocation = asyncHandler(async (req: Request, res: Response, next
     }
 
     const country = await Country.findOne({ code2: countryCode });
-
+    
     if(!country){
         return next( new ErrorResponse(`Error`, 400, [`country code is required`]) );
     }

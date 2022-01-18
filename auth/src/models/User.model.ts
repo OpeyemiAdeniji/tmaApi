@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import mongoose, { ObjectId } from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { generate } from '../utils/random.util'
 
 import Role from './Role.model';
 
@@ -10,10 +11,12 @@ interface IUserModel extends mongoose.Model<IUserDoc> {
 	getSignedJwtToken(): any,
 	matchPassword(password: string): any,
 	matchEmailCode(code: string): boolean,
+	matchInviteLink(code: string): boolean,
 	increaseLoginLimit(): number,
 	checkLockedStatus(): boolean,
 	getResetPasswordToken(): any,
 	getActivationToken(): any,
+	getInviteToken(): any;
 	hasRole(role: any, roles: Array<ObjectId>): boolean,
 	findByEmail(email: string): IUserDoc,
 }
@@ -35,6 +38,8 @@ interface IUserDoc extends mongoose.Document {
 	resetPasswordTokenExpire: Date | undefined;
 	emailCode: string | undefined;
 	emailCodeExpire: Date | undefined;
+	inviteToken: string | undefined | any;
+	inviteTokenExpire: Date | undefined;
 
 	isSuper: boolean;
 	isActivated: boolean;
@@ -66,10 +71,12 @@ interface IUserDoc extends mongoose.Document {
 	getSignedJwtToken(): any,
 	matchPassword(password: string): any,
 	matchEmailCode(code: string): boolean,
+	matchInviteLink(link: string): boolean,
 	increaseLoginLimit(): number,
 	checkLockedStatus(): boolean,
 	getResetPasswordToken(): any,
 	getActivationToken(): any,
+	getInviteToken(): any;
 	hasRole(role: any, roles: Array<ObjectId>): Promise<boolean>,
 	findByEmail(email: string): IUserDoc,
 
@@ -128,6 +135,8 @@ const UserSchema = new mongoose.Schema(
 		resetPasswordTokenExpire: Date,
 		emailCode: String,
 		emailCodeExpire: Date,
+		inviteToken: String,
+		inviteTokenExpire: Date,
 
         isSuper: {
 			type: Boolean,
@@ -294,6 +303,23 @@ UserSchema.methods.getActivationToken = function () {
 
 	// Set expire
 	this.activationTokenExpire = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+	return token;
+};
+
+//Generate and hash invite token
+UserSchema.methods.getInviteToken = function () {
+	// Generate token
+	const token = crypto.randomBytes(20).toString('hex');
+
+	// Hash the token and set to resetPasswordToken field
+	this.inviteToken = crypto
+		.createHash('sha256')
+		.update(token)
+		.digest('hex');
+
+	// Set expire
+	this.inviteTokenExpire = Date.now() + (60 * 24) * 60 * 1000; // 24 hours
 
 	return token;
 };

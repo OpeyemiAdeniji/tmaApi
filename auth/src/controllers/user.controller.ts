@@ -18,6 +18,9 @@ import Role from '../models/Role.model'
 import Notification from '../models/Notification.model'
 import Status from '../models/Status.model'
 
+import nats from '../events/nats';
+import UserCreated from '../events/publishers/user-created'
+
 
 // @desc           Get all users
 // @route          GET /api/v1/users
@@ -49,115 +52,6 @@ export const getUser = asyncHandler(async (req: Request, res:Response, next: Nex
 	});
 
 })
-
-// @desc    Get all talents
-// @route   GET /api/v1/users/talents
-// @access  Public // superadmin
-export const getTalents = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
-
-	let result: object | any = {
-		count: 0,
-		data: null
-	}
-
-	const { active } = req.query;
-
-	const users = await User.find({}).populate([{path: 'talent'}]);
-
-	const talents = users.filter((u) => u.isTalent === true);
-	const activeTalents= talents.filter((a) => a.isActive === true);
-
-	if(active && active === 'true'){
-		result.count = activeTalents.length;
-		result.data = activeTalents;
-	}else{
-		result.count = talents.length;
-		result.data = talents;
-	}
-
-	res.status(200).json({
-		error: false,
-		errors: [],
-		count: result.count,
-		message: `Successful`,
-		data: result.data,
-		status: 200
-	});
-
-})
-
-// @desc    Get all businesses [these are people who hire the talents]
-// @route   GET /api/v1/users/businesses
-// @access  Public // superadmin
-export const getBusinesses = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
-
-	let result: object | any = {
-		count: 0,
-		data: null
-	}
-
-	const { active } = req.query;
-
-	const users = await User.find({ userType: 'business' }).populate([{path: 'business'}]);
-
-	const businesses = users.filter((u) => u.isBusiness === true);
-	const activeBusinesses = businesses.filter((a) => a.isActive === true);
-
-	if(active && active === 'true'){
-		result.count = activeBusinesses.length;
-		result.data = activeBusinesses;
-	}else{
-		result.count = businesses.length;
-		result.data = businesses;
-	}
-
-	res.status(200).json({
-		error: false,
-		errors: [],
-		count: result.count,
-		message: `Successful`,
-		data: result.data,
-		status: 200
-	});
-
-})
-
-// @desc    Get all businesses [these are people who supply the talents]
-// @route   GET /api/v1/users/organizations
-// @access  Public // superadmin
-export const getOrganizations = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
-
-	let result: object | any = {
-		count: 0,
-		data: null
-	}
-
-	const { active } = req.query;
-
-	const users = await User.find({ userType: 'third-party' }).populate([{path: 'business'}]);
-
-	const businesses = users.filter((u) => u.isBusiness === true);
-	const activeBusinesses = businesses.filter((a) => a.isActive === true);
-
-	if(active && active === 'true'){
-		result.count = activeBusinesses.length;
-		result.data = activeBusinesses;
-	}else{
-		result.count = businesses.length;
-		result.data = businesses;
-	}
-
-	res.status(200).json({
-		error: false,
-		errors: [],
-		count: result.count,
-		message: `Successful`,
-		data: result.data,
-		status: 200
-	});
-
-})
-
 
 // @desc    Get user statuses
 // @route   GET /api/v1/users/status/:id
@@ -236,7 +130,7 @@ export const changePassword = asyncHandler(async (req: Request, res:Response, ne
 			emailSalute: 'Hi Champ',
 			bodyOne: 'Please verify your email using the code below',
 			bodyTwo: `${mailCode}`,
-			fromName: 'MyRIOI'
+			fromName: 'MYRIOI'
 		}
 
 		await sendGrid(emailData);
@@ -276,6 +170,458 @@ export const changePassword = asyncHandler(async (req: Request, res:Response, ne
 	}
 
 })
+
+
+// @desc        Add Business manager
+// @route       POST /api/identity/v1/users/add-manager?invite=false
+// @access      Private
+export const addManager = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
+
+	const { firstName, lastName, email, phoneNumber, phoneCode, callback} = req.body;
+	const { invite } = req.query;
+
+	if(invite && invite.toString() === 'true' && !callback){
+		return next(new ErrorResponse('Error', 400, ['invite callback url is required']));
+	}
+
+	// validate
+	if(!firstName){
+		return next(new ErrorResponse('Error', 400, ['first name is required']));
+	}
+
+	if(!lastName){
+		return next(new ErrorResponse('Error', 400, ['last name is required']));
+	}
+
+	if(!email){
+		return next(new ErrorResponse('Error', 400, ['email is required']));
+	}
+
+	const existing = await User.findOne({email: email});
+
+	if(!existing){
+		return next(new ErrorResponse('Error', 403, ['email already exists']));
+	}
+
+	if(!phoneNumber){
+		return next(new ErrorResponse('Error', 400, ['phone number is required']));
+	}
+
+	if(!phoneCode){
+		return next(new ErrorResponse('Error', 400, ['phone code is required']));
+	}
+
+	if(!strIncludesEs6(phoneCode, '+')){
+        return next(new ErrorResponse('Error', 400, ['phone code is must include \'+\' sign']));
+    }
+
+	// format phone number
+	let phoneStr: string;
+	if(strIncludesEs6(phoneCode, '-')){
+		phoneStr = phoneCode.substring(3);
+	}else{
+		phoneStr = phoneCode.substring(1);
+	}
+
+	const phoneExists = await User.findOne({ phoneNumber: phoneStr + phoneNumber.substring(1) });
+
+	if(phoneExists){
+		return next(new ErrorResponse('Error', 400, ['phone number already exists']));
+	}
+
+	const role = await Role.findOne({ name: 'manager' }); // get the manager role
+
+	if(!role){
+		return next(new ErrorResponse('Error', 500, ['role not found. contact support team.']));
+	}
+
+	const password = await generate(8, true);  // generate password
+
+	const user = await User.create({
+
+		firstName,
+		lastName,
+        email,
+        password: password,
+		passwordType: 'generated',
+		savedPassword: password,
+		phoneNumber: phoneStr + phoneNumber.substring(1),
+		userType: 'manager',
+        isSuper: false,
+		isActivated: false,
+		isAdmin: false,
+		isTalent: false,
+		isBusiness: false,
+		isManager: true,
+		isUser: true,
+		isActive: true
+
+	})
+
+	user.roles.push(role?._id);
+	const token = user.getInviteToken();
+	await user.save({ validateBeforeSave: false });
+
+	const inviteLink = `${callback}/${token}`;
+
+	if(invite && invite.toString() === 'true'){
+
+		let emailData = {
+			template: 'welcome',
+			email: user.email,
+			preheaderText: 'MYRIOI Invitation',
+			emailTitle: 'MYRIOI Invite',
+			emailSalute: 'Hello ' + user.firstName + ',',
+			bodyOne: 'MYRIOI has invited you to join them as a business manager on their talent management platform.',
+			bodyTwo: 'You can accept invitation by clicking the button below or ignore this email to decline. Invitation expires in 24 hours',
+			buttonUrl: `${inviteLink}`,
+			buttonText: 'Accept Invite',
+			fromName: 'MYRIOI'
+		}
+
+		await sendGrid(emailData);
+	}
+
+	const returnData = {
+		firstName: user.firstName,
+		lastName: user.lastName,
+        email: user.email,
+		phoneNumber: user.phoneNumber,
+		phoneCode: phoneCode,
+		role: {
+			_id: role?._id,
+			name: role?.name
+		},
+		inviteLink: `${callback}/${token}`,
+		userType: user.userType
+	}
+
+	// publish to NATS
+	await new UserCreated(nats.client).publish({ user: returnData, userType: returnData.userType, phoneCode: phoneCode })
+
+	res.status(206).json({
+		error: true,
+		errors: [],
+		data: returnData,
+		message: 'successful',
+		status: 206
+	})
+
+})
+
+// @desc        Add Talent
+// @route       POST /api/identity/v1/users/add-talent?invite=false
+// @access      Private
+export const addTalent = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+
+	const { firstName, lastName, email, phoneNumber, phoneCode, callback } = req.body;
+
+	const { invite } = req.query;
+
+	if(invite && invite.toString() === 'true' && !callback){
+		return next(new ErrorResponse('Error', 400, ['invite callback url is required']));
+	}
+
+	// validate
+	if(!firstName){
+		return next(new ErrorResponse('Error', 400, ['first name is required']));
+	}
+
+	if(!lastName){
+		return next(new ErrorResponse('Error', 400, ['last name is required']));
+	}
+
+	if(!email){
+		return next(new ErrorResponse('Error', 400, ['email is required']));
+	}
+
+	const existing = await User.findOne({email: email});
+
+	if(!existing){
+		return next(new ErrorResponse('Error', 403, ['email is already existing']));
+	}
+
+	if(!phoneNumber){
+		return next(new ErrorResponse('Error', 400, ['phone number is required']));
+	}
+
+	if(!phoneCode){
+		return next(new ErrorResponse('Error', 400, ['phone code is required']));
+	}
+
+	if(!strIncludesEs6(phoneCode, '+')){
+        return next(new ErrorResponse('Error', 400, ['phone code is must include \'+\' sign']));
+    }
+
+	// format phone number
+	let phoneStr: string
+	if(strIncludesEs6(phoneCode, '_')){
+		phoneStr = phoneCode.subString(3);
+	}else{
+		phoneStr = phoneCode.subString(1)
+	}
+
+	// check if number exist
+	const phoneExists = await User.findOne({ phoneNumber: phoneStr + phoneNumber.substring(1)});
+	
+	if(phoneExists){
+		return next(new ErrorResponse('Error', 400, ['phone number already exists']));
+	}
+
+	// find role
+	const role = await Role.findOne({ name: 'talent' });
+
+	if(!role){
+		return next(new ErrorResponse('Error', 500, ['role not found. contact support team.']));
+	}
+
+	// generate password
+	const password = await generate(8, true);
+
+	const user = await User.create({
+		firstName, 
+		lastName, 
+		email, 
+		password, 
+		passwordType: 'generated',
+		savedPassword: password,
+		phoneNumber: phoneStr + phoneNumber.subString(1), 
+		userType: 'talent',
+        isSuper: false,
+		isActivated: false,
+		isAdmin: false,
+		isTalent: true,
+		isBusiness: false,
+		isManager: false,
+		isUser: true,
+		isActive: true
+	})
+
+	user.roles.push(role?._id);
+	const token = user.getInviteToken();
+	await user.save({ validateBeforeSave: false });
+	user.save();
+
+	const inviteLink = `${callback}/${token}`;
+
+	if(invite && invite.toString() === 'true'){
+
+		let emailData = {
+			template: 'welcome',
+			email: user.email,
+			preheaderText: 'MYRIOI Invitation',
+			emailTitle: 'MYRIOI Invite',
+			emailSalute: 'Hello ' + user.firstName + ',',
+			bodyOne: 'MYRIOI has invited you to join them as a talent on their talent management platform.',
+			bodyTwo: 'You can accept invitation by clicking the button below or ignore this email to decline. Invitation expires in 24 hours',
+			buttonUrl: `${inviteLink}`,
+			buttonText: 'Accept Invite',
+			fromName: 'MYRIOI'
+		}
+
+		await sendGrid(emailData);
+	}
+
+		const returnData = {
+			firstName: user.firstName,
+			lastName: user.lastName,
+			phoneNumber: user.phoneNumber,
+			email: user.email,
+			phoneCode: phoneCode,
+			role: {
+				_id: role?._id,
+				name: role?.name
+			},
+
+			invite: `${callback}/${token}`,
+			userType: user.userType
+		}
+
+		// publish to NATS
+		await new UserCreated(nats.client).publish({ user: returnData, userType: returnData.userType, phoneCode: phoneCode })
+
+		res.status(206).json({
+			error: true,
+			errors: [],
+			data: returnData,
+			message: 'successful',
+			status: 206
+		})
+
+})
+
+// @desc        Add Business
+// @route       POST /api/identity/v1/users/add-business?type="business"  [pass third-party as type]
+// @access      Private
+export const addBusiness = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+
+	const { 
+		businessName, 
+		email, 
+		phoneNumber, 
+		phoneCode, 
+		callback, 
+		industry,
+		location,
+		address,
+		websiteUrl,
+
+	} = req.body;
+
+	const { type } = req.query;
+
+	if(!callback){
+		return next(new ErrorResponse('Error', 400, ['callback url is required']));
+	}
+
+	if(!type){
+		return next(new ErrorResponse('Error', 400, ['business type is required']));
+	}
+
+	// validate
+	if(!businessName){
+		return next(new ErrorResponse('Error', 400, ['business name is required']));
+	}
+
+	if(!email){
+		return next(new ErrorResponse('Error', 400, ['email is required']));
+	}
+
+	const existing = await User.findOne({email: email});
+
+	if(!existing){
+		return next(new ErrorResponse('Error', 403, ['email is already existing']));
+	}
+
+	if(!phoneNumber){
+		return next(new ErrorResponse('Error', 400, ['phone number is required']));
+	}
+
+	if(!phoneCode){
+		return next(new ErrorResponse('Error', 400, ['phone code is required']));
+	}
+
+	if(!strIncludesEs6(phoneCode, '+')){
+        return next(new ErrorResponse('Error', 400, ['phone code is must include \'+\' sign']));
+    }
+
+	// format phone number
+	let phoneStr: string
+	if(strIncludesEs6(phoneCode, '_')){
+		phoneStr = phoneCode.subString(3);
+	}else{
+		phoneStr = phoneCode.subString(1)
+	}
+
+	// check if number exist
+	const phoneExists = await User.findOne({ phoneNumber: phoneStr + phoneNumber.substring(1)});
+	
+	if(phoneExists){
+		return next(new ErrorResponse('Error', 400, ['phone number already exists']));
+	}
+
+	// find role
+	const role = await Role.findOne({ name: 'business' })
+
+	// generate password
+	const password = await generate(8, true);
+
+	const user = await User.create({
+		firstName: businessName, 
+		lastName: businessName, 
+		email, 
+		password, 
+		passwordType: 'generated',
+		savedPassword: password,
+		phoneNumber: phoneStr + phoneNumber.subString(1), 
+		userType: type ? type : 'business',
+        isSuper: false,
+		isActivated: false,
+		isAdmin: false,
+		isTalent: false,
+		isBusiness: true,
+		isManager: false,
+		isUser: true,
+		isActive: true
+	})
+
+	let emailData = {
+		template: 'email-verify',
+		email: user.email,
+		preheaderText: 'MYRIOI',
+		emailTitle: 'Welcome to MYRIOI',
+		emailSalute: 'Hello ' + user.firstName + ',',
+		bodyOne: 'MYRIOI has added you as a business on their talent management platform. Thank you for joining our platform.',
+		bodyTwo: 'Please note that you will be informed when there is a talent match for your business.',
+		fromName: 'MYRIOI'
+	}
+
+	await sendGrid(emailData);
+
+	const returnData = {
+		firstName: user.firstName,
+		lastName: user.lastName,
+		phoneNumber: user.phoneNumber,
+		email: user.email,
+		phoneCode: phoneCode,
+		role: {
+			_id: role?._id,
+			name: role?.name
+		},
+		userType: user.userType,
+		industry: industry,
+		location: location,
+		address: address,
+		websiteUrl: websiteUrl
+
+	}
+
+	// publish to NATS
+	await new UserCreated(nats.client).publish({ user: returnData, userType: returnData.userType, phoneCode: phoneCode })
+
+	res.status(206).json({
+		error: true,
+		errors: [],
+		data: returnData,
+		message: 'successful',
+		status: 206
+	})
+
+})
+
+// @desc        Accept Invite
+// @route       PUT /api/identity/v1/users/accept-invite
+// @access      Private
+export const acceptInvite = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
+	
+	const { token } = req.body;
+
+	if(!token){
+		return new ErrorResponse('Error', 400, ['token is required'])
+	}
+
+	const linkMatched = await User.findOne({ inviteToken: token, inviteTokenExpire: { $gt: new Date() } }) 
+
+	if(!linkMatched){
+		return next(new ErrorResponse('invalid token', 400, ['invite link expired']))
+	}
+
+	linkMatched.inviteToken = undefined;
+	linkMatched.inviteTokenExpire = undefined;
+	await linkMatched.save();
+	
+	res.status(206).json({
+		error: true,
+		errors: [],
+		data: null,
+		message: 'successful',
+		status: 206
+	})
+
+
+})
+
+
 
 /** 
  * snippet

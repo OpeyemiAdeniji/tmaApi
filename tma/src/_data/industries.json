@@ -1,0 +1,83 @@
+[
+    {
+        "name": "Software",
+        "description": "The development Of Softwares"
+    },
+    {
+        "name": "Hardware",
+        "description": "The design, Production and marketing of hardwares"
+    },
+    {
+        "name": "Cloud Services",
+        "description": "Delivering softwares and hardware services"
+    },
+    {
+        "name": "Internet",
+        "description": "Internet based services"
+    },
+    {
+        "name": "Ecommerce",
+        "description": "Online platform for buying and selling of products nad services"
+    },
+    {
+        "name": "Consumer Electronics",
+        "description": "The Design, marketing and manufacturin of computer electronics suchb as smart phones"
+    },
+    {
+        "name": "Software",
+        "description": "The development Of Softwares"
+    },
+    {
+        "name": "Telecom",
+        "description": "Network Services such as inernet connection"
+    },
+    {
+        "name": "Software",
+        "description": "The development Of Softwares"
+    },
+    {
+        "name": "Infrastructure",
+        "description": "A platform for delivering games or mobile apps "
+    },
+    {
+        "name": "Robotics",
+        "description": "The development Of Machines that resspond and interact with their environment"
+    },
+    {
+        "name": "Artificial Intelligence",
+        "description": "The development Of Softwares and Hardwares"
+    },
+    {
+        "name": "Consulting",
+        "description": "Technology related Consulting"
+    },
+    {
+        "name": "Design",
+        "description": "Technology related design services such as wed design"
+    },
+    {
+        "name": "Games",
+        "description": "The development and production of video games"
+    },
+    {
+        "name": "Education, Edutech",
+        "description": "Education Deluvered vua digital platforms"
+    },
+    {
+        "name": "Agricultural Technology, Agritech",
+        "description": "The development Of Softwares and hardwares to enhance agricultural and farming production"
+    },
+    {
+        "name": "Finance, Fintech",
+        "description": "Finance such as banks acccounts, payments, loans and investment platforms"
+    },
+    {
+        "name": "HealthCare, HealthTech",
+        "description": "The development Of Softwares"
+    },
+    {
+        "name": "Transportation",
+        "description": "Transportation technology"
+    }
+
+]

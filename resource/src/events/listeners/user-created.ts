@@ -18,7 +18,7 @@ class UserCreatedListener extends Listener {
     async onMessage(data: any, msg: any){
 
         // get the message data
-        const { user, phoneCode, } = data;
+        const { user, phoneCode } = data;
 
         // find the country that matches the phone code
         const country = await Country.findOne({ phoneCode: phoneCode });

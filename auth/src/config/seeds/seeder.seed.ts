@@ -11,7 +11,7 @@ import { seedUsers } from './user.seed'
 // role functions
 const attachSuperRole = async (): Promise<void> => {
 
-    const superadmin = await User.findOne({ email: 'admin@myrioi.co' });
+    const superadmin = await User.findOne({ email: 'admin@MYRIOI.co' });
     const role = await Role.findOne({ name: 'superadmin' });
 
 

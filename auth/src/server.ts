@@ -3,6 +3,7 @@ import colors from 'colors'
 import { seedData } from './config/seeds/seeder.seed'
 import connectDB from './config/db'
 import { getMemoryStats, getHeapSize } from './utils/memory.util'
+import { unlockUserAccounts } from './jobs/user.job'
 
 const connect = async (): Promise<void> => {
 
@@ -15,7 +16,10 @@ const connect = async (): Promise<void> => {
 
     // seed data
     await seedData();
-
+    
+    // start job automatically
+    // run every 0 seconds of every 30th minute of every hour of every day of month of every month of every day of week
+    unlockUserAccounts('0 */30 * * * *');
 }
 
 connect();  // initialize connection and seed data

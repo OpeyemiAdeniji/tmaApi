@@ -1,0 +1,48 @@
+[
+    {
+        "name": "Amazon Web Services",
+"code": "AWS",
+        "description": "Amazon Web Services"
+    },
+    {
+        "name": "Microsoft Azure",
+"code": "MAS",
+        "description": "Microsoft Azure Services"
+    },
+    {
+        "name": "Google Cloud",
+"code": "GCS",
+        "description": "Google Cloud Services"
+    },
+    {
+        "name": "Alibaba Cloud",
+"code": "ACS",
+        "description": "Alibaba cloud Services"
+    },
+    {
+        "name": "IBM Cloud",
+"code": "ICS",
+        "description": "IBM cloud Services"
+    },
+    {
+        "name": "Oracle Cloud",
+"code": "OCS",
+        "description": "Oracle cloud Services"
+    },
+    
+    {
+        "name": "Salesforce Cloud",
+"code": "SWS",
+        "description": "Salesforce Web Services"
+    },
+    {
+        "name": "SaP Cloud",
+"code": "SAP",
+        "description": "SaP Cloud Services"
+    },
+    {
+        "name": "Rackspace Cloud",
+"code": "RCS",
+        "description": "Rackspace Cloud Services"
+    }
+]
