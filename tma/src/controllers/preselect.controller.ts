@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { asyncHandler } from "@btffamily/tmat";
+import { asyncHandler } from "@btffamily/tmaapp";
 import ErrorResponse from '../utils/error.util'
 
 // models

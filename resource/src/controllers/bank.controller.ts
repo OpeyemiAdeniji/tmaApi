@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import ErrorResponse from '../utils/error.util';
-import { asyncHandler, strIncludesEs6, strToArrayEs6 } from '@btffamily/tmat';
+import { asyncHandler, strIncludesEs6, strToArrayEs6 } from '@btffamily/tmaapp';
 
 // import models
 import Bank from '../models/Bank.model';

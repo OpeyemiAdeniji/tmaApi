@@ -45,7 +45,6 @@ var findByName = function (model, name) { return __awaiter(void 0, void 0, void 
             case 0: return [4 /*yield*/, model.findOne({ name: name })];
             case 1:
                 role = _a.sent();
-                console.log(role);
                 return [2 /*return*/, role];
         }
     });
@@ -68,7 +67,6 @@ var getRolesByName = function (roles, authType, authDB) { return __awaiter(void 
             case 0: return [4 /*yield*/, (0, db_mw_1.getRoleModel)(authType, authDB)];
             case 1:
                 Role = _a.sent();
-                console.log(Role);
                 result = roles.map(function (r) { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0: return [4 /*yield*/, findByName(Role, r)];

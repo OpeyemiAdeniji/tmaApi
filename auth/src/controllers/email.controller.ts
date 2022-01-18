@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
 import ErrorResponse from '../utils/error.util';
-import { asyncHandler } from '@btffamily/tmat';
+import { asyncHandler } from '@btffamily/tmaapp';
 import { sendGrid } from '../utils/email.util';
 
 import User from '../models/User.model';

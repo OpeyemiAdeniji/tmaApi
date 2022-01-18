@@ -1,7 +1,7 @@
 import crypto from 'crypto'
 import ErrorResponse from '../utils/error.util'
 import { Request, Response, NextFunction } from 'express';
-import { asyncHandler } from '@btffamily/tmat';
+import { asyncHandler } from '@btffamily/tmaapp';
 
 import NotificationHelper from '../middleware/notify.mw'
 import Notification from '../models/Notification.model'

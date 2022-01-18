@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import ErrorResponse from '../utils/error.util';
-import { asyncHandler, strIncludesEs6, strToArrayEs6, isString, isObject } from '@btffamily/tmat';
+import { asyncHandler, strIncludesEs6, strToArrayEs6, isString, isObject } from '@btffamily/tmaapp';
 
 import Location from '../models/Location.model';
 import Country from '../models/Country.model';

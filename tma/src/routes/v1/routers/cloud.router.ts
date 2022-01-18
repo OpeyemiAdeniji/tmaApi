@@ -20,3 +20,5 @@ import {
 const allRoles = ['superadmin', 'admin', 'business', 'manager', 'talent', 'user'];
 
  router.get('/', vcd, advancedResults(Cloud), getClouds);
+
+ export default router;

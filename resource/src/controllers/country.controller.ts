@@ -1,7 +1,7 @@
 import mongoose, { Document, ObjectId } from 'mongoose';
 import { Request, Response, NextFunction } from 'express';
 import ErrorResponse from '../utils/error.util';
-import { asyncHandler, strIncludesEs6, strToArrayEs6 } from '@btffamily/tmat';
+import { asyncHandler, strIncludesEs6, strToArrayEs6 } from '@btffamily/tmaapp';
 
 import Country from '../models/Country.model';
 
