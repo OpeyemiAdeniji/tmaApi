@@ -15,12 +15,20 @@ export const getRolesByName = async (roles: Array<string>, authType: string, aut
 
     const Role = await getRoleModel(authType, authDB);
 
-    const resultArr = roles.map(async (r) => {
-        const role = await Role.findOne({name: r});
-        if(role){
-            return role;
+    let resultArr: Array<any> = [];
+    const allRoles = await Role.find({});
+
+    for (let i = 0; i < roles.length; i++){
+
+        for(let j = 0; j < allRoles.length; j++){
+
+            if(roles[i].toString() === allRoles[j].eventNames.toString()){
+                resultArr.push(allRoles[j]);
+            }
+
         }
-    })
+        
+    }
 
     return resultArr;
 }

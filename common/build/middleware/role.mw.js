@@ -61,20 +61,27 @@ var getRoleName = function (model, id) { return __awaiter(void 0, void 0, void 0
     });
 }); };
 var getRolesByName = function (roles, authType, authDB) { return __awaiter(void 0, void 0, void 0, function () {
-    var Role, result, authorized;
+    var Role, resultArr;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, (0, db_mw_1.getRoleModel)(authType, authDB)];
             case 1:
                 Role = _a.sent();
-                result = roles.map(function (r) { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, findByName(Role, r)];
-                        case 1: return [2 /*return*/, _a.sent()];
-                    }
-                }); }); });
-                authorized = Promise.all(result);
-                return [2 /*return*/, authorized];
+                resultArr = roles.map(function (r) { return __awaiter(void 0, void 0, void 0, function () {
+                    var role;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0: return [4 /*yield*/, Role.findOne({ name: r })];
+                            case 1:
+                                role = _a.sent();
+                                if (role) {
+                                    return [2 /*return*/, role];
+                                }
+                                return [2 /*return*/];
+                        }
+                    });
+                }); });
+                return [2 /*return*/, resultArr];
         }
     });
 }); };
