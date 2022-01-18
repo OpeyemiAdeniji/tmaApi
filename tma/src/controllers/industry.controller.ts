@@ -15,6 +15,7 @@ export const getIndustries = asyncHandler(async (req: Request, res: Response, ne
 // @route          GET /api/tma/v1/industries/:id
 // @access         Private/Superadmin/Admin
 export const getIndustry = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+
     const industry = await Industry.findById(req.params.id);
 
     if(!industry){
@@ -41,10 +42,6 @@ export const addIndustry = asyncHandler(async (req: Request, res: Response, next
         return next(new ErrorResponse('Error', 404, ['name is required']))
     }
 
-    if(!description){
-        return next(new ErrorResponse('Error', 404, ['description is required']))
-    }
-
     const exists = await Industry.findOne({ name: name });
 
     if(exists){
@@ -53,7 +50,7 @@ export const addIndustry = asyncHandler(async (req: Request, res: Response, next
 
     const industry = await Industry.create({
         name,
-        description
+        description: description ? description : ''
     })
 
     res.status(200).json({
@@ -78,9 +75,15 @@ export const updateIndustry = asyncHandler(async (req: Request, res: Response, n
         return next(new ErrorResponse('Error', 404, ['industry does not exist']))
     }
 
+    const exists = await Industry.findOne({ name: name });
+
+    if(exists){
+        return next(new ErrorResponse('Error!', 400, ['industry already exist']));
+    }
+
     industry.name = name ? name : industry.name;
     industry.description = description ? description : industry.description;
-    industry.save();
+    await industry.save();
 
     res.status(200).json({
         error: false,

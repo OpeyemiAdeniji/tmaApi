@@ -55,13 +55,7 @@ const BusinessSchema = new mongoose.Schema (
         },
 
         email: {
-			type: String,
-			required: [true, 'email is required'],
-			unique: [true, 'email already exist'],
-			match: [
-				/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-				'a valid email is required',
-			],
+			type: String
 		},
 
         phoneNumber: {

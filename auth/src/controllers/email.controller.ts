@@ -38,12 +38,12 @@ export const sendWelcomeEmail = asyncHandler(async (req: Request, res: Response,
             template: 'welcome',
             email: email,
             preheaderText: 'welcome',
-            emailTitle: 'Welcome to Myrioi',
+            emailTitle: 'Welcome to MYRIOI',
             emailSalute: `Hello, ${user.firstName}`,
-            bodyOne: 'Welcome to Myrioi, we\'re glad you joined us.',
+            bodyOne: 'Welcome to MYRIOI, we\'re glad you joined us.',
             buttonUrl: `${callbackUrl}`,
             buttonText: 'Login To Dashboard',
-            fromName: 'Myrioi'
+            fromName: 'MYRIOI'
         }
 
         await sendGrid(emailData);
@@ -106,7 +106,7 @@ export const sendActivationEmail = asyncHandler(async (req: Request, res: Respon
         bodyOne: 'Please confirm that you own this email by clicking the button below',
         buttonUrl: `${activationUrl}`,
         buttonText: 'Login To Dashboard',
-        fromName: 'Myrioi'
+        fromName: 'MYRIOI'
     }
 
     await sendGrid(emailData);
@@ -170,7 +170,7 @@ export const sendResetLink = asyncHandler(async (req: Request, res: Response, ne
         bodyOne: 'You are receiving this email because you (or someone else) has requested a password reset. Click the button below to change your password or ignore this email if this wasnt you',
         buttonUrl: `${resetUrl}`,
         buttonText: 'Reset Password',
-        fromName: 'Myrioi'
+        fromName: 'MYRIOI'
     }
 
     await sendGrid(emailData);
@@ -214,7 +214,7 @@ export const sendVerificationEmail = asyncHandler(async (req: Request, res: Resp
         emailSalute: `Hello, ${user.firstName}`,
         bodyOne: 'Use the code below to verify your email',
         bodyTwo: `${mailCode}`,
-        fromName: 'Myrioi'
+        fromName: 'MYRIOI'
     }
     await sendGrid(emailData);
 

@@ -30,15 +30,14 @@ const LanguageSchema = new mongoose.Schema(
     {
         name: {
             type: String,
-            required: false
+            required: [true, 'name is required']
         },
         code: {
             type: String,
-            required: false
+            required: [true, 'code is required']
         },
         description: {
-            type: String,
-            required: false
+            type: String
         },
 
         slug: String,

@@ -14,6 +14,7 @@ interface ITalentModel extends mongoose.Model<ITalentDoc> {
 // interface that describes the properties that the Doc has
 interface ITalentDoc extends mongoose.Document{
 
+    bio: string;
     firstName: string;
     lastName: string;
     middleName: string; 
@@ -58,6 +59,10 @@ interface ITalentDoc extends mongoose.Document{
 const TalentSchema = new mongoose.Schema (
 
     {
+
+        bio: {
+            type: String,
+        },
 
         firstName: {
             type: String,

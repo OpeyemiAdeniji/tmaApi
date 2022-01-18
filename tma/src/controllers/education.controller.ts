@@ -14,6 +14,7 @@ dayjs.extend(customparse);
 // import models
 import Education from '../models/Education.model';
 import User from '../models/User.model';
+import Talent from '../models/Talent.model';
 
 // @desc           Get Educations
 // @route          GET /api/tma/v1/educations
@@ -40,4 +41,74 @@ export const getEducation = asyncHandler(async (req: Request, res: Response, nex
         message: 'successful',
         status: 200
     })
+});
+
+// @desc           Get an Education
+// @route          GET /api/tma/v1/education/talent/:id
+// @access         Private/Superadmin/admin/talent
+export const getTalentEducationList = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+
+    const talent = await Talent.findOne({ user: req.params.id });
+
+    if (!talent) {
+        return next(new ErrorResponse('Error', 404, ['user does not exist']))
+    }
+
+    const educations = await Education.find({ user: talent.user });
+
+    res.status(200).json({
+        error: false,
+        errors: [],
+        data: educations.length > 0 ? educations : [],
+        message: 'successful',
+        status: 200
+    })
+
+
+});
+
+// @desc           Add education
+// @route          GET /api/tma/v1/education/talent/add-education/:id
+// @access         Private/Superadmin/admin/talent
+export const addEducation = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+
+    const {
+        institutionName,
+        degree,
+        startDate,
+        endDate,
+        isCurrent,
+    } = req.body
+
+    const talent = await Talent.findOne({ user: req.params.id });
+
+    if (!talent) {
+        return next(new ErrorResponse('Error', 404, ['user does not exist']))
+    }
+
+    if(!startDate){
+        return next(new ErrorResponse('Error', 404, ['start date is required']))
+    }
+
+    const sd = await dayjs(startDate);
+    const ed = await dayjs(endDate);
+
+    const edu = await Education.create({
+        institutionName,
+        degree,
+        startDate: sd,
+        endDate: ed,
+        isCurrent,
+        user: talent.user
+    });
+
+    res.status(200).json({
+        error: false,
+        errors: [],
+        data: edu,
+        message: 'successful',
+        status: 200
+    })
+
+    
 });

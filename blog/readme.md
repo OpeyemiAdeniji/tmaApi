@@ -1,6 +1,6 @@
-# MyRIOI TMA-API
+# MYRIOI TMA-API
 
-> Backend API for the MyRIOI TMA Blog Service 
+> Backend API for the MYRIOI TMA Blog Service 
 
 ## Usage
 

@@ -11,16 +11,16 @@ import {
  import Framework from '../../../models/Framework.model';
 
  const router: Router = express.Router({ mergeParams: true});
-
- import { protect, authorize } from '../../../middleware/auth.mw'
+ import { authorize, protect } from '../../../middleware/auth.mw';
  import { validateChannels as vcd } from '../../../middleware/header.mw';
 
  const roles = ['superadmin', 'admin', 'user'];
+ const limRoles = ['superadmin', 'admin', 'manager'];
 const allRoles = ['superadmin', 'admin', 'business', 'manager', 'talent', 'user'];
 
-router.get('/', vcd, advancedResults(Framework), getFrameworks);
-router.get('/:id', vcd, protect, authorize(roles), getFramework);
-router.post('/add-framework', vcd, protect, authorize(roles), addFramework);
-router.put('/:id', vcd, protect, authorize(roles), updateFramework);
+ router.get('/', vcd, protect, authorize(roles), advancedResults(Framework), getFrameworks);
+ router.get('/:id', vcd, protect, authorize(allRoles), getFramework);
+ router.post('/', vcd, protect, authorize(roles), addFramework);
+ router.put('/:id', vcd, protect, authorize(roles), updateFramework);
 
 export default router;

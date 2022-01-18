@@ -53,7 +53,7 @@ export const getTalents = asyncHandler(async (req: Request, res:Response, next: 
 })
 
 // @desc    Get all businesses [these are people who hire the talents]
-// @route   GET /api/v1/users/businesses
+// @route   GET /api/v1/users/businesses?active="true"&type="business"
 // @access  Public // superadmin
 export const getBusinesses = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
 
@@ -62,52 +62,48 @@ export const getBusinesses = asyncHandler(async (req: Request, res:Response, nex
 		data: null
 	}
 
-	const { active } = req.query;
+	const { active, type} = req.query;
 
 	const businesses = await Business.find({}).populate([{path: 'user'}]);
 	const activeBusinesses = businesses.filter((b) => b.user.isActive === true);
 
 	if(active && active.toString() === 'true'){
-		result.count = activeBusinesses.length;
-		result.data = activeBusinesses;
+
+		if(type){
+
+			const typeBusinesses = activeBusinesses.filter((b) => b.businessType === type);
+			result.count = typeBusinesses.length;
+			result.data = typeBusinesses;
+
+		}else{
+
+			result.count = activeBusinesses.length;
+			result.data = activeBusinesses;
+
+		}
+
+		
+
+
 	}else{
-		result.count = businesses.length;
-		result.data = businesses;
+
+		if(type){
+
+			const typeBusinesses = businesses.filter((b) => b.businessType === type);
+			result.count = typeBusinesses.length;
+			result.data = typeBusinesses;
+
+		}else{
+
+			result.count = businesses.length;
+			result.data = businesses;
+
+		}
+
+
+		
 	}
 
-	res.status(200).json({
-		error: false,
-		errors: [],
-		count: result.count,
-		message: `Successful`,
-		data: result.data,
-		status: 200
-	});
-
-})
-
-// @desc    Get all businesses [these are people who supply the talents]
-// @route   GET /api/v1/users/organizations
-// @access  Public // superadmin
-export const getOrganizations = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
-
-	let result: object | any = {
-		count: 0,
-		data: null
-	}
-
-	const { active } = req.query;
-
-	const businesses = await Business.find({ userType: 'third-party' }).populate([{path: 'user'}]);
-	const activeBusinesses = businesses.filter((a) => a.user.isActive === true);
-
-	if(active && active.toString() === 'true'){
-		result.count = activeBusinesses.length;
-		result.data = activeBusinesses;
-	}else{
-		result.count = businesses.length;
-		result.data = businesses;
-	}
 
 	res.status(200).json({
 		error: false,
