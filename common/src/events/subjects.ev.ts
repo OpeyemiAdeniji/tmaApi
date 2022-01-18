@@ -3,7 +3,7 @@ export enum Subjects {
 
     UserCreated = 'tma.user.created',
     CountryFound = 'tma.country.found',
-    LocationSaved = 'concreap.location.saved',
+    LocationSaved = 'tma.location.saved',
     NotificationCreated = 'tma.notification.created',
 
 }
