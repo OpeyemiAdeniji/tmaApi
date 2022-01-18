@@ -7,8 +7,17 @@ config();
 
 // models
 import Business from './src/models/Business.model'
+import Cloud from './src/models/Cloud.model'
+import Education from './src/models/Education.model'
+import Framework from './src/models/Framework.model'
+import Industry from './src/models/Industry.model'
+import Interview from './src/models/Interview.model'
+import Language from './src/models/Language.model'
+import Preselect from './src/models/Preselect.model'
+import Skill from './src/models/Skill.model'
 import Talent from './src/models/Talent.model'
 import User from './src/models/User.model'
+import Work from './src/models/Work.model'
 
 const options: object = {
 
@@ -48,6 +57,14 @@ const deleteData = async () : Promise<void> => {
         await connectDB();
 
         await Business.deleteMany();
+        await Cloud.deleteMany();
+        await Education.deleteMany();
+        await Framework.deleteMany();
+        await Industry.deleteMany();
+        await Interview.deleteMany();
+        await Language.deleteMany();
+        await Preselect.deleteMany();
+        await Skill.deleteMany();
         await Talent.deleteMany();
         await User.deleteMany();
 
