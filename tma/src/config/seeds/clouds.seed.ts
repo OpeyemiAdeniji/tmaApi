@@ -17,10 +17,12 @@ export const seedClouds = async () => {
 
         const seed = await Cloud.create(clouds)
 
-        if(seed) {
-            console.log('Cloud seeded successfully'.green.inverse);
+        if(seed){
+            console.log(colors.green.inverse('clouds seeded successfully.'));
         }
+
     } catch (err) {
-        console.log(`Error: ${err}`.red.inverse)
+        console.log(colors.red.inverse(`${err}`));
     }
+
 }

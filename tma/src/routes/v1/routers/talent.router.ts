@@ -18,6 +18,6 @@ const allRoles = ['superadmin', 'admin', 'business', 'manager', 'talent', 'user'
 
 router.get('/', vcd, protect, authorize(roles), advancedResults(Talent), getTalents);
 router.get('/:id', vcd, protect, authorize(allRoles), getTalent);
-router.post('/', vcd, protect, authorize(allRoles), apply);
+router.post('/:id', vcd, protect, authorize(allRoles), apply);
 
 export default router;

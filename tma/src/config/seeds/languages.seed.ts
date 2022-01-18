@@ -18,9 +18,9 @@ export const seedLanguages = async () => {
         const seed = await Language.create(languages);
 
         if (seed) {
-            console.log('Languages seeded successfully')
+            console.log(colors.green.inverse('languages seeded successfully'));
         }
     } catch (err) {
-        console.log(`Error: ${err}`.red.inverse)
+        console.log(colors.red.inverse(`Error: ${err}`))
     }
 }

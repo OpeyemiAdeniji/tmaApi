@@ -8,7 +8,7 @@ import { generate } from '../utils/random.util';
 import { userLogger } from '../config/wiston';
 import { uploadBase64File } from '../utils/google.util'
 import { validateWorks, addWorks } from '../services/work.srv'
-import { validateEducation, addEducations } from '../services/education'
+import { validateEducation, addEducations } from '../services/education.srv'
 
 import dayjs from 'dayjs'
 import customparse from 'dayjs/plugin/customParseFormat';
@@ -193,7 +193,6 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 		githubUrl,
 		user: user._id
 	})
-
 
 	// save skill
 	const skill = await Skill.create({

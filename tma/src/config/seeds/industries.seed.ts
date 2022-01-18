@@ -18,9 +18,9 @@ export const seedIndustries = async () => {
         const seed = await Industry.create(industries)
 
         if(seed) {
-            console.log('Industries seeded successfully'.green.inverse);
+            console.log(colors.green.inverse('industries seeded successfully'));
         }
     } catch (err) {
-        console.log(`Error: ${err}`.red.inverse)
+        console.log(colors.red.inverse(`Error: ${err}`))
     }
 }

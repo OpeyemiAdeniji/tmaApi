@@ -18,9 +18,9 @@ export const seedFrameworks = async () => {
         const seed = await Framework.create(frameworks)
 
         if(seed) {
-            console.log('frameworks seeded successfully'.green.inverse);
+            console.log(colors.green.inverse('frameworks seeded successfully'));
         }
     } catch (err) {
-        console.log(`Error: ${err}`.red.inverse)
+        console.log(colors.red.inverse(`Error: ${err}`))
     }
 }
