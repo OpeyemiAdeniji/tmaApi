@@ -973,6 +973,7 @@ const sendTokenResponse = async (user: any, message: string, statusCode: number,
 	});
 };
 
+
 /** 
  * snippet
  * **/
@@ -983,6 +984,3 @@ const sendTokenResponse = async (user: any, message: string, statusCode: number,
 // export const funcd = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
 
 // })
-
-
-
