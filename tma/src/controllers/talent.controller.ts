@@ -77,6 +77,7 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 	}
 
 	const { 
+		bio,
 		primaryLanguage, 
 		secondaryLanguage,
 		primaryFramework, 
@@ -185,6 +186,7 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 	console.log(req.body)
 
 	const talent = await Talent.create({
+		bio,
 		firstName: user.firstName,
 		lastName: user.lastName,
 		middleName,
