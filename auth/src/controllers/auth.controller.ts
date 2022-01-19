@@ -897,7 +897,6 @@ export const detachRole = asyncHandler(async (req: Request, res:Response, next: 
 
 })
 
-
 // Helper function: get token from model, create cookie and send response
 const sendTokenResponse = async (user: any, message: string, statusCode: number, res: Response): Promise<void> => {
 
