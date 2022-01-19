@@ -381,7 +381,6 @@ export const login = asyncHandler(async (req: Request, res:Response, next: NextF
 
 			user.loginLimit = user.increaseLoginLimit()
 			await user.save();
-
 		}
 
 		// lock user account if not locked
@@ -410,7 +409,6 @@ export const login = asyncHandler(async (req: Request, res:Response, next: NextF
 
 	// save request user object
 	req.user = user;
-
 
 	const message = 'successful';
 	sendTokenResponse(user, message, 200, res);

@@ -64,7 +64,9 @@ export const getTalent = asyncHandler(async (req: Request, res:Response, next: N
 // @access  Private/Superadmin/Admin
 export const apply = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
 
-	const user = await User.findOne({ user: req.params.id });
+	const user = await User.findById(req.params.id);
+
+	console.log(user);
 
 	if(!user){
 		return next(new ErrorResponse(`Error!`, 404, ['user does not exist']))

@@ -19,7 +19,7 @@ import {
  const limRoles = ['superadmin', 'admin', 'manager'];
 const allRoles = ['superadmin', 'admin', 'business', 'manager', 'talent', 'user'];
 
-router.get('/', vcd, protect, authorize(roles), advancedResults(Cloud), getClouds);
+router.get('/', vcd, advancedResults(Cloud), getClouds);
 router.get('/:id', vcd, protect, authorize(allRoles), getCloud);
 router.post('/', vcd, protect, authorize(roles), addCloud);
 router.put('/:id', vcd, protect, authorize(roles), updateCloud);
