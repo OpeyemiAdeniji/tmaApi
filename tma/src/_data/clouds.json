@@ -2,36 +2,36 @@
     {
         "name": "Amazon Web Services",
         "code": "aws",
-        "description": "Amazon Web Services"
+        "description": "amazon web services"
     },
 
     {
         "name": "Microsoft Azure",
         "code": "mas",
-        "description": "Microsoft Azure Services"
+        "description": "microsoft azure services"
     },
 
     {
         "name": "Google Cloud",
         "code": "gcs",
-        "description": "Google Cloud Services"
+        "description": "google cloud services"
     },
 
     {
         "name": "Alibaba Cloud",
         "code": "acs",
-        "description": "Alibaba cloud Services"
+        "description": "alibaba cloud services"
     },
 
     {
         "name": "IBM Cloud",
         "code": "ics",
-        "description": "IBM cloud Services"
+        "description": "iBM cloud services"
     },
 
     {
         "name": "Oracle Cloud",
         "code": "ocs",
-        "description": "Oracle cloud Services"
+        "description": "oracle cloud services"
     }
 ]
