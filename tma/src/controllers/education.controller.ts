@@ -80,10 +80,16 @@ export const addEducation = asyncHandler(async (req: Request, res: Response, nex
         isCurrent,
     } = req.body
 
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+        return next(new ErrorResponse('Error', 404, ['user does not exist']))
+    }
+
     const talent = await Talent.findOne({ user: req.params.id });
 
-    if (!talent) {
-        return next(new ErrorResponse('Error', 404, ['user does not exist']))
+    if (user && !talent) {
+        return next(new ErrorResponse('Error', 404, ['talent profile does not exist']))
     }
 
     if(!startDate){
@@ -99,7 +105,7 @@ export const addEducation = asyncHandler(async (req: Request, res: Response, nex
         startDate: sd,
         endDate: ed,
         isCurrent,
-        user: talent.user
+        user: user._id
     });
 
     res.status(200).json({
