@@ -143,10 +143,10 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 	}
 
 	if(typeof(works) !== 'object'){
-		return next (new ErrorResponse('Error', 400, ['work data is required to be an array of object']))
+		return next (new ErrorResponse('Error', 400, ['work data is required to be an array of objects']))
 	}
 
-	if(works.length <= 0){
+	if(!works.length && works.length <= 0){
 		return next (new ErrorResponse('Error', 400, ['work data is required to contain valid object data']))
 	}
 
@@ -166,7 +166,7 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 		return next (new ErrorResponse('Error', 400, ['education data is required to be an array of object']))
 	}
 
-	if(educations.length <= 0){
+	if(!educations.length && educations.length <= 0){
 		return next (new ErrorResponse('Error', 400, ['education data is required to contain valid object data']))
 	}
 
@@ -212,7 +212,7 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 
 		for(let i = 0; i < languages.length; i++){
 
-			const lang = await Language.findById(languages[i]);
+			const lang = await Language.findOne({ code: languages[i] });
 
 			if (lang){
 
@@ -230,7 +230,7 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 
 		for(let i = 0; i < frameworks.length; i++){
 
-			const frame = await Framework.findById(frameworks[i]);
+			const frame = await Framework.findOne({ name: frameworks[i] });
 
 			if (frame){
 
@@ -248,7 +248,7 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 
 		for(let i = 0; i < clouds.length; i++){
 
-			const cloud = await Framework.findById(clouds[i]);
+			const cloud = await Cloud.findOne({ code: clouds[i] });
 
 			if (cloud){
 
