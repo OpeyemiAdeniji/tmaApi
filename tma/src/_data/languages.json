@@ -1,27 +1,32 @@
 [
     {
         "name": "Python",
-        "code": "Py",
+        "code": "py",
         "description": ""
     },
     {
-        "name": "C-plus plus",
-        "code": "C++",
+        "name": "C Plus-Plus",
+        "code": "c++",
         "description": ""
     },
     {
-        "name": "C#",
-        "code": "C-sharp",
+        "name": "C-Sharp",
+        "code": "c#",
         "description": ""
     },
     {
         "name": "Java",
-        "code": "Jv",
+        "code": "java",
+        "description": ""
+    },
+    {
+        "name": "Javascript",
+        "code": "javascript",
         "description": ""
     },
     {
         "name": "Ruby",
-        "code": "Rb",
+        "code": "rb",
         "description": ""
     },
     {
@@ -36,27 +41,27 @@
     },
     {
         "name": "TypeScript",
-        "code": "Ts",
+        "code": "ts",
         "description": ""
     },
     {
         "name": "Kotlin",
-        "code": "Kt",
+        "code": "kt",
         "description": ""
     },
     {
-        "name": "Golang",
-        "code": "Go",
+        "name": "Go Language",
+        "code": "go",
         "description": ""
     },
     {
         "name": "Rust",
-        "code": "Rs",
+        "code": "rs",
         "description": ""
     },
     {
-        "name": "Visual Basic .NET",
-        "code": ".net",
+        "name": "Visual Basic",
+        "code": "vb",
         "description": ""
     }
 ]

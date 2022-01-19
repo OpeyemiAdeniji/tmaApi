@@ -1,83 +1,83 @@
 [
     {
         "name": "Software",
-        "description": "The development Of Softwares"
+        "description": "the development of softwares"
     },
     {
         "name": "Hardware",
-        "description": "The design, Production and marketing of hardwares"
+        "description": "the design, production and marketing of hardwares"
     },
     {
         "name": "Cloud Services",
-        "description": "Delivering softwares and hardware services"
+        "description": "delivering softwares and hardware services"
     },
     {
         "name": "Internet",
-        "description": "Internet based services"
+        "description": "internet based services"
     },
     {
         "name": "Ecommerce",
-        "description": "Online platform for buying and selling of products nad services"
+        "description": "online platform for buying and selling of products and services"
     },
     {
         "name": "Consumer Electronics",
-        "description": "The Design, marketing and manufacturin of computer electronics suchb as smart phones"
+        "description": "the design, marketing and manufacturing of computer electronics such as smart phones"
     },
     {
         "name": "Software",
-        "description": "The development Of Softwares"
+        "description": "the development of softwares"
     },
     {
         "name": "Telecom",
-        "description": "Network Services such as inernet connection"
+        "description": "network services such as inernet connection"
     },
     {
         "name": "Software",
-        "description": "The development Of Softwares"
+        "description": "the development of softwares"
     },
     {
         "name": "Infrastructure",
-        "description": "A platform for delivering games or mobile apps "
+        "description": "a platform for delivering games or mobile apps "
     },
     {
         "name": "Robotics",
-        "description": "The development Of Machines that resspond and interact with their environment"
+        "description": "the development of machines that respond and interact with their environment"
     },
     {
         "name": "Artificial Intelligence",
-        "description": "The development Of Softwares and Hardwares"
+        "description": "the development Of softwares and hardwares"
     },
     {
         "name": "Consulting",
-        "description": "Technology related Consulting"
+        "description": "technology related consulting"
     },
     {
         "name": "Design",
-        "description": "Technology related design services such as wed design"
+        "description": "technology related design services such as wed design"
     },
     {
         "name": "Games",
-        "description": "The development and production of video games"
+        "description": "the development and production of video games"
     },
     {
         "name": "Education, Edutech",
-        "description": "Education Deluvered vua digital platforms"
+        "description": "education delivered via digital platforms"
     },
     {
         "name": "Agricultural Technology, Agritech",
-        "description": "The development Of Softwares and hardwares to enhance agricultural and farming production"
+        "description": "the development of softwares and hardwares to enhance agricultural and farming production"
     },
     {
         "name": "Finance, Fintech",
-        "description": "Finance such as banks acccounts, payments, loans and investment platforms"
+        "description": "finance such as banks acccounts, payments, loans and investment platforms"
     },
     {
         "name": "HealthCare, HealthTech",
-        "description": "The development Of Softwares"
+        "description": "the development of softwares"
     },
     {
         "name": "Transportation",
-        "description": "Transportation technology"
+        "description": "transportation technology"
     }
 
 ]

@@ -97,7 +97,7 @@ const TalentSchema = new mongoose.Schema (
 
         level: {
             type: String,
-            enum: ['junior', 'intermediate', 'expert'],
+            enum: ['junior', 'mid-level', 'senior'],
             required: [true, 'level is required']
         },
         

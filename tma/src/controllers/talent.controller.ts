@@ -66,10 +66,14 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 
 	const user = await User.findById(req.params.id);
 
-	console.log(user);
-
 	if(!user){
 		return next(new ErrorResponse(`Error!`, 404, ['user does not exist']))
+	}
+
+	const existing = await Talent.findOne({user: user._id});
+
+	if(existing){
+		return next(new ErrorResponse(`Error!`, 400, ['talent profile already exist']))
 	}
 
 	const { 
@@ -89,6 +93,7 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 		location,
 		address,
 		type,
+		level,
 		currentSalary,
 		resumeUrl,
 		portfolioUrl,
@@ -98,40 +103,40 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 	} = req.body;
 
 
-	// validate languages (P & S)
-	const pLang = await Language.findById(primaryLanguage);
+	// // validate languages (P & S)
+	const pLang = await Language.findOne({ name: primaryLanguage });
 
 	if(!pLang) {
 		return next (new ErrorResponse('Error', 404, ['primary language does not exist']))
 	}
 
-	const sLang = await Language.findById(secondaryLanguage);
+	const sLang = await Language.findOne({ name: secondaryLanguage  });
 	
 	if(!sLang) {
 		return next (new ErrorResponse('Error', 404, ['secondary language does not exist']))
 	}
 
 	// validate frameworks
-	const pFrame = await Framework.findById(primaryFramework);
+	const pFrame = await Framework.findOne({ name: primaryFramework });
 
 	if(!pFrame) {
 		return next (new ErrorResponse('Error', 404, ['primary framework does not exist']))
 	}
 
-	const sFrame = await Framework.findById(secondaryFramework);
+	const sFrame = await Framework.findOne({ name: secondaryFramework});
 	
 	if(!sFrame) {
 		return next (new ErrorResponse('Error', 404, ['secondary framework does not exist']))
 	}
 
 	// validate cloud platforms
-	const pCloud = await Cloud.findById(primaryCloud);
+	const pCloud = await Cloud.findOne({ name: primaryCloud });
 
 	if(!pCloud) {
 		return next (new ErrorResponse('Error', 404, ['primary cloud platform does not exist']))
 	}
 
-	const sCloud = await Cloud.findById(secondaryCloud);
+	const sCloud = await Cloud.findOne({ name: secondaryCloud });
 	
 	if(!sCloud) {
 		return next (new ErrorResponse('Error', 404, ['secondary cloud platform does not exist']))
@@ -177,6 +182,7 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 		return next (new ErrorResponse('Error', 400, [`${valEdu.message}`]));
 	}
 
+	console.log(req.body)
 
 	const talent = await Talent.create({
 		firstName: user.firstName,
@@ -186,6 +192,7 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 		location: location.label,
 		address,
 		type,
+		level,
 		band: 1,
 		currentSalary,
 		resumeUrl,
@@ -216,7 +223,7 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 
 			if (lang){
 
-				skill.languages.push(lang._id);
+				skill.languages.push(lang.code);
 				await skill.save();
 
 			}
@@ -234,7 +241,7 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 
 			if (frame){
 
-				skill.frameworks.push(frame._id);
+				skill.frameworks.push(frame.name);
 				await skill.save();
 
 			}
@@ -252,7 +259,7 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 
 			if (cloud){
 
-				skill.clouds.push(cloud._id);
+				skill.clouds.push(cloud.code);
 				await skill.save();
 
 			}

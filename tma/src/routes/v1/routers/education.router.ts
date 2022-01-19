@@ -21,6 +21,6 @@ const allRoles = ['superadmin', 'admin', 'business', 'manager', 'talent', 'user'
 router.get('/', vcd, protect, authorize(roles), advancedResults(Education), getEducations);
 router.get('/:id', vcd, protect, authorize(allRoles), getEducation);
 router.get('/:id', vcd, protect, authorize(limRoles), getTalentEducationList);
-router.post('/talent/add-education/:id', vcd, protect, authorize(allRoles), addEducation);
+router.post('/add-education/:id', vcd, protect, authorize(allRoles), addEducation);
 
 export default router;

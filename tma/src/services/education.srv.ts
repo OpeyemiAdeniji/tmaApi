@@ -1,4 +1,7 @@
 import Education from '../models/Education.model'
+import dayjs from 'dayjs'
+import customparse from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customparse);
 
 export const validateEducation = async (educations: Array<any> ): Promise<any> => {
 
@@ -56,12 +59,15 @@ export const addEducations = async (data: Array<any>, user: any, talent: any): P
 
         if(!edu){
 
+            const sd = await dayjs(data[i].startDate)
+            const ed = await dayjs(data[i].endDate)
+
             await Education.create({
 
                 institutionName: data[i].institutionName,
                 degree: data[i].degree,
-                startDate: data[i].startDate,
-                endDate: data[i].endDate ? data[i].endDate: '',
+                startDate: sd,
+                endDate: data[i].endDate ? ed: '',
                 isCurrent: data[i].isCurrent ? data[i].isCurrent: false,
                 user: user._id,
                 talent: talent._id,

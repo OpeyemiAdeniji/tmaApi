@@ -1,4 +1,7 @@
 import Work from '../models/Work.model'
+import dayjs from 'dayjs'
+import customparse from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customparse);
 
 export const validateWorks = async (works: Array<any> ): Promise<any> => {
 
@@ -66,14 +69,17 @@ export const addWorks = async (works: Array<any>, user: any, talent: any): Promi
 
         if(!work){
 
+            const sd = await dayjs(works[i].startDate)
+            const ed = await dayjs(works[i].endDate)
+
             await Work.create({
 
                 companyName: works[i].companyName,
                 companyUrl: works[i].companyUrl,
                 description: works[i].description,
                 role: works[i].role,
-                startDate: works[i].startDate,
-                endDate: works[i].endDate ? works[i].endDate : '',
+                startDate: sd,
+                endDate: works[i].endDate ? ed : '',
                 isCurrent: works[i].isCurrent ? works[i].isCurrent : false,
                 user: user._id,
                 talent: talent._id,
