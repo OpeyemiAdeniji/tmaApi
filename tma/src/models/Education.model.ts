@@ -47,11 +47,12 @@ const EducationSchema = new mongoose.Schema(
         },
 
         startDate: {
-            type: String,
+            type: mongoose.Schema.Types.Mixed,
+            required: [true, 'start date is required']
         },
 
         endDate: {
-            type: String,
+            type: mongoose.Schema.Types.Mixed,
         },
 
         isCurrent: {
