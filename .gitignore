@@ -1,7 +1,3 @@
 .env
 node_modules
 nats-data.txt
-auth/node_modules
-blog/node_modules
-resource/node_modules
-tma/node_modules
