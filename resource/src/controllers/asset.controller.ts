@@ -140,7 +140,6 @@ export const removeAsset = asyncHandler(async (req: Request, res: Response, next
         message: `successful`,
         status: 200,
     });
-
 })
 
 /** 

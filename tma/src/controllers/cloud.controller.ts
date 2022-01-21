@@ -106,5 +106,4 @@ export const updateCloud = asyncHandler(async (req: Request, res: Response, next
         message: 'succesful',
         status: 200
     })
-
 })
