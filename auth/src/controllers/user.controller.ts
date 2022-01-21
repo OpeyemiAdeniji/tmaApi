@@ -39,6 +39,7 @@ export const getUser = asyncHandler(async (req: Request, res:Response, next: Nex
 		{ path: 'roles', select: '_id name resources' },
 	]);
 
+	console.log(user)
 	if(!user){
 		return next(new ErrorResponse(`Error!`, 404, ['Could not find user']))
 	}

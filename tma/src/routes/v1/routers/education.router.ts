@@ -9,8 +9,8 @@ import {
 
 import Education from '../../../models/Education.model';
 
-import advancedResults from '../../../middleware/adanced.mw';
 const router: Router = express.Router({ mergeParams: true });
+import advancedResults from '../../../middleware/adanced.mw';
 import { validateChannels as vcd } from '../../../middleware/header.mw';
 import { authorize, protect } from '../../../middleware/auth.mw';
 
