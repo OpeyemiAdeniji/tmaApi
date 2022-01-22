@@ -5,12 +5,9 @@ import { config } from 'dotenv'
 // env vars
 config();
 
-<<<<<<< HEAD
-// models // changes made now
-=======
 // models // kk
->>>>>>> e48be7ce262fb8e16b67cdb005d569ae945d5015
 import Business from './src/models/Business.model'
+import Category from './src/models/Category.model'
 import Cloud from './src/models/Cloud.model'
 import Education from './src/models/Education.model'
 import Framework from './src/models/Framework.model'
@@ -20,6 +17,7 @@ import Language from './src/models/Language.model'
 import Preselect from './src/models/Preselect.model'
 import Skill from './src/models/Skill.model'
 import Talent from './src/models/Talent.model'
+import Tool from './src/models/Tool.model'
 import User from './src/models/User.model'
 import Work from './src/models/Work.model'
 
@@ -61,6 +59,7 @@ const deleteData = async () : Promise<void> => {
         await connectDB();
 
         await Business.deleteMany();
+        await Category.deleteMany();
         await Cloud.deleteMany();
         await Education.deleteMany();
         await Framework.deleteMany();
@@ -70,6 +69,7 @@ const deleteData = async () : Promise<void> => {
         await Preselect.deleteMany();
         await Skill.deleteMany();
         await Talent.deleteMany();
+        await Tool.deleteMany();
         await User.deleteMany();
         await Work.deleteMany();
         
