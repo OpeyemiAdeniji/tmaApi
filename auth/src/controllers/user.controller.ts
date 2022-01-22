@@ -71,13 +71,19 @@ export const getUserStatus = asyncHandler(async (req: Request, res:Response, nex
 	if(!status){
 		result = {
 			profile: false,
-			application: false,
+			apply: {
+				status: false,
+				step: 0
+			},
 			activated: false
 		}
 	}else{
 		result = {
-			profile: status.profile ? status.profile  : false,
-			address: status.application ? status.application : false,
+			profile: status.profile ? status.profile : false,
+			apply: {
+				status: status.apply.status,
+				step: status.apply.step
+			},
 			activated: status.activated ? status.activated : false
 		};
 	}

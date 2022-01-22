@@ -14,6 +14,12 @@ import dayjs from 'dayjs'
 import customparse from 'dayjs/plugin/customParseFormat';
 dayjs.extend(customparse);
 
+import nats from '../events/nats';
+import TalentApplied from '../events/publishers/talent-applied';
+
+
+
+
 // models
 import User from '../models/User.model'
 import Talent from '../models/Talent.model'
@@ -77,6 +83,7 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 	}
 
 	const { 
+		applyStep,
 		bio,
 		primaryLanguage, 
 		secondaryLanguage,
@@ -183,104 +190,21 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 		return next (new ErrorResponse('Error', 400, [`${valEdu.message}`]));
 	}
 
-	console.log(req.body)
-
-	const talent = await Talent.create({
-		bio,
-		firstName: user.firstName,
-		lastName: user.lastName,
-		middleName,
-		gender,
-		location: location.label,
-		address,
-		type,
-		level,
-		band: 1,
-		currentSalary,
-		resumeUrl,
-		portfolioUrl,
-		linkedinUrl,
-		dribbleUrl,
-		githubUrl,
-		user: user._id
-	})
-
-	// save skill
-	const skill = await Skill.create({
-		primaryLanguage,
-		secondaryLanguage,
-		primaryFramework,
-		secondaryFramework,
-		primaryCloud,
-		secondaryCloud,
-		user: user._id
-	})
-
-	// save other languages
-	if(languages.length > 0){
-
-		for(let i = 0; i < languages.length; i++){
-
-			const lang = await Language.findOne({ code: languages[i] });
-
-			if (lang){
-
-				skill.languages.push(lang.code);
-				await skill.save();
-
-			}
-
-		}
-
-	}
-
-	// save other frameworks
-	if(frameworks.length > 0){
-
-		for(let i = 0; i < frameworks.length; i++){
-
-			const frame = await Framework.findOne({ name: frameworks[i] });
-
-			if (frame){
-
-				skill.frameworks.push(frame.name);
-				await skill.save();
-
-			}
-
-		}
-
-	}
-
-	// save other clouds
-	if(clouds.length > 0){
-
-		for(let i = 0; i < clouds.length; i++){
-
-			const cloud = await Cloud.findOne({ code: clouds[i] });
-
-			if (cloud){
-
-				skill.clouds.push(cloud.code);
-				await skill.save();
-
-			}
-
-		}
-
-	}
+	
 
 	// save works
-	await addWorks(works, user, talent);
+	// await addWorks(works, user, talent);
 
 	// save works
-	await addEducations(educations, user, talent);
+	// await addEducations(educations, user, talent);
+
+	await new TalentApplied(nats.client).publish({ talent: null, user: user, step: applyStep });
 
 
 	res.status(200).json({
 		error: false,
 		errors: [],
-		data: { _id: talent._id, firstName: talent.firstName, email: user.email, user: user._id, id: talent.id },
+		data: { },
 		message: `successful`,
 		status: 200
 	});

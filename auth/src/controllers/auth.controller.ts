@@ -102,8 +102,21 @@ export const registerTalent = asyncHandler(async (req: Request, res: Response, n
 		isActive: true
     });
 
+	// create status
+	const status = await Status.create({
+		profile: false,
+		activated: false,
+		apply: {
+			status: false,
+			step: 0
+		},
+		user: user._id,
+		email: user.email
+	});
+
 	// attach the user role
 	user.roles.push(role._id);
+	user.status = status._id;
 	await user.save();
 
 	// attach the talent
@@ -265,8 +278,17 @@ export const registerBusiness = asyncHandler(async (req: Request, res:Response, 
 		isActive: true
 	});
 
+	// create status
+	const status = await Status.create({
+		profile: false,
+		activated: false,
+		user: user._id,
+		email: user.email
+	});
+
 	// attach the 'business' role
 	user.roles.push(role._id);
+	user.status = status._id;
 	await user.save();
 
 	//send welcome email
@@ -925,21 +947,22 @@ const sendTokenResponse = async (user: any, message: string, statusCode: number,
 
 	const status = await Status.findOne({ user: user._id });
 
-	// profile: boolean;
-    // address: boolean;
-    // identity: boolean;
-    // activated: boolean;
-
 	if(!status){
 		result = {
 			profile: false,
-			application: false,
+			apply: {
+				status: false,
+				step: 0
+			},
 			activated: false
 		}
 	}else{
 		result = {
 			profile: status.profile ? status.profile  : false,
-			address: status.application ? status.application : false,
+			apply: {
+				status: status.apply.status,
+				step: status.apply.step
+			},
 			activated: status.activated ? status.activated : false
 		};
 	}

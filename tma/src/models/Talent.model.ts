@@ -39,6 +39,7 @@ interface ITalentDoc extends mongoose.Document{
     jobType: string;
     workType: string;
     workCategory: object | any;
+    applyStep: number;
     
 
     languages: Array<object | any>;
@@ -154,6 +155,11 @@ const TalentSchema = new mongoose.Schema (
 
         resumeUrl: {
             type: String
+        },
+
+        applyStep: {
+            type: Number,
+            default: 0
         },
 
         pLanguage: {
