@@ -5,7 +5,7 @@ import { config } from 'dotenv'
 // env vars
 config();
 
-// models // kk
+// models 
 import Business from './src/models/Business.model'
 import Category from './src/models/Category.model'
 import Cloud from './src/models/Cloud.model'
