@@ -19,7 +19,7 @@ const roles = ['superadmin', 'admin', 'user'];
 const limRoles = ['superadmin', 'admin', 'manager'];
 const allRoles = ['superadmin', 'admin', 'business', 'manager', 'talent', 'user'];
 
-router.get('/', vcd, advancedResults(Language), getLanguages);
+router.get('/', vcd, protect, authorize(allRoles), advancedResults(Language), getLanguages);
 router.get('/:id', vcd, protect, authorize(allRoles), getLanguage);
 router.post('/', vcd, protect, authorize(roles), addLanguage);
 router.put('/:id', vcd, protect, authorize(roles), updateLanguage);
