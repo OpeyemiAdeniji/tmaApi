@@ -39,8 +39,14 @@ export const authorize = async (roles: Array<string>, userRoles: Array<string>, 
     let resultFlag: boolean = false;
 
     await getRolesByName(roles, authType, authDB).then((resp) => {
+        console.log(resp);
         allRoles = [...resp];
     });
+
+    console.log(' ');
+    console.log(' ');
+    console.log(' user roles ');
+    console.log(userRoles);
 
     // get authorized IDs
     const ids = allRoles.map((e: any) => { return e._id });
