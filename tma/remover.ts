@@ -5,7 +5,11 @@ import { config } from 'dotenv'
 // env vars
 config();
 
+<<<<<<< HEAD
+// models // changes made now
+=======
 // models // kk
+>>>>>>> e48be7ce262fb8e16b67cdb005d569ae945d5015
 import Business from './src/models/Business.model'
 import Cloud from './src/models/Cloud.model'
 import Education from './src/models/Education.model'
