@@ -13,6 +13,8 @@ import frameworkRoutes from './routers/framework.router';
 import cloudRoutes from './routers/cloud.router';
 import industryRoutes from './routers/industry.router';
 import workRoutes from './routers/work.router';
+import toolRoutes from './routers/tool.router';
+import categoryRoutes from './routers/category.router';
 
 // create router
 const router = express.Router();
@@ -30,6 +32,8 @@ router.use('/frameworks', frameworkRoutes);
 router.use('/clouds', cloudRoutes);
 router.use('/industries', industryRoutes);
 router.use('/works', workRoutes);
+router.use('/tools', toolRoutes);
+router.use('/categories', categoryRoutes);
 
 router.get('/', (req: Request, res: Response, next: NextFunction) => {
 

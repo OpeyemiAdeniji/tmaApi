@@ -19,7 +19,7 @@ export const getSkills = asyncHandler(async (req: Request, res: Response, next: 
 // @access         Private/Superadmin/Admin
 export const getSkill = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     
-    const skill = await Skill.findById(req.params.id).populate([ { path: 'user'} ])
+    const skill = await Skill.findById(req.params.id);
 
     if (!skill) {
         return next(new ErrorResponse('Error', 404, ['skill does not exist']))
