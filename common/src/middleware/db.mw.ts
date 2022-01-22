@@ -50,7 +50,7 @@ export const connectDB = async (authType: string, authDB: string): Promise<void>
 
 export const getRoleModel = async (authType: string, authDB: string): Model<Schema> => {
 
-    console.log(authDB);
+    // console.log(authDB);
 
     await connectDB(authType, authDB);
     
