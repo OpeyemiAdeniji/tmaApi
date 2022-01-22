@@ -13,6 +13,7 @@ interface IToolDoc extends mongoose.Document{
 
     name: string;
     brand: string;
+    icon: string;
     description: string;
     slug: string;
 
@@ -40,6 +41,10 @@ const ToolSchema = new mongoose.Schema(
         },
 
         brand: {
+            type: String
+        },
+
+        icon: {
             type: String
         },
 

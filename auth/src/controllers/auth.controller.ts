@@ -45,6 +45,12 @@ export const registerTalent = asyncHandler(async (req: Request, res: Response, n
         return next(new ErrorResponse('An error occured. Please contact support.', 500, ['Roles not defined']));
     }
 
+	// find the user role
+    const talentRole = await Role.findOne({ name: 'talent' });
+    if(!talentRole){
+        return next(new ErrorResponse('An error occured. Please contact support.', 500, ['Roles not defined']));
+    }
+
     // validate existing email
     const exist = await User.findOne({ email: email });
     if(exist){
@@ -114,14 +120,10 @@ export const registerTalent = asyncHandler(async (req: Request, res: Response, n
 		email: user.email
 	});
 
-	// attach the user role
+	// attach the user and talent role
 	user.roles.push(role._id);
+	user.roles.push(talentRole._id);
 	user.status = status._id;
-	await user.save();
-
-	// attach the talent
-	const tRole = await Role.findOne({ name: 'talent' });
-	user.roles.push(tRole?._id);
 	await user.save();
 
     // send emails, publish nats and initialize notification

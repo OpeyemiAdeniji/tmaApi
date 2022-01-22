@@ -48,6 +48,7 @@ interface ITalentDoc extends mongoose.Document{
 
     primarySkill: mongoose.Schema.Types.ObjectId | any;
     skills: Array<mongoose.Schema.Types.ObjectId | any>
+    tools: Array<mongoose.Schema.Types.ObjectId | any>
     matchedBusinesses: Array<mongoose.Schema.Types.ObjectId | any>;
     currentlyMatched: mongoose.Schema.Types.ObjectId | any;
     user: mongoose.Schema.Types.ObjectId | any;
@@ -274,6 +275,13 @@ const TalentSchema = new mongoose.Schema (
             {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'Skill'
+            }
+        ],
+
+        tools: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Tool'
             }
         ],
 
