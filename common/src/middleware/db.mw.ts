@@ -34,7 +34,7 @@ export const connectDB = async (authType: string, authDB: string): Promise<void>
 
         // vs8w16K2a4YfR530
         dbConn = await mongoose.createConnection(authDB, options);
-        console.log(dbConn);;
+        // console.log(dbConn);;
 
     }else if(authType === 'cloud'){
 
