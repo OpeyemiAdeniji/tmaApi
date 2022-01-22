@@ -81,8 +81,8 @@ const SkillSchema = new mongoose.Schema(
 
 SkillSchema.set('toJSON', { getters: true, virtuals: true });
 
-SkillSchema.pre('save', async function (next) {
-    this.slug = slugify(this.primaryLanguage, { lower: true });
+SkillSchema.pre<ISkillDoc>('save', async function (next) {
+    this.slug = slugify(this.name, { lower: true });
     next();
 });
 

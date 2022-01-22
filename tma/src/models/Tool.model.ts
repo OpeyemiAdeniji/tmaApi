@@ -80,8 +80,8 @@ const ToolSchema = new mongoose.Schema(
 
 ToolSchema.set('toJSON', { getters: true, virtuals: true });
 
-ToolSchema.pre('save', async function (next) {
-    this.slug = slugify(this.primaryLanguage, { lower: true });
+ToolSchema.pre<IToolDoc>('save', async function (next) {
+    this.slug = slugify(this.name, { lower: true });
     next();
 });
 

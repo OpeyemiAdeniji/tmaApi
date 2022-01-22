@@ -41,6 +41,8 @@ export const seedSkills = async () => {
 
         }
 
+        console.log(colors.green.inverse('skills seeded successfully'));
+
     } catch (err) {
         console.log(colors.red.inverse(`${err}`));
     }
@@ -73,6 +75,8 @@ export const seedTools = async () => {
             }
 
         }
+
+        console.log(colors.green.inverse('tools seeded successfully'));
 
     } catch (err) {
         console.log(colors.red.inverse(`${err}`));

@@ -57,15 +57,19 @@ const CategorySchema = new mongoose.Schema(
             default: 0
         },
 
-        skills: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Skill'
-        },
+        skills:[
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Skill'
+            }
+        ],
 
-        tools: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Tool'
-        },
+        tools: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Tool'
+            }
+        ],
 
         slug: String,
 
