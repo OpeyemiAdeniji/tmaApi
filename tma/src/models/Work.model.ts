@@ -17,7 +17,10 @@ interface IWorkDoc extends mongoose.Document{
     startDate: Date | string;
     endDate: Date | string;
     isCurrent: Boolean;
+    workType: string;
+    category: string;
     slug: string;
+
 
     user: mongoose.Schema.Types.ObjectId | any;
     talent: mongoose.Schema.Types.ObjectId | any;
@@ -66,6 +69,16 @@ const WorkSchema = new mongoose.Schema(
         isCurrent: {
             type: Boolean,
             default: false
+        },
+
+        workType: {
+            type: String,
+            enum: ['contract', 'permanent']
+        },
+
+        category: {
+            type: String,
+            enum: ['part-time', 'full-time']
         },
 
         slug: String,

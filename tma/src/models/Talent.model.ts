@@ -7,7 +7,7 @@ interface ITalentModel extends mongoose.Model<ITalentDoc> {
     // functions
     findByName(name: string): ITalentDoc;
     getTalentName(id: any): ITalentDoc;
-    getAllTalents(): any
+    getAllTalents(): any;
 
 }
 
@@ -24,9 +24,8 @@ interface ITalentDoc extends mongoose.Document{
     address: string,
     level: string,
     band: number,
-    type: string,
-    currentSalary: number,
-    employmentStatus: string,
+    currentSalary: object | any,
+    employmentStatus: boolean,
     email: string,
     linkedinUrl: string,
     githubUrl: string,
@@ -34,10 +33,23 @@ interface ITalentDoc extends mongoose.Document{
     portfolioUrl: string,
     resumeUrl: string,
     slug: string;
+    pLanguage: object | any;
+    pFramework: object | any;
+    pCloud: object | any;
+    jobType: string;
+    workType: string;
+    workCategory: object | any;
+    
 
-    businesses: Array<mongoose.Schema.Types.ObjectId | any>;
+    languages: Array<object | any>;
+    frameworks: Array<object | any>;
+    clouds: Array<object | any>;
+
+    primarySkill: mongoose.Schema.Types.ObjectId | any;
+    skills: Array<mongoose.Schema.Types.ObjectId | any>
+    matchedBusinesses: Array<mongoose.Schema.Types.ObjectId | any>;
+    currentlyMatched: mongoose.Schema.Types.ObjectId | any;
     user: mongoose.Schema.Types.ObjectId | any;
-    skill: mongoose.Schema.Types.ObjectId | any;
     educations: Array<mongoose.Schema.Types.ObjectId | any>,
     works: Array<mongoose.Schema.Types.ObjectId | any>
 
@@ -97,25 +109,27 @@ const TalentSchema = new mongoose.Schema (
 
         level: {
             type: String,
-            enum: ['junior', 'mid-level', 'senior'],
-            required: [true, 'level is required']
+            enum: ['junior', 'intermidiate', 'senior']
         },
         
         band: {
             type: Number
         },
 
-        type: {
-            type: String,
-            enum: ['fullstack', 'mobile', 'backend', 'frontend', 'qa-analyst']
-        },
-
         currentSalary: {
-            type: Number
+            value: {
+                type: Number,
+                default: 0
+            },
+            currency: {
+                type: String,
+                max: [3, 'currency cannot be more than 3 characters'],
+                min: [2, 'currency cannot be less than 2 characters']
+            }
         },
 
         employmentStatus: {
-            type: String
+            type: Boolean
         },
 
         email: {
@@ -123,8 +137,7 @@ const TalentSchema = new mongoose.Schema (
 		},
 
         linkedinUrl: {
-            type: String,
-            required: [true, 'linkedin url is required']
+            type: String
         },
 
         githubUrl: {
@@ -140,13 +153,132 @@ const TalentSchema = new mongoose.Schema (
         },
 
         resumeUrl: {
+            type: String
+        },
+
+        pLanguage: {
+            type: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Language'
+            },
+            strength: {
+                type: Number,
+                min: [1, 'language strength cannot be less than 1'],
+                max: [5, 'language strength cannot be more than 5']
+            }
+        },
+
+        pFramework: {
+            type: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Framework'
+            },
+            strength: {
+                type: Number,
+                min: [1, 'framework strength cannot be less than 1'],
+                max: [5, 'framework strength cannot be more than 5']
+            }
+        },
+
+        pCloud: {
+            type: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Cloud'
+            },
+            strength: {
+                type: Number,
+                min: [1, 'cloud strength cannot be less than 1'],
+                max: [5, 'cloud strength cannot be more than 5']
+            }
+        },
+
+        languages: [
+            {
+                type: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'Language'
+                },
+                strength: {
+                    type: Number,
+                    min: [1, 'language strength cannot be less than 1'],
+                    max: [5, 'language strength cannot be more than 5']
+                }
+            }
+        ],
+
+        frameworks: [
+            {
+                type: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'Framework'
+                },
+                strength: {
+                    type: Number,
+                    min: [1, 'framework strength cannot be less than 1'],
+                    max: [5, 'framework strength cannot be more than 5']
+                }
+            }
+        ],
+
+        clouds: [
+            {
+                type: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'Cloud'
+                },
+                strength: {
+                    type: Number,
+                    min: [1, 'cloud strength cannot be less than 1'],
+                    max: [5, 'cloud strength cannot be more than 5']
+                }
+            }
+        ],
+
+        jobType: {
             type: String,
-            required: [true, 'resume url is required']
+            enum: ['remote', 'on-site', 'hybrid']
+        },
+
+        workType: {
+            type: String,
+            enum: ['contract', 'permanent']
+        },
+
+        workCategory: {
+
+            type: {
+                type: String,
+                enum: ['part-time', 'full-time']
+            },
+
+            availability: {
+                type: String
+            }
+
         },
 
         slug: String,
 
-        businesses: [
+        primarySkill: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Skill'
+        },
+
+        skills: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Skill'
+            }
+        ],
+
+        matchedBusinesses: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Business'
+            }
+        ],
+
+        currentlyMatched: [
             {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'Business'
@@ -156,11 +288,6 @@ const TalentSchema = new mongoose.Schema (
         user: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'
-        },
-
-        skill: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Skill'
         },
 
         educations: [

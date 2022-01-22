@@ -1,0 +1,79 @@
+[
+    {
+        "name": "Figma",
+        "brand": "Figma",
+        "category": "P-D",
+        "description": "UI/UX and product design tool"
+    },
+
+    {
+        "name": "Adobe XD",
+        "brand": "Adobe",
+        "category": "P-D",
+        "description": "UI/UX and product design tool"
+    },
+
+    {
+        "name": "InVision",
+        "brand": "InVision",
+        "category": "P-D",
+        "description": "UI/UX and product design tool"
+    },
+
+    {
+        "name": "After Effects",
+        "brand": "Adobe",
+        "category": "P-D",
+        "description": "UI/UX and product design tool"
+    },
+
+    {
+        "name": "Illustrator",
+        "brand": "Adobe",
+        "category": "P-D",
+        "description": "UI/UX and product design tool"
+    },
+
+    {
+        "name": "Sketch",
+        "brand": "Sketch B.V.",
+        "category": "P-D",
+        "description": "UI/UX and product design tool"
+    },
+
+    {
+        "name": "Miro",
+        "brand": "Miro",
+        "category": "P-D",
+        "description": "UI/UX, product design, whiteboard and collaborative tool"
+    },
+
+    {
+        "name": "VS Code",
+        "brand": "Microsoft",
+        "category": "S-E",
+        "description": "Programming tool"
+    },
+
+    {
+        "name": "Visual Studio",
+        "brand": "Microsoft",
+        "category": "S-E",
+        "description": "Programming tool"
+    },
+
+    {
+        "name": "Xamarin",
+        "brand": "Microsoft",
+        "category": "S-E",
+        "description": "Programming tool"
+    },
+
+    {
+        "name": "Unity 3D",
+        "brand": "Unity Technologies",
+        "category": "S-E",
+        "description": "Programming tool"
+    }
+
+]

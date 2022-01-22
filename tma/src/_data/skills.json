@@ -1,0 +1,45 @@
+[
+    {
+        "name": "Frontend Engineer",
+        "shortCode": "F.E",
+        "category": "S-E",
+        "description": "Frontend engineers build products dealing with the frontend."
+    },
+    {
+        "name": "Backend Engineer",
+        "shortCode": "B.E",
+        "category": "S-E",
+        "description": "Backend engineers build products dealing with the backend."
+    },
+    {
+        "name": "Fullstack Engineer",
+        "shortCode": "FSE",
+        "category": "S-E",
+        "description": "Fullstack engineers build products dealing with the frontend & backend."
+    },
+    {
+        "name": "UI/UX",
+        "shortCode": "UIX",
+        "category": "P-D",
+        "description": "Product designers design products digitally"
+    },
+    {
+        "name": "UI Designer",
+        "shortCode": "UID",
+        "category": "P-D",
+        "description": "UI designers design products digitally"
+    },
+    {
+        "name": "UX Designer",
+        "shortCode": "UXD",
+        "category": "P-D",
+        "description": "UX designers design products digitally"
+    },
+    {
+        "name": "UX Researcher",
+        "shortCode": "UXR",
+        "category": "P-D",
+        "description": "UX researcers design products by research"
+    }
+
+]

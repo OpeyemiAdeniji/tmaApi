@@ -2,17 +2,17 @@ import mongoose, { ObjectId } from 'mongoose';
 import slugify from 'slugify';
 
 // interface that describes the properties the model has
-interface ISkillModel extends mongoose.Model<ISkillDoc>{
+interface IToolModel extends mongoose.Model<IToolDoc>{
 
     // functions
-    getAllSkills(): any
+    getAllTools(): any
 }
 
 // interface that describes the properties the doc has
-interface ISkillDoc extends mongoose.Document{
+interface IToolDoc extends mongoose.Document{
 
     name: string;
-    shortCode: string;
+    brand: string;
     description: string;
     slug: string;
 
@@ -28,20 +28,19 @@ interface ISkillDoc extends mongoose.Document{
     id: mongoose.Schema.Types.ObjectId;
 
     // functions
-    getAllSkills(): any
+    getAllTools(): any
 
 }
 
-const SkillSchema = new mongoose.Schema(
+const ToolSchema = new mongoose.Schema(
     {
         name: {
             type: String,
             required: [true, 'name is required']
         },
 
-        shortCode: {
-            type: String,
-            maxlength: [3, 'short code cannot be more than 3 characters']
+        brand: {
+            type: String
         },
 
         description: {
@@ -79,22 +78,22 @@ const SkillSchema = new mongoose.Schema(
     }
 )
 
-SkillSchema.set('toJSON', { getters: true, virtuals: true });
+ToolSchema.set('toJSON', { getters: true, virtuals: true });
 
-SkillSchema.pre('save', async function (next) {
+ToolSchema.pre('save', async function (next) {
     this.slug = slugify(this.primaryLanguage, { lower: true });
     next();
 });
 
-SkillSchema.statics.findById = async (id: any) => {
-    return Skill.findOne({id: id})
+ToolSchema.statics.findById = async (id: any) => {
+    return Tool.findOne({id: id})
 } 
 
-SkillSchema.statics.getAllSkills = () => {
-    return Skill.find({});
+ToolSchema.statics.getAllTools = () => {
+    return Tool.find({});
 }
 
 // define the model variable constant
-const Skill = mongoose.model<ISkillDoc, ISkillModel>('Skill', SkillSchema);
+const Tool = mongoose.model<IToolDoc, IToolModel>('Tool', ToolSchema);
 
-export default Skill;
+export default Tool;
