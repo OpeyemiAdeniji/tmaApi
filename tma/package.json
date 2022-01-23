@@ -16,7 +16,7 @@
   "author": "BTF",
   "license": "MIT",
   "dependencies": {
-    "@btffamily/tmaapp": "^1.0.13",
+    "@btffamily/tmaapp": "^1.0.15",
     "@google-cloud/storage": "^5.16.0",
     "@sendgrid/mail": "^7.6.0",
     "@types/app-root-path": "^1.2.4",

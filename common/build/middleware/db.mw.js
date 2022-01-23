@@ -108,8 +108,11 @@ var getRoleModel = function (authType, authDB) { return __awaiter(void 0, void 0
     var model;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, (0, exports.connectDB)(authType, authDB)];
+            case 0: 
+            // console.log(authDB);
+            return [4 /*yield*/, (0, exports.connectDB)(authType, authDB)];
             case 1:
+                // console.log(authDB);
                 _a.sent();
                 return [4 /*yield*/, dbConn.collection('roles')];
             case 2:

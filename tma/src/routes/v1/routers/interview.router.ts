@@ -17,7 +17,7 @@ const roles = ['superadmin', 'admin'];
 const limRoles = ['superadmin', 'admin', 'manager'];
 const allRoles = ['superadmin', 'admin', 'business', 'manager', 'talent', 'user'];
 
-router.get('/', vcd, protect, authorize(allRoles), advanced(Interview), getInterviews);
+router.get('/', vcd, protect, authorize(limRoles), advanced(Interview), getInterviews);
 router.get('/:id', vcd, protect, authorize(allRoles), getInterview);
 
 export default router;

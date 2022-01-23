@@ -1,11 +1,11 @@
 import express, { Router } from 'express';
 
 import {
-    getSkills,
-    getSkill
-} from '../../../controllers/skill.controller';
+    getCategories,
+    getCategory
+} from '../../../controllers/category.controller';
 
-import Skill from '../../../models/Skill.model';
+import Category from '../../../models/Category.model';
 
 import advancedResults from '../../../middleware/adanced.mw';
 const router: Router = express.Router({ mergeParams: true });
@@ -16,7 +16,7 @@ const roles = ['superadmin', 'admin'];
 const limRoles = ['superadmin', 'admin', 'manager'];
 const allRoles = ['superadmin', 'admin', 'business', 'manager', 'talent', 'user'];
 
-router.get('/', vcd, protect, authorize(allRoles), advancedResults(Skill), getSkills);
-router.get('/:id', vcd, protect, authorize(allRoles), getSkill);
+router.get('/', vcd, protect, authorize(allRoles), advancedResults(Category), getCategories);
+router.get('/:id', vcd, protect, authorize(allRoles), getCategory);
 
 export default router;
