@@ -3,7 +3,7 @@ import colors from 'colors'
 import { seedData } from './config/seeds/seeder.seed'
 import connectDB from './config/db'
 import { getMemoryStats, getHeapSize } from './utils/memory.util'
-import { unlockUserAccounts } from './jobs/user.job'
+import { unlockUserAccounts, syncAdminDetails } from './jobs/user.job'
 
 const connect = async (): Promise<void> => {
 
@@ -17,9 +17,13 @@ const connect = async (): Promise<void> => {
     // seed data
     await seedData();
     
-    // start job automatically
-    // run every 0 seconds of every 30th minute of every hour of every day of month of every month of every day of week
-    unlockUserAccounts('0 */30 * * * *');
+    // start job automatically //
+
+    // unlock user accounts: run every 0 seconds of every 30th minute of every hour of every day of month of every month of every day of week
+    unlockUserAccounts('0 */29 * * * *');
+
+    // sync superadmin details to all services: run every 0 seconds of every 1st minute of every 24th hour of every day of month of every month of every day of week
+    syncAdminDetails('0 */1 */23 * * *');
 }
 
 connect();  // initialize connection and seed data

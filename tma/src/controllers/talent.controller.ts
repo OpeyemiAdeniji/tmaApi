@@ -14,6 +14,12 @@ import dayjs from 'dayjs'
 import customparse from 'dayjs/plugin/customParseFormat';
 dayjs.extend(customparse);
 
+import nats from '../events/nats';
+import TalentApplied from '../events/publishers/talent-applied';
+
+
+
+
 // models
 import User from '../models/User.model'
 import Talent from '../models/Talent.model'
@@ -23,6 +29,7 @@ import Skill from '../models/Skill.model'
 import Education from '../models/Education.model'
 import Framework from '../models/Framework.model';
 import Cloud from '../models/Cloud.model';
+import Tool from '../models/Tool.model';
 
 
 // @desc           Get all talents
@@ -64,223 +71,217 @@ export const getTalent = asyncHandler(async (req: Request, res:Response, next: N
 // @access  Private/Superadmin/Admin
 export const apply = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
 
+	const { 
+		applyStep,
+		firstName,
+		lastName,
+		middleName,
+		bio,
+		primarySkill,
+		primaryLanguage,
+		primaryFramework,
+		primaryCloud,
+		tools,
+		languages,
+		frameworks,
+		clouds,
+	} = req.body;
+
 	const user = await User.findById(req.params.id);
 
 	if(!user){
 		return next(new ErrorResponse(`Error!`, 404, ['user does not exist']))
 	}
 
-	const existing = await Talent.findOne({user: user._id});
-
-	if(existing){
-		return next(new ErrorResponse(`Error!`, 400, ['talent profile already exist']))
+	if(!applyStep) {
+		return next (new ErrorResponse('Error', 404, ['talent application step is required']))
 	}
-
-	const { 
-		bio,
-		primaryLanguage, 
-		secondaryLanguage,
-		primaryFramework, 
-		secondaryFramework,
-		primaryCloud, 
-		secondaryCloud,
-		languages,
-		frameworks,
-		clouds,
-		works,
-		educations,
-		middleName,
-		gender,
-		location,
-		address,
-		type,
-		level,
-		currentSalary,
-		resumeUrl,
-		portfolioUrl,
-		linkedinUrl,
-		dribbleUrl,
-		githubUrl 
-	} = req.body;
-
 
 	// // validate languages (P & S)
-	const pLang = await Language.findOne({ name: primaryLanguage });
+	const pSkill = await Skill.findOne({ shortCode: primarySkill });
 
-	if(!pLang) {
-		return next (new ErrorResponse('Error', 404, ['primary language does not exist']))
+	if(!pSkill) {
+		return next (new ErrorResponse('Error', 404, ['skill does not exist']))
 	}
 
-	const sLang = await Language.findOne({ name: secondaryLanguage  });
-	
-	if(!sLang) {
-		return next (new ErrorResponse('Error', 404, ['secondary language does not exist']))
+	// // validate languages (P & S)
+	const pLang = await Language.findOne({ name: primaryLanguage.name });
+
+	if(!pLang) {
+		return next (new ErrorResponse('Error', 404, ['language does not exist']))
 	}
 
 	// validate frameworks
-	const pFrame = await Framework.findOne({ name: primaryFramework });
+	const pFrame = await Framework.findOne({ name: primaryFramework.name });
 
 	if(!pFrame) {
-		return next (new ErrorResponse('Error', 404, ['primary framework does not exist']))
-	}
-
-	const sFrame = await Framework.findOne({ name: secondaryFramework});
-	
-	if(!sFrame) {
-		return next (new ErrorResponse('Error', 404, ['secondary framework does not exist']))
+		return next (new ErrorResponse('Error', 404, ['framework does not exist']))
 	}
 
 	// validate cloud platforms
-	const pCloud = await Cloud.findOne({ name: primaryCloud });
+	const pCloud = await Cloud.findOne({ name: primaryCloud.name });
 
 	if(!pCloud) {
-		return next (new ErrorResponse('Error', 404, ['primary cloud platform does not exist']))
+		return next (new ErrorResponse('Error', 404, ['cloud platform does not exist']))
 	}
 
-	const sCloud = await Cloud.findOne({ name: secondaryCloud });
+	// check tools
+	if(!tools){
+		return next (new ErrorResponse('Error', 400, ['tools data is rquired']))
+	}
+
+	if(typeof(tools) !== 'object'){
+		return next (new ErrorResponse('Error', 400, ['tools data is required to be an array of object']))
+	}
+
+
+	if(applyStep <= 1){
+
+		const talent = await Talent.create({ 
+
+			applyStep: applyStep,
+			firstName: firstName ? firstName : user.firstName,
+			lastName: lastName ? lastName : user.lastName,
+			middleName: middleName ? middleName : '',
+			bio,
+			primarySkill: pSkill._id,
+			pLanguage: { type: pLang._id, strength: primaryLanguage.strength },
+			pFramework: { type: pFrame._id, strength: primaryFramework.strength },
+			pCloud: { type: pCloud._id, strentgh: primaryCloud.strength }
+		});
+
+		// save tools
+		for(let i = 0; i < tools.length; i++){
+
+			const tool = await Tool.findOne({ name: tools[i] });
+
+			if (tool){
+
+				talent.tools.push(tool._id);
+				await talent.save();
+
+			}
+
+		}
+
+		// save other languages
+		if(languages.length > 0){
+
+			for(let i = 0; i < languages.length; i++){
+
+				const lang = await Language.findOne({ code: languages[i].code });
+
+				if (lang){
+
+					talent.languages.push({ type: lang._id, strength: languages[i].strength });
+					await talent.save();
+
+				}
+
+			}
+
+		}
+
+		// save other frameworks
+		if(frameworks.length > 0){
+
+			for(let i = 0; i < frameworks.length; i++){
+
+				const frame = await Framework.findOne({ name: frameworks[i].name });
+
+				if (frame){
+
+					talent.frameworks.push({ type: frame._id, strength: frameworks[i].strength });
+					await talent.save();
+
+				}
+
+			}
+
+		}
+		
+		// save other clouds
+		if(clouds.length > 0){
+
+			for(let i = 0; i < clouds.length; i++){
+
+				const cloud = await Cloud.findOne({ code: clouds[i].code });
+
+				if(cloud){
+
+					talent.clouds.push({ type: cloud._id, strength: clouds[i].strength });
+					await talent.save();
+
+				}
+
+			}
+
+		}
+
+		await new TalentApplied(nats.client).publish({ talent: null, user: user, step: applyStep });
+
+		res.status(200).json({
+			error: false,
+			errors: [],
+			data: talent,
+			message: `successful`,
+			status: 200
+		});
+
+
+	}
 	
-	if(!sCloud) {
-		return next (new ErrorResponse('Error', 404, ['secondary cloud platform does not exist']))
-	}
 
-	// check works
-	if(!works){
-		return next (new ErrorResponse('Error', 400, ['work data is rquired']))
-	}
 
-	if(typeof(works) !== 'object'){
-		return next (new ErrorResponse('Error', 400, ['work data is required to be an array of objects']))
-	}
+	if(applyStep > 1){
 
-	if(!works.length && works.length <= 0){
-		return next (new ErrorResponse('Error', 400, ['work data is required to contain valid object data']))
-	}
+		const talent = await Talent.findOne({user: user._id});
 
-	// works internal validation
-	const valWork = await validateWorks(works);
+		if(talent){
 
-	if(valWork.flag === false){
-		return next (new ErrorResponse('Error', 400, [`${valWork.message}`]));
-	}
+			if(applyStep === 2){
 
-	// check education
-	if(!educations){
-		return next (new ErrorResponse('Error', 400, ['education data is rquired']))
-	}
 
-	if(typeof(educations) !== 'object'){
-		return next (new ErrorResponse('Error', 400, ['education data is required to be an array of object']))
-	}
-
-	if(!educations.length && educations.length <= 0){
-		return next (new ErrorResponse('Error', 400, ['education data is required to contain valid object data']))
-	}
-
-	// works internal education
-	const valEdu = await validateEducation(educations);
-
-	if(valEdu.flag === false){
-		return next (new ErrorResponse('Error', 400, [`${valEdu.message}`]));
-	}
-
-	console.log(req.body)
-
-	const talent = await Talent.create({
-		bio,
-		firstName: user.firstName,
-		lastName: user.lastName,
-		middleName,
-		gender,
-		location: location.label,
-		address,
-		type,
-		level,
-		band: 1,
-		currentSalary,
-		resumeUrl,
-		portfolioUrl,
-		linkedinUrl,
-		dribbleUrl,
-		githubUrl,
-		user: user._id
-	})
-
-	// save skill
-	const skill = await Skill.create({
-		primaryLanguage,
-		secondaryLanguage,
-		primaryFramework,
-		secondaryFramework,
-		primaryCloud,
-		secondaryCloud,
-		user: user._id
-	})
-
-	// save other languages
-	if(languages.length > 0){
-
-		for(let i = 0; i < languages.length; i++){
-
-			const lang = await Language.findOne({ code: languages[i] });
-
-			if (lang){
-
-				skill.languages.push(lang.code);
-				await skill.save();
 
 			}
 
-		}
+			if(applyStep === 3){
 
-	}
-
-	// save other frameworks
-	if(frameworks.length > 0){
-
-		for(let i = 0; i < frameworks.length; i++){
-
-			const frame = await Framework.findOne({ name: frameworks[i] });
-
-			if (frame){
-
-				skill.frameworks.push(frame.name);
-				await skill.save();
+				
 
 			}
 
-		}
+			if(applyStep === 4){
 
-	}
-
-	// save other clouds
-	if(clouds.length > 0){
-
-		for(let i = 0; i < clouds.length; i++){
-
-			const cloud = await Cloud.findOne({ code: clouds[i] });
-
-			if (cloud){
-
-				skill.clouds.push(cloud.code);
-				await skill.save();
+				
 
 			}
 
+			// save works
+			// await addWorks(works, user, talent);
+
+			// save works
+			// await addEducations(educations, user, talent);
+
+	
+
 		}
+
 
 	}
 
-	// save works
-	await addWorks(works, user, talent);
 
-	// save works
-	await addEducations(educations, user, talent);
+	
+
+	
+
+	
 
 
 	res.status(200).json({
 		error: false,
 		errors: [],
-		data: { _id: talent._id, firstName: talent.firstName, email: user.email, user: user._id, id: talent.id },
+		data: { },
 		message: `successful`,
 		status: 200
 	});

@@ -12,6 +12,7 @@ declare global {
     }
 }
 
+
 export const protect = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
 
     try {
@@ -19,7 +20,7 @@ export const protect = asyncHandler(async (req: Request, res: Response, next: Ne
         let authCheck: any;
         // await AuthCheck(req, process.env.JWT_SECRET).then((resp) => {
         //     authCheck = resp || null
-        // })
+        // }) //
 
         authCheck = AuthCheck(req, process.env.JWT_SECRET || '');
 

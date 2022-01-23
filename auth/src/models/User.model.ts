@@ -55,7 +55,7 @@ interface IUserDoc extends mongoose.Document {
 
 	// relationships
 	country: mongoose.Schema.Types.ObjectId | any;
-	talent: mongoose.Schema.Types.ObjectId | any;
+	status: mongoose.Schema.Types.ObjectId | any;
 	business: mongoose.Schema.Types.ObjectId | any;
 	roles: Array<mongoose.Schema.Types.ObjectId | any>;
 
@@ -193,9 +193,9 @@ const UserSchema = new mongoose.Schema(
 			ref: 'Country',
 		},
 
-		talent: {
+		status: {
 			type: mongoose.Schema.Types.ObjectId,
-			ref: 'Talent',
+			ref: 'Status',
 		},
 
 		business: {

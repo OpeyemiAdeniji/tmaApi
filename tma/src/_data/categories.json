@@ -1,0 +1,45 @@
+[
+    {
+        "name": "Solutions Architect",
+        "title": "Solutions Architect",
+        "code": "S-A",
+        "priority": 1,
+        "description": "Skill category for solutions architect"
+    },
+    {
+        "name": "Product Management",
+        "title": "Product Manager",
+        "code": "P-M",
+        "priority": 2,
+        "description": "Skill category for product management"
+    },
+    {
+        "name": "Business Management",
+        "title": "Business Manager",
+        "code": "B-M",
+        "priority": 3,
+        "description": "Skill category for business management"
+    },
+    {
+        "name": "Software Engineering",
+        "title": "Software Engineer",
+        "code": "S-E",
+        "priority": 4,
+        "description": "Skill category for software engineering"
+    },
+    {
+        "name": "Product Design",
+        "title": "Product Designer",
+        "code": "P-D",
+        "priority": 5,
+        "description": "Skill category for product design"
+    },
+    {
+        "name": "Test/QA Analysis",
+        "title": "Test/QA Analyst",
+        "code": "TQ-A",
+        "priority": 6,
+        "description": "Skill category for test/QA analysis"
+    }
+
+]

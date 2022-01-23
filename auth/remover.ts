@@ -64,8 +64,6 @@ const deleteData = async () : Promise<void> => {
 
 }
 
-
 if(process.argv[2] === '-d'){
     deleteData();
 }
-

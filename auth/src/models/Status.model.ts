@@ -13,8 +13,9 @@ interface IStatusModel extends mongoose.Model<IStatusDoc> {
 interface IStatusDoc extends mongoose.Document{
 
     profile: boolean;
-    application: boolean;
+    apply: object | any;
     activated: boolean;
+    email: string;
 
     user: mongoose.Schema.Types.ObjectId | any
 
@@ -39,12 +40,22 @@ const StatusSchema = new mongoose.Schema (
             type: Boolean,
         },
 
-        application: {
-            type: Boolean,
+        apply: {
+            status: {
+                type: Boolean,
+            },
+            step: {
+                type: Number,
+                default: 0
+            }
         },
 
         activated: {
             type: Boolean,
+        },
+
+        email: {
+            type: String
         },
 
         user: {

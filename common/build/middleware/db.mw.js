@@ -88,8 +88,6 @@ var connectDB = function (authType, authDB) { return __awaiter(void 0, void 0, v
             case 2:
                 // vs8w16K2a4YfR530
                 dbConn = _a.sent();
-                console.log(dbConn);
-                ;
                 return [3 /*break*/, 4];
             case 3:
                 if (authType === 'cloud') {
