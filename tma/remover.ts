@@ -2,9 +2,13 @@ import mongoose from 'mongoose'
 import colors from 'colors'
 import { config } from 'dotenv'
 
-// env vars
+// env vars ////
 config();
 
+<<<<<<< HEAD
+=======
+// models 
+>>>>>>> 67ef79561d23c3592f0be610c0f5985e2cbe3aad
 import Business from './src/models/Business.model'
 import Category from './src/models/Category.model'
 import Cloud from './src/models/Cloud.model'

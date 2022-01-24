@@ -16,7 +16,65 @@ dayjs.extend(customparse);
 import User from '../models/User.model'
 import Talent from '../models/Talent.model'
 import Business from '../models/Business.model'
+import Category from '../models/Category.model'
+import Cloud from '../models/Cloud.model'
+import Education from '../models/Education.model'
+import Industry from '../models/Industry.model'
+import Language from '../models/Language.model'
+import Skill from '../models/Skill.model'
+import Tool from '../models/Tool.model'
+import Work from '../models/Work.model'
+import Interview from '../models/Interview.model'
+import Preselect from '../models/Preselect.model'
+import Framework from '../models/Framework.model'
 
+
+// @desc    Get system resources
+// @route   GET /api/v1/users/system-resources
+// @access  Public // superadmin
+export const getSystemResources = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
+
+	const { query } = req.query;
+
+	let result: any;
+
+	if(!query || query === 'all'){
+
+		const langs = await Language.find({});
+		const skills = await Skill.find({});
+		const frames = await Framework.find({});
+		const cats = await Category.find({});
+		const tools = await Tool.find({});
+		const industries = await Industry.find({});
+		const clouds = await Cloud.find({});
+
+		result = { 
+			languages: langs,
+			skills: skills,
+			frameworks: frames,
+			categories: cats,
+			tools: tools,
+			industries: industries,
+			clouds: clouds
+		}
+
+	}
+
+	if(query){
+
+
+
+	}
+
+	res.status(200).json({
+		error: false,
+		errors: [],
+		message: `successful`,
+		data: result,
+		status: 200
+	});
+
+})
 
 // @desc    Get all talents
 // @route   GET /api/v1/users/talents

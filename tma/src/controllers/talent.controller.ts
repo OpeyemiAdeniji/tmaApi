@@ -231,6 +231,17 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 		});
 
 
+		await new TalentApplied(nats.client).publish({ talent: null, user: user, step: applyStep });
+
+		res.status(200).json({
+			error: false,
+			errors: [],
+			data: talent,
+			message: `successful`,
+			status: 200
+		});
+
+
 	}
 	
 
@@ -354,6 +365,3 @@ export const uploadTalent = asyncHandler(async(req: Request, res: Response, next
 // export const funcd = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
 
 // })
-
-
-
