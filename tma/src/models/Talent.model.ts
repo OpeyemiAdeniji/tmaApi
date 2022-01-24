@@ -122,7 +122,7 @@ const TalentSchema = new mongoose.Schema (
             value: {
                 type: Number,
                 default: 0
-            },
+            }, 
             currency: {
                 type: String,
                 max: [3, 'currency cannot be more than 3 characters'],

@@ -2,8 +2,11 @@ import crypto from 'crypto';
 import mongoose, { ObjectId, Model } from 'mongoose';
 import { Request, Response, NextFunction } from 'express';
 import ErrorResponse from '../utils/error.util';
+import fs from 'fs';
 import { sendGrid } from '../utils/email.util';
 import { asyncHandler, arrayIncludes, strIncludesEs6 } from '@btffamily/tmaapp'
+import { saveParsed } from '../services/talent.sv'
+import { parseToJson } from "../utils/csv.util";
 import { generate } from '../utils/random.util';
 import { userLogger } from '../config/wiston';
 import { uploadBase64File } from '../utils/google.util'
@@ -31,12 +34,11 @@ import Framework from '../models/Framework.model';
 import Cloud from '../models/Cloud.model';
 import Tool from '../models/Tool.model';
 
-
 // @desc           Get all talents
 // @route          GET /api/v1/talents
 // @access         Private
 export const getTalents = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
-	res.status(200).json(res.advancedResults);   
+	res.status(200).json(res.advancedResults);   	
 })
 
 // @desc    Get a talent
@@ -285,6 +287,60 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 		message: `successful`,
 		status: 200
 	});
+
+})
+
+// @desc    Upload Talent
+// @route   PUT /api/v1/talents/upload/:id
+// @access  Private/Superadmin/Admin
+export const uploadTalent = asyncHandler(async(req: Request, res: Response, next: NextFunction) => {
+
+	const user = req.params.id;
+
+	if(!user){
+		return next(new ErrorResponse('Error!', 404, ['user does not exist']));
+	}
+
+	if(!req.files){
+		return next(new ErrorResponse('Error!', 400, ['please upload a file']));
+	}
+
+	const file : any = req.files.file;
+
+	// make sure the file is a csv file
+	if(file.mimetype !== 'text/csv'){
+		return next(new ErrorResponse('Error', 400, ['please upload a valid csv file']))
+	}
+
+	// get file path
+	const filePath = file.tempFilePath;
+
+	const data = await parseToJson(filePath);
+
+	// delete tmp file created
+	const tmpFolder = filePath;
+	await fs.rmSync(tmpFolder, { recursive: true })
+
+	// check if file does not contain any data
+	if(data.length <= 0 || data === undefined || data === null){
+		return next(new ErrorResponse('Error', 400, ['file does not contain any data']));
+	}
+
+	// save all data
+	const saved = await saveParsed(data, user)
+
+	if(saved && saved.flag === false){
+		return next(new ErrorResponse('Error', 400, [`${saved.message}`]));
+	}
+
+	res.status(200).json({
+		error: false,
+		errors: [],
+		count: saved?.result.length,
+		data: saved?.result,
+		message: 'successful',
+		status: 200
+	})
 
 })
 
