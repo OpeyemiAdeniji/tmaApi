@@ -14,6 +14,7 @@ import {
 
  const roles = ['superadmin', 'admin', 'user'];
  const limRoles = ['superadmin', 'admin', 'manager'];
+ const bizRoles = ['superadmin', 'admin', 'manager', 'business'];
 const allRoles = ['superadmin', 'admin', 'business', 'manager', 'talent', 'user'];
 
  router.get('/', vcd, protect, authorize(roles), advancedResults(Work), getWorks);

@@ -14,9 +14,10 @@ import { protect, authorize } from '../../../middleware/auth.mw';
 
 const roles = ['superadmin', 'admin'];
 const limRoles = ['superadmin', 'admin', 'manager'];
+const bizRoles = ['superadmin', 'admin', 'manager', 'business'];
 const allRoles = ['superadmin', 'admin', 'business', 'manager', 'talent', 'user'];
 
-router.get('/', vcd, protect, authorize(allRoles), advancedResults(Category), getCategories);
+router.get('/', vcd, protect, authorize(limRoles), advancedResults(Category), getCategories);
 router.get('/:id', vcd, protect, authorize(allRoles), getCategory);
 
 export default router;

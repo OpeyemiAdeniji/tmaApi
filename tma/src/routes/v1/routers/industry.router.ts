@@ -16,9 +16,10 @@ import {
 
  const roles = ['superadmin', 'admin', 'user'];
  const limRoles = ['superadmin', 'admin', 'manager'];
+ const bizRoles = ['superadmin', 'admin', 'manager', 'business'];
 const allRoles = ['superadmin', 'admin', 'business', 'manager', 'talent', 'user'];
 
- router.get('/', vcd, protect, authorize(allRoles), advancedResults(Industry), getIndustries);
+ router.get('/', vcd, advancedResults(Industry), getIndustries);
  router.get('/:id', vcd, protect, authorize(limRoles), getIndustry);
  router.post('/', vcd, protect, authorize(roles), addIndustry);
  router.put('/:id', vcd, protect, authorize(roles), updateIndustry);

@@ -110,3 +110,5 @@ npm install -g pm2@3.2.2
 pm2 startup ubuntu
 pm2 install typescript
 
+########### >>>>>>>> heroku Specifics
+

@@ -15,9 +15,10 @@ import { validateChannels as vcd } from '../../../middleware/header.mw';
 
 const roles = ['superadmin', 'admin'];
 const limRoles = ['superadmin', 'admin', 'manager'];
+ const bizRoles = ['superadmin', 'admin', 'manager', 'business'];
 const allRoles = ['superadmin', 'admin', 'business', 'manager', 'talent', 'user'];
 
-router.get('/', vcd, protect, authorize(roles), advancedResults(Talent), getTalents);
+router.get('/', vcd, protect, authorize(limRoles), advancedResults(Talent), getTalents);
 router.get('/:id', vcd, protect, authorize(allRoles), getTalent);
 router.put('/apply/:id', vcd, protect, authorize(allRoles), apply);
 

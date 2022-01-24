@@ -16,9 +16,10 @@ import {
 
  const roles = ['superadmin', 'admin', 'user'];
  const limRoles = ['superadmin', 'admin', 'manager'];
-const allRoles = ['superadmin', 'admin', 'business', 'manager', 'talent', 'user'];
+ const bizRoles = ['superadmin', 'admin', 'manager', 'business'];
+ const allRoles = ['superadmin', 'admin', 'business', 'manager', 'talent', 'user'];
 
- router.get('/', vcd, protect, authorize(allRoles), advancedResults(Framework), getFrameworks);
+ router.get('/', advancedResults(Framework), getFrameworks);
  router.get('/:id', vcd, protect, authorize(allRoles), getFramework);
  router.post('/', vcd, protect, authorize(roles), addFramework);
  router.put('/:id', vcd, protect, authorize(roles), updateFramework);
