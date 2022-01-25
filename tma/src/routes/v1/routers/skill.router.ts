@@ -17,11 +17,7 @@ const limRoles = ['superadmin', 'admin', 'manager'];
  const bizRoles = ['superadmin', 'admin', 'manager', 'business'];
 const allRoles = ['superadmin', 'admin', 'business', 'manager', 'talent', 'user'];
 
-<<<<<<< HEAD
 router.get('/', vcd, protect, authorize(allRoles), advancedResults(Skill), getSkills);
-=======
-router.get('/', vcd, advancedResults(Skill), getSkills);
->>>>>>> 67ef79561d23c3592f0be610c0f5985e2cbe3aad
 router.get('/:id', vcd, protect, authorize(allRoles), getSkill);
 
 export default router;
