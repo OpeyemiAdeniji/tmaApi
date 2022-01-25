@@ -114,7 +114,7 @@ export const registerTalent = asyncHandler(async (req: Request, res: Response, n
 		activated: false,
 		apply: {
 			status: false,
-			step: 0
+			step: 1
 		},
 		user: user._id,
 		email: user.email
@@ -965,7 +965,7 @@ const sendTokenResponse = async (user: any, message: string, statusCode: number,
 			profile: false,
 			apply: {
 				status: false,
-				step: 0
+				step: 1
 			},
 			activated: false
 		}
