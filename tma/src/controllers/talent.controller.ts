@@ -20,9 +20,6 @@ dayjs.extend(customparse);
 import nats from '../events/nats';
 import TalentApplied from '../events/publishers/talent-applied';
 
-
-
-
 // models
 import User from '../models/User.model'
 import Talent from '../models/Talent.model'
@@ -291,8 +288,19 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 		// save works
 		// await addWorks(works, user, talent);
 
-		// save works
-		// await addEducations(educations, user, talent);
+			
+			talent.applyStep = talent.applyStep + 1;
+			await talent.save();
+
+			await new TalentApplied(nats.client).publish({ talent: talent, user: user, step: applyStep + 1 });
+
+			res.status(200).json({
+				error: false,
+				errors: [],
+				data: talent,
+				message: `successful`,
+				status: 200
+			});
 
 		
 		talent.applyStep = talent.applyStep + 1;
