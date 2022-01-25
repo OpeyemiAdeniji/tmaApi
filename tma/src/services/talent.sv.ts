@@ -6,6 +6,7 @@ import Language from '../models/Language.model';
 import Framework from '../models/Framework.model';
 import Cloud from '../models/Cloud.model';
 import User from '../models/User.model';
+import Tool from '../models/Tool.model';
 
 export const saveParsed = async (data: any, user: any ) => {
 
@@ -41,22 +42,37 @@ export const saveParsed = async (data: any, user: any ) => {
                     firstName: data[i].firstName,
                     lastName: data[i].lastName,
                     middleName: data[i].middleName,
-                    bio: data[i].bio,
                     user: user._id
                 })
 
                 // save the primary skill
-                const pSkill = await Skill.findOne({ name: data[i].primarySkill});
+                const pSkill = await Skill.findOne({ name: data[i].primarySkill });
 
                 if(pSkill){
                     talent.primarySkill = pSkill._id;
                     await talent.save()
+
+                    pSkill.talents.push(talent._id);
+                    await pSkill.save();
+
                 }else{
-                    const pSkill = await Category.findOne({ name: data[i].primarySkill});
+                    const pSkill = await Category.findOne({ name: data[i].primarySkill });
+                    
                     if(pSkill){
                         talent.primarySkill = pSkill._id;
                         await talent.save()
                     }
+                }
+
+                // save tool
+                const tool = await Tool.findOne({ name: data[i].tools });
+
+                if(tool){
+                    talent.tools.push(tool._id);
+                    await talent.save();
+
+                    tool.talents.push(talent._id);
+                    await tool.save();
                 }
 
                 // save the primary language
@@ -105,7 +121,72 @@ export const saveParsed = async (data: any, user: any ) => {
 
                 }
 
+                // save the primary framework
+                const pFrame = await Framework.findOne({ name: data[i].primaryFramework })
 
+                if(pFrame){
+                    talent.pFramework.type = pFrame._id;
+                    talent.pFramework.strength = 1;
+                    await talent.save();
+                }
+
+                // save the secondary framework
+                if(data[i].secondaryFramework){
+
+                    const frameworks: Array<string> = data[i].secondaryFramework.split(',');
+
+                    if(frameworks.length > 0){
+
+                        for(let i = 0; i < frameworks.length; i++){
+
+                            const framework = await Framework.findOne({ name: frameworks[i] })
+                            
+                            if(framework){
+                                talent.frameworks.push({ type: framework._id, strength: 1 });
+                                await talent.save();
+                            }
+                        }
+                    }
+                }
+
+                // save the primary cloud
+                const primCloud = await Cloud.findOne({ name: data[i].primaryCloud });
+
+                if(primCloud){
+
+                    talent.pCloud.type = primCloud._id;
+                    talent.pCloud.strength = 1;
+                    await talent.save();
+                }
+
+                // save the secondary cloud
+                if(data[i].secondaryCloud){
+
+                    const clouds: Array<string> = data[i].secondaryCloud.split(',');
+
+                    if(clouds.length > 0){
+
+                        for(let i = 0; i < clouds.length; i++){
+
+                            const cloud = await Cloud.findOne({ code: clouds[i] });
+
+                            if(!cloud){
+
+                                const cloud = await Cloud.findOne({ name: clouds[i] });
+
+                                if(cloud){
+                                    talent.clouds.push({ type: cloud._id, strenth: 1 });
+                                    await talent.save();
+                                }
+                            }
+
+                            if(cloud){
+                                talent.clouds.push({ type: cloud._id, strenth: 1 });
+                                await talent.save();
+                            }
+                        }
+                    }
+                }
 
             }
         }
@@ -122,18 +203,16 @@ export const validateTalent = (data: any): object | any => {
         const firstName = data[i].firstName;
         const lastName = data[i].lastName;
         const middleName = data[i].middleName;
-        const bio = data[i].bio;
-        const strength = data[i].strength;
         const primarySkill = data[i].primarySkill;
-        const primaryLanguage = data[i].primaryLanguage;
-        const primaryFramework = data[i].primaryFramework;
-        const primaryCloud = data[i].primaryCloud;
+        const primaryLanguage = data[i].pLanguage;
+        const primaryFramework = data[i].pFramework;
+        const primaryCloud = data[i].pCloud;
+        const secondaryLanguage = data[i].languages
+        const secondaryFramework= data[i].frameworks
+        const secondaryCloud = data[i].clouds
         const tools = data[i].tools;
-        const languages = data[i].languages;
-        const frameworks = data[i].frameworks;
-        const clouds = data[i].clouds;
 
-        if(!firstName && !lastName && !middleName && !bio && !primarySkill && !primaryLanguage && !primaryFramework && !primaryCloud && !tools && !languages && !frameworks && !clouds){
+        if(!firstName && !lastName && !middleName && !primarySkill && !primaryLanguage && !primaryFramework && !primaryCloud && !tools && !secondaryLanguage && !secondaryFramework && !secondaryCloud){
 
             flag = false;
             message = 'talent data does not have required fields';
@@ -152,11 +231,6 @@ export const validateTalent = (data: any): object | any => {
         }else if(middleName === ''){
             flag= false;
             message = 'talent does not have a middle name field';
-            break;
-
-        }else if(bio === ''){
-            flag = false;
-            message = 'talent does not have a bio field';
             break;
 
         }else if(primarySkill === ''){
@@ -184,17 +258,17 @@ export const validateTalent = (data: any): object | any => {
             message = 'talent does not have a tools';
             break;
 
-        }else if(languages === ''){
+        }else if(secondaryLanguage === ''){
             flag = false;
             message = 'talent does not have a languages';
             break;
 
-        }else if(frameworks === ''){
+        }else if(secondaryFramework === ''){
             flag = false;
             message = 'talent does not have a frameworks';
             break;
 
-        }else if(clouds === ''){
+        }else if(secondaryCloud === ''){
             flag = false;
             message = 'talent does not have a clouds';
             break;

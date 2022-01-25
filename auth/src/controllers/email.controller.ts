@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import express, { Request, Response, NextFunction } from 'express';
 import ErrorResponse from '../utils/error.util';
 import { asyncHandler } from '@btffamily/tmaapp';
@@ -5,6 +6,10 @@ import { sendGrid } from '../utils/email.util';
 
 import User from '../models/User.model';
 import { generate } from '../utils/random.util'
+
+import dayjs from 'dayjs'
+import customparse from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customparse)
 
 
 // @desc    send welcome email to user
@@ -127,7 +132,6 @@ export const sendActivationEmail = asyncHandler(async (req: Request, res: Respon
 
 })
 
-
 // @desc    send forgot password email
 // @route   POST /api/identity/v1/emails/forgot-password
 // @access  Public
@@ -186,6 +190,72 @@ export const sendResetLink = asyncHandler(async (req: Request, res: Response, ne
 
 })
 
+// @desc        Reset user password
+// @route       POST /api/identity/v1/auth/reset-password
+// @access      Public
+export const resetPassword = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
+
+	const token = req.params.token;
+    const { password } = req.body;
+
+	if(!password){
+        return next(new ErrorResponse('Error', 400, ['new \'password\' is required']))
+    }
+
+	const hashed = crypto
+    .createHash('sha256')
+    .update(token)
+    .digest('hex');
+
+	const user = await User.findOne({ resetPasswordToken: hashed });
+
+	if(!user){
+		return next(new ErrorResponse('error', 404, ['invalid token']));
+	}
+
+	const nd = dayjs(user.resetPasswordTokenExpire); // expire date
+	const td = dayjs(); // today
+	const diff = td.get('minutes') - nd.get('minutes');
+	
+	if(user && diff > 10 ){
+		return next(new ErrorResponse('error', 404, ['invalid token']))
+	}
+
+	// match user password with regex
+	const match =  /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/;
+	const matched: boolean = match.test(password);
+
+	if(!matched){
+		return next(new ErrorResponse('Error', 400, ['password must contain at least 8 characters, 1 lowercase letter, 1 uppercase letter, 1 special character and 1 number']))
+	}
+
+	user.password = password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordTokenExpire = undefined;
+    await user.save();
+
+	res.status(200).json({
+        error: false,
+        errors: [],
+        data: null,
+        message: 'successful',
+        status: 200
+    })
+
+	// send password changed email
+	let emailData = {
+		template: 'email-verify',
+		email: user.email,
+		preheaderText: 'password changed',
+		emailTitle: 'Changed Password',
+		emailSalute: `Hello ${user.firstName},`,
+		bodyOne:'You have successfully changed your password',
+		fromName: 'MYRIOI'
+	};
+
+	await sendGrid(emailData);
+
+})
 
 // @desc    send email verification code
 // @route   POST /api/identity/v1/emails/send-email-code

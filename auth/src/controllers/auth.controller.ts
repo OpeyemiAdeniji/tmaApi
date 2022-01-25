@@ -735,6 +735,17 @@ export const resetPassword = asyncHandler(async (req: Request, res:Response, nex
     })
 
 	//TODO: send password changed email
+	let emailData = {
+		template: 'email-verify',
+		email: user.email,
+		preheaderText: 'password reset',
+		emailTitle: 'Changed Password',
+		emailSalute: `Hello ${user.firstName},`,
+		bodyOne:'You have successfully changed your password',
+		fromName: 'MYRIOI'
+	};
+
+	await sendGrid(emailData);
 
 })
 
