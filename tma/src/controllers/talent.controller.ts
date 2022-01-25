@@ -85,6 +85,7 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 		languages,
 		frameworks,
 		clouds,
+		skills,
 	} = req.body;
 
 	const user = await User.findById(req.params.id);
@@ -150,16 +151,39 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 			pCloud: { type: pCloud._id, strentgh: primaryCloud.strength }
 		});
 
+
+		// save skills
+		if(skills.length){
+
+			for(let i = 0; i < skills.length; i++){
+
+				const skill = await Skill.findOne({ shortCode: skills[i] });
+	
+				if (skill){
+	
+					talent.skills.push(skill._id);
+					await talent.save();
+	
+				}
+	
+			}
+
+		}
+
 		// save tools
-		for(let i = 0; i < tools.length; i++){
+		if(tools.length){
 
-			const tool = await Tool.findOne({ name: tools[i] });
+			for(let i = 0; i < tools.length; i++){
 
-			if (tool){
-
-				talent.tools.push(tool._id);
-				await talent.save();
-
+				const tool = await Tool.findOne({ name: tools[i] });
+	
+				if (tool){
+	
+					talent.tools.push(tool._id);
+					await talent.save();
+	
+				}
+	
 			}
 
 		}
@@ -218,7 +242,10 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 
 		}
 
-		await new TalentApplied(nats.client).publish({ talent: null, user: user, step: applyStep });
+		talent.applyStep = talent.applyStep + 1;
+		await talent.save();
+
+		await new TalentApplied(nats.client).publish({ talent: talent, user: user, step: applyStep + 1 });
 
 		res.status(200).json({
 			error: false,
@@ -263,7 +290,19 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 			// save works
 			// await addEducations(educations, user, talent);
 
-	
+			
+			talent.applyStep = talent.applyStep + 1;
+			await talent.save();
+
+			await new TalentApplied(nats.client).publish({ talent: talent, user: user, step: applyStep + 1 });
+
+			res.status(200).json({
+				error: false,
+				errors: [],
+				data: talent,
+				message: `successful`,
+				status: 200
+			});
 
 		}
 
