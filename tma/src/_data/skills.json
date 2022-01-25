@@ -40,6 +40,12 @@
         "shortCode": "UXR",
         "category": "P-D",
         "description": "UX researcers design products by research"
+    },
+    {
+        "name": "Mobile Developer",
+        "shortCode": "MD",
+        "category": "S-E",
+        "description": "Mobile developers build mobile products"
     }
 
 ]
