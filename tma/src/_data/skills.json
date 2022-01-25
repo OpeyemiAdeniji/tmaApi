@@ -1,18 +1,18 @@
 [
     {
-        "name": "Frontend Engineer",
+        "name": "Frontend Developer",
         "shortCode": "F.E",
         "category": "S-E",
         "description": "Frontend engineers build products dealing with the frontend."
     },
     {
-        "name": "Backend Engineer",
+        "name": "Backend Developer",
         "shortCode": "B.E",
         "category": "S-E",
         "description": "Backend engineers build products dealing with the backend."
     },
     {
-        "name": "Fullstack Engineer",
+        "name": "Fullstack Developer",
         "shortCode": "FSE",
         "category": "S-E",
         "description": "Fullstack engineers build products dealing with the frontend & backend."
