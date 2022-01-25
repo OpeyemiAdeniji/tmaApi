@@ -19,7 +19,7 @@ export const seedSkills = async () => {
         
         for(let j = 0; j < skills.length; j++){
 
-            const sk = await Skill.findOne({ name: skills[j].name });
+            const sk = await Skill.findOne({ shortCode: skills[j].shortCode });
 
             if(!sk){
 
@@ -36,12 +36,13 @@ export const seedSkills = async () => {
 
                 category?.skills.push(skill._id);
                 await category?.save();
+                console.log(`${skill.name} seeded successfully`);
 
             }
 
         }
 
-        console.log(colors.green.inverse('skills seeded successfully'));
+        
 
     } catch (err) {
         console.log(colors.red.inverse(`${err}`));
@@ -71,12 +72,11 @@ export const seedTools = async () => {
 
                 category?.tools.push(tool._id);
                 await category?.save();
+                console.log(`${tool.name} seeded successfully`);
 
             }
 
         }
-
-        console.log(colors.green.inverse('tools seeded successfully'));
 
     } catch (err) {
         console.log(colors.red.inverse(`${err}`));

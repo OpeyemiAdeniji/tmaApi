@@ -33,6 +33,7 @@ import Education from '../models/Education.model'
 import Framework from '../models/Framework.model';
 import Cloud from '../models/Cloud.model';
 import Tool from '../models/Tool.model';
+import Category from '../models/Category.model';
 
 // @desc           Get all talents
 // @route          GET /api/v1/talents
@@ -101,40 +102,38 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 	}
 
 	// // validate languages (P & S)
-	const pSkill = await Skill.findOne({ shortCode: primarySkill });
+	let pSkill: any;
+	pSkill = await Skill.findOne({ shortCode: primarySkill });
 
-	if(!pSkill) {
-		return next (new ErrorResponse('Error', 404, ['skill does not exist']))
+	if(applyStep <= 1 && !pSkill) {
+
+		pSkill = await Category.findOne({ code: primarySkill });
+		
+		if(!pSkill){
+			return next (new ErrorResponse('Error', 404, ['skill does not exist']))
+		}
+
 	}
 
-	// // validate languages (P & S)
+	// // validate language
 	const pLang = await Language.findOne({ name: primaryLanguage.name });
 
-	if(!pLang) {
+	if(applyStep <= 1 && primaryLanguage.name && !pLang) {
 		return next (new ErrorResponse('Error', 404, ['language does not exist']))
 	}
 
 	// validate frameworks
 	const pFrame = await Framework.findOne({ name: primaryFramework.name });
 
-	if(!pFrame) {
+	if(applyStep <= 1 && primaryFramework.name && !pFrame) {
 		return next (new ErrorResponse('Error', 404, ['framework does not exist']))
 	}
 
 	// validate cloud platforms
 	const pCloud = await Cloud.findOne({ name: primaryCloud.name });
 
-	if(!pCloud) {
+	if(applyStep <= 1 && primaryCloud.name && !pCloud) {
 		return next (new ErrorResponse('Error', 404, ['cloud platform does not exist']))
-	}
-
-	// check tools
-	if(!tools){
-		return next (new ErrorResponse('Error', 400, ['tools data is rquired']))
-	}
-
-	if(typeof(tools) !== 'object'){
-		return next (new ErrorResponse('Error', 400, ['tools data is required to be an array of object']))
 	}
 
 
@@ -148,9 +147,9 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 			middleName: middleName ? middleName : '',
 			bio,
 			primarySkill: pSkill._id,
-			pLanguage: { type: pLang._id, strength: primaryLanguage.strength },
-			pFramework: { type: pFrame._id, strength: primaryFramework.strength },
-			pCloud: { type: pCloud._id, strentgh: primaryCloud.strength }
+			pLanguage: { type: pLang?._id, strength: primaryLanguage.strength },
+			pFramework: { type: pFrame?._id, strength: primaryFramework.strength },
+			pCloud: { type: pCloud?._id, strentgh: primaryCloud.strength }
 		});
 
 
@@ -258,17 +257,6 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 		});
 
 
-		await new TalentApplied(nats.client).publish({ talent: null, user: user, step: applyStep });
-
-		res.status(200).json({
-			error: false,
-			errors: [],
-			data: talent,
-			message: `successful`,
-			status: 200
-		});
-
-
 	}
 	
 
@@ -277,47 +265,48 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 
 		const talent = await Talent.findOne({user: user._id});
 
-		if(talent){
+		if(!talent){
+			return next (new ErrorResponse('Error', 404, ['application process should start from step 1']));
+		}
 
-			if(applyStep === 2){
+
+		if(applyStep === 2){
 
 
-
-			}
-
-			if(applyStep === 3){
-
-				
-
-			}
-
-			if(applyStep === 4){
-
-				
-
-			}
-
-			// save works
-			// await addWorks(works, user, talent);
-
-			// save works
-			// await addEducations(educations, user, talent);
-
-			
-			talent.applyStep = talent.applyStep + 1;
-			await talent.save();
-
-			await new TalentApplied(nats.client).publish({ talent: talent, user: user, step: applyStep + 1 });
-
-			res.status(200).json({
-				error: false,
-				errors: [],
-				data: talent,
-				message: `successful`,
-				status: 200
-			});
 
 		}
+
+		if(applyStep === 3){
+
+			
+
+		}
+
+		if(applyStep === 4){
+
+			
+
+		}
+
+		// save works
+		// await addWorks(works, user, talent);
+
+		// save works
+		// await addEducations(educations, user, talent);
+
+		
+		talent.applyStep = talent.applyStep + 1;
+		await talent.save();
+
+		await new TalentApplied(nats.client).publish({ talent: talent, user: user, step: applyStep + 1 });
+
+		res.status(200).json({
+			error: false,
+			errors: [],
+			data: talent,
+			message: `successful`,
+			status: 200
+		});
 
 
 	}

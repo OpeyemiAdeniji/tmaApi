@@ -74,7 +74,7 @@ export const getUserStatus = asyncHandler(async (req: Request, res:Response, nex
 			profile: false,
 			apply: {
 				status: false,
-				step: 0
+				step: 1
 			},
 			activated: false
 		}

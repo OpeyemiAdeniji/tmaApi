@@ -160,7 +160,7 @@ const TalentSchema = new mongoose.Schema (
 
         applyStep: {
             type: Number,
-            default: 0
+            default: 1
         },
 
         pLanguage: {
@@ -268,7 +268,6 @@ const TalentSchema = new mongoose.Schema (
 
         primarySkill: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Skill'
         },
 
         skills: [
