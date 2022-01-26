@@ -68,7 +68,8 @@ class UserCreatedListener extends Listener {
                     location: user.location.label,
                     placeId: user.location.value.place_id,
                     address: user.address,
-                    user: uc._id
+                    user: uc._id,
+                    passwordType: user.passwordType
 
                 });
 

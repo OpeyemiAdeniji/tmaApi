@@ -50,7 +50,7 @@ interface ITalentDoc extends mongoose.Document{
     skills: Array<mongoose.Schema.Types.ObjectId | any>
     tools: Array<mongoose.Schema.Types.ObjectId | any>
     matchedBusinesses: Array<mongoose.Schema.Types.ObjectId | any>;
-    currentlyMatched: mongoose.Schema.Types.ObjectId | any;
+    currentlyMatched: mongoose.Schema.Types.ObjectId | undefined;
     user: mongoose.Schema.Types.ObjectId | any;
     educations: Array<mongoose.Schema.Types.ObjectId | any>,
     works: Array<mongoose.Schema.Types.ObjectId | any>

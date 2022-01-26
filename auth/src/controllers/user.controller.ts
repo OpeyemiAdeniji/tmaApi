@@ -307,12 +307,12 @@ export const addManager = asyncHandler(async (req: Request, res:Response, next: 
 	// publish to NATS
 	await new UserCreated(nats.client).publish({ user: returnData, userType: returnData.userType, phoneCode: phoneCode })
 
-	res.status(206).json({
+	res.status(200).json({
 		error: true,
 		errors: [],
 		data: returnData,
 		message: 'successful',
-		status: 206
+		status: 200
 	})
 
 })
@@ -383,6 +383,13 @@ export const addTalent = asyncHandler(async (req: Request, res: Response, next: 
 		return next(new ErrorResponse('Error', 500, ['role not found. contact support team.']));
 	}
 
+	// find the user role
+    const talentRole = await Role.findOne({ name: 'talent' });
+
+    if(!talentRole){
+        return next(new ErrorResponse('An error occured. Please contact support.', 500, ['Roles not defined']));
+    }
+
 	// generate password
 	const password = await generate(8, true);
 
@@ -405,7 +412,21 @@ export const addTalent = asyncHandler(async (req: Request, res: Response, next: 
 		isActive: true
 	})
 
+	// create status
+	const status = await Status.create({
+		profile: false,
+		activated: false,
+		apply: {
+			status: false,
+			step: 1
+		},
+		user: user._id,
+		email: user.email
+	});
+
 	user.roles.push(role?._id);
+	user.status = status._id;
+	user.roles.push(talentRole._id);
 	const token = user.getInviteToken();
 	await user.save({ validateBeforeSave: false });
 	user.save();
@@ -431,6 +452,7 @@ export const addTalent = asyncHandler(async (req: Request, res: Response, next: 
 	}
 
 		const returnData = {
+			_id: user._id,
 			firstName: user.firstName,
 			lastName: user.lastName,
 			phoneNumber: user.phoneNumber,
@@ -448,12 +470,12 @@ export const addTalent = asyncHandler(async (req: Request, res: Response, next: 
 		// publish to NATS
 		await new UserCreated(nats.client).publish({ user: returnData, userType: returnData.userType, phoneCode: phoneCode });
 
-		res.status(206).json({
+		res.status(200).json({
 			error: true,
 			errors: [],
 			data: returnData,
 			message: 'successful',
-			status: 206
+			status: 200
 		})
 })
 
@@ -583,19 +605,19 @@ export const addBusiness = asyncHandler(async (req: Request, res: Response, next
 		industry: industry,
 		location: location,
 		address: address,
-		websiteUrl: websiteUrl
-
+		websiteUrl: websiteUrl,
+		passwordType: user.passwordType
 	}
 
 	// publish to NATS
 	await new UserCreated(nats.client).publish({ user: returnData, userType: type, phoneCode: phoneCode })
 
-	res.status(206).json({
+	res.status(200).json({
 		error: true,
 		errors: [],
 		data: returnData,
 		message: 'successful',
-		status: 206
+		status: 200
 	})
 
 })
@@ -626,12 +648,12 @@ export const acceptInvite = asyncHandler(async (req: Request, res:Response, next
 	user.inviteTokenExpire = undefined;
 	await user.save();
 	
-	res.status(206).json({
+	res.status(200).json({
 		error: true,
 		errors: [],
 		data: { _id: user._id, email: user.email },
 		message: 'successful',
-		status: 206
+		status: 200
 	})
 
 })

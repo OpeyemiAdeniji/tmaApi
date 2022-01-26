@@ -31,6 +31,8 @@ import Framework from '../models/Framework.model';
 import Cloud from '../models/Cloud.model';
 import Tool from '../models/Tool.model';
 import Category from '../models/Category.model';
+import Business from '../models/Business.model';
+import Preselect from '../models/Preselect.model';
 
 // @desc           Get all talents
 // @route          GET /api/v1/talents
@@ -487,6 +489,164 @@ export const uploadTalent = asyncHandler(async(req: Request, res: Response, next
 	})
 
 })
+
+// @desc    Preselect Talent
+// @route   PUT /api/v1/talents/preselect/:id
+// @access  Private/Superadmin/Admin
+export const selectTalent = asyncHandler(async(req: Request, res: Response, next: NextFunction) => {
+
+	const { talents, description, businessId, callbackUrl } = req.body;
+
+	const user = await User.findById(req.params.id);
+
+	if(!user){
+		return next(new ErrorResponse('Error!', 404, ['user does not exist']));
+	}
+
+	if(!callbackUrl){
+		return next(new ErrorResponse('Error!', 400, ['callback url is required']));
+	}
+
+	if(!description){
+		return next(new ErrorResponse('Error!', 400, ['description is required']));
+	}
+
+	if(!businessId){
+		return next(new ErrorResponse('Error!', 400, ['business id is required']));
+	}
+
+	const business = await Business.findById(businessId);
+
+	if(!business){
+		return next(new ErrorResponse('Error!', 404, ['business does not exist']));
+	}
+
+	if(!talents){
+		return next(new ErrorResponse('Error!', 400, ['selected \'talents\' is required']));
+	}
+
+	if(typeof(talents) !== 'object'){
+		return next(new ErrorResponse('Error!', 400, ['talents data is required to be an array']));
+	}
+
+	if(!talents.length || talents.length <= 0){
+		return next(new ErrorResponse('Error!', 400, ['talents data is required']));
+	}
+
+	const preselect = await Preselect.create({
+		description: description,
+		business: business._id,
+		createdBy: user._id
+	})
+
+	// save talents details
+	for(let j = 0; j < talents.length; j++){
+
+		const talent = await Talent.findById(talents[j]);
+
+		if(talent && talent.currentlyMatched === undefined ){
+
+			preselect.talents.push(talent._id);
+			await preselect.save();
+
+			talent.matchedBusinesses.push(business._id);
+			talent.currentlyMatched = business._id;
+			await talent.save();
+
+			business.preselects.push(talent._id);
+			business.talents.push(talent._id);
+			await business.save();
+		}
+
+	}
+
+	const token = preselect.getPreselectToken();
+	await preselect.save({ validateBeforeSave: false });
+
+	// send email to business 
+	if(token){
+
+		let emailData = {
+            template: 'welcome',
+            email: business.email,
+            preheaderText: `Successful Talent${business.preselects.length > 1 ? 's' : ''} Match`,
+            emailTitle: 'MYRIOI Talent Match',
+            emailSalute: `Hello, ${business.name}`,
+            bodyOne: `${business.preselects.length} Talents on the MYRIOI Talent Management Platform has been matched with your requirements. Please use the button below to view talent profiles`,
+            buttonUrl: `${callbackUrl}/${token}`,
+            buttonText: 'View Talents',
+            fromName: 'MYRIOI'
+        }
+
+        await sendGrid(emailData);
+
+
+	}
+	
+	res.status(200).json({
+		error: false,
+		errors: [],
+		data: { selected: preselect, url:`${callbackUrl}/${token}` },
+		message: 'successful',
+		status: 200
+	})
+
+})
+
+// @desc    Preselect Talent
+// @route   PUT /api/v1/talents/preview
+// @access  Private/Superadmin/Admin
+export const viewSelectedTalents = asyncHandler(async(req: Request, res: Response, next: NextFunction) => {
+
+	const { token } = req.body;
+
+	if(!token){
+		return new ErrorResponse('Error', 400, ['token is required'])
+	}
+
+	const hashed = crypto
+    .createHash('sha256')
+    .update(token)
+    .digest('hex');
+
+	const preselect = await Preselect.findOne({preselectToken: hashed, preselectTokenExpire: {$gt: new Date() }});
+
+	if(!preselect){
+		return next(new ErrorResponse('invalid token', 400, ['token expired']));
+	}
+
+	const business = await Business.findById(req.params.id);
+
+	let pType: string;
+	if(business && business.passwordType === 'generated'){
+		business.passwordType = 'self-changed';
+		await business.save();
+		pType = 'generated';
+	}else{
+		pType = 'self-changed';
+	}
+
+	const pSelect = await Preselect.findById(preselect._id).populate([ { path: 'talents'}, { path: 'business' } ]);
+
+	const returnData = {
+		_id: pSelect?._id,
+		description: pSelect?.description,
+		talents: pSelect?.talents,
+		business: pSelect?.business,
+		passwordType: pType
+	}
+	
+	res.status(200).json({
+		error: false,
+		errors: [],
+		data: returnData,
+		message: 'successful',
+		status: 200
+	})
+
+})
+
+
 
 /** 
  * snippet
