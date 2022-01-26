@@ -389,6 +389,7 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 			}
 
 			talent.jobType = jobType;
+			talent.workType = workType ? workType : 'contract';
 			talent.workCategory.type = workCategory.type;
 			talent.workCategory.availability = workCategory.availability;
 			talent.applyStep = talent.applyStep + 1;
