@@ -44,6 +44,13 @@ export const validateWorks = async (works: Array<any> ): Promise<any> => {
                 result.flag = false;
                 break;
             }
+
+            else if(!works[i].workType){
+                result.message = 'work type is required'
+                result.flag = false;
+                break;
+            }
+
             else{
 
                 result.message = ''
@@ -80,6 +87,7 @@ export const addWorks = async (works: Array<any>, user: any, talent: any): Promi
                 role: works[i].role,
                 startDate: sd,
                 endDate: works[i].endDate ? ed : '',
+                workType: works[i].workType,
                 isCurrent: works[i].isCurrent ? works[i].isCurrent : false,
                 user: user._id,
                 talent: talent._id,

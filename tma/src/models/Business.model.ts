@@ -22,6 +22,7 @@ interface IBusinessDoc extends mongoose.Document{
     businessType: string;
     slug: string;
     websiteUrl: string;
+    passwordType: string;
 
     talents: Array<mongoose.Schema.Types.ObjectId | any>;
     user: mongoose.Schema.Types.ObjectId | any;
@@ -78,6 +79,11 @@ const BusinessSchema = new mongoose.Schema (
         businessType: {
             type: String,
             enum: ['business', 'third-party']
+        },
+
+        passwordType:{
+            type: String,
+            enum: ['generated', 'self', 'self-changed']
         },
 
         websiteUrl: {

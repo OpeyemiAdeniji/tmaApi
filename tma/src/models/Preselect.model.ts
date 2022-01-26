@@ -80,7 +80,7 @@ const PreselectSchema = new mongoose.Schema(
 PreselectSchema.set('toJSON', { getters: true, virtuals: true });
 
 PreselectSchema.pre<IPreselectDoc>('save', async function(next){
-    this.slug = slugify('talent' , { lower: true });
+    this.slug = slugify(this.description , { lower: true });
     next()
 })
 

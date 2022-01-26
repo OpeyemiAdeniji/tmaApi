@@ -319,7 +319,7 @@ UserSchema.methods.getInviteToken = function () {
 		.digest('hex');
 
 	// Set expire
-	this.inviteTokenExpire = Date.now() + (60 * 24) * 60 * 1000; // 24 hours
+	this.inviteTokenExpire = Date.now() + 1440 * 60 * 1000; // 24 hours
 
 	return token;
 };
