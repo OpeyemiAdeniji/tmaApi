@@ -1,17 +1,18 @@
-import { isTemplateExpression } from 'typescript';
 import Talent from '../models/Talent.model';
 import Skill from '../models/Skill.model';
 import Category from '../models/Category.model';
 import Language from '../models/Language.model';
 import Framework from '../models/Framework.model';
 import Cloud from '../models/Cloud.model';
-import User from '../models/User.model';
 import Tool from '../models/Tool.model';
+import { sendGrid } from '../utils/email.util';
+
+import { generate } from "../utils/random.util";
 
 export const saveParsed = async (data: any, user: any ) => {
 
     let result = [];
-    let flag, message
+    let flag, message, pwd
 
     const validate = await validateTalent(data);
 
@@ -37,13 +38,33 @@ export const saveParsed = async (data: any, user: any ) => {
 
             }else{
 
+                const gen = await generate(8, true)
+                pwd = '#Ts' + gen + '1/'
+
                 const talent = await Talent.create({
                     applyStep: 1, 
                     firstName: data[i].firstName,
                     lastName: data[i].lastName,
                     middleName: data[i].middleName,
+                    email: data[i].email,
+                    password: pwd,
+                    passwordType: 'generated',
                     user: user._id
                 })
+
+                let emailData = {
+                    template: 'email-verify',
+                    email: user.email,
+                    preheaderText: 'MYRIOI',
+                    emailTitle: 'Welcome to MYRIOI',
+                    emailSalute: 'Hello ' + user.firstName + ',',
+                    bodyOne: `MYRIOI has added you as a talent on their talent management platform. Thank you for joining our platform. 
+                    Please login to your dashboard with the details below. You will be forced to change your password immediately you login`,
+                    bodyTwo: `Email: ${user.email} \n Password: ${pwd}`,
+                    fromName: 'MYRIOI'
+                }
+            
+                await sendGrid(emailData);
 
                 // save the primary skill
                 const pSkill = await Skill.findOne({ name: data[i].primarySkill });
@@ -184,11 +205,25 @@ export const saveParsed = async (data: any, user: any ) => {
                                 talent.clouds.push({ type: cloud._id, strenth: 1 });
                                 await talent.save();
                             }
+
+                            result.push(talent)
+
+                            user.talent = talent._id;
+                            user.save();
+            
+                            flag = true;
+                            message = `successful`;
                         }
                     }
                 }
 
             }
+        }
+
+        return {
+            flag: flag,
+            message: message,
+            result: result
         }
     }
 }
@@ -203,6 +238,7 @@ export const validateTalent = (data: any): object | any => {
         const firstName = data[i].firstName;
         const lastName = data[i].lastName;
         const middleName = data[i].middleName;
+        const email = data[i].email;
         const primarySkill = data[i].primarySkill;
         const primaryLanguage = data[i].pLanguage;
         const primaryFramework = data[i].pFramework;
@@ -212,7 +248,7 @@ export const validateTalent = (data: any): object | any => {
         const secondaryCloud = data[i].clouds
         const tools = data[i].tools;
 
-        if(!firstName && !lastName && !middleName && !primarySkill && !primaryLanguage && !primaryFramework && !primaryCloud && !tools && !secondaryLanguage && !secondaryFramework && !secondaryCloud){
+        if(!firstName && !lastName && !middleName && !email && !primarySkill && !primaryLanguage && !primaryFramework && !primaryCloud && !tools && !secondaryLanguage && !secondaryFramework && !secondaryCloud){
 
             flag = false;
             message = 'talent data does not have required fields';
@@ -232,6 +268,11 @@ export const validateTalent = (data: any): object | any => {
             flag= false;
             message = 'talent does not have a middle name field';
             break;
+
+        }else if(middleName === ''){
+            flag= false;
+            message = 'talent does not have a middle name field';
+            break
 
         }else if(primarySkill === ''){
             flag = false;

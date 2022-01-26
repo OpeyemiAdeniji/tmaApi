@@ -70,7 +70,7 @@ const UserSchema = new mongoose.Schema (
 			type: Boolean
 		},
 
-        talents: {
+        talent: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Talent'
         },

@@ -302,3 +302,59 @@ export const sendVerificationEmail = asyncHandler(async (req: Request, res: Resp
 
 
 })
+
+// @desc    send Invite Link
+// @route   POST /api/identity/v1/emails?invite=false
+// @access  Public
+export const sendInvite = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+
+    const { email, callback } = req.body;
+
+    if(!callback){
+		return next(new ErrorResponse('Error', 400, ['invite callback url is required']));
+	}
+
+    if(!email){
+        return next( new ErrorResponse('Error', 400, ['email is required']))
+    }
+
+    const user = await User.findOne({email: email});
+
+    if(!user){
+        return next( new ErrorResponse('Error', 404, ['email does not exist']))
+    }
+
+    if(!user.isTalent && !user.isManager){
+        return next( new ErrorResponse('Error', 400, ['user is not authrized to recieve invite link']))
+    }
+
+    const token = user.getInviteToken();
+    console.log(token, 'token')
+	await user.save({ validateBeforeSave: false });
+	user.save();
+
+	const inviteLink = `${callback}/${token}`;
+
+	let emailData = {
+        template: 'welcome',
+        email: user.email,
+        preheaderText: 'MYRIOI Invitation',
+        emailTitle: 'MYRIOI Invite',
+        emailSalute: 'Hello ' + user.firstName + ',',
+        bodyOne: 'MYRIOI has invited you to join them as a talent on their talent management platform.',
+        bodyTwo: 'You can accept invitation by clicking the button below or ignore this email to decline. Invitation expires in 24 hours',
+        buttonUrl: `${inviteLink}`,
+        buttonText: 'Accept Invite',
+        fromName: 'MYRIOI'
+    }
+
+    await sendGrid(emailData);
+
+    res.status(200).json({
+        error: false,
+        errors: [],
+        data: null,
+        message: 'successful',
+        status: 200
+    })
+})

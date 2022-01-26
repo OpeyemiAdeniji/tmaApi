@@ -290,6 +290,7 @@ export const addManager = asyncHandler(async (req: Request, res:Response, next: 
 	}
 
 	const returnData = {
+		_id: user._id,
 		firstName: user.firstName,
 		lastName: user.lastName,
         email: user.email,
@@ -445,7 +446,7 @@ export const addTalent = asyncHandler(async (req: Request, res: Response, next: 
 		}
 
 		// publish to NATS
-		await new UserCreated(nats.client).publish({ user: returnData, userType: returnData.userType, phoneCode: phoneCode })
+		await new UserCreated(nats.client).publish({ user: returnData, userType: returnData.userType, phoneCode: phoneCode });
 
 		res.status(206).json({
 			error: true,
@@ -454,7 +455,6 @@ export const addTalent = asyncHandler(async (req: Request, res: Response, next: 
 			message: 'successful',
 			status: 206
 		})
-
 })
 
 // @desc        Add Business
@@ -607,26 +607,30 @@ export const acceptInvite = asyncHandler(async (req: Request, res:Response, next
 		return new ErrorResponse('Error', 400, ['token is required'])
 	}
 
-	const linkMatched = await User.findOne({ inviteToken: token, inviteTokenExpire: { $gt: new Date() } }) 
+	const hashed = crypto
+    .createHash('sha256')
+    .update(token)
+    .digest('hex');
 
-	if(!linkMatched){
-		return next(new ErrorResponse('invalid token', 400, ['invite link expired']))
+	const user = await User.findOne({inviteToken: hashed, inviteTokenExpire: {$gt: new Date() }});
+
+	if(!user){
+		return next(new ErrorResponse('invalid token', 400, ['invite link expired']));
 	}
 
-	linkMatched.inviteToken = undefined;
-	linkMatched.inviteTokenExpire = undefined;
-	await linkMatched.save();
+	user.inviteToken = undefined;
+	user.inviteTokenExpire = undefined;
+	await user.save();
 	
 	res.status(206).json({
 		error: true,
 		errors: [],
-		data: null,
+		data: { _id: user._id, email: user.email },
 		message: 'successful',
 		status: 206
 	})
 
 })
-
 
 /** 
  * snippet
@@ -638,6 +642,3 @@ export const acceptInvite = asyncHandler(async (req: Request, res:Response, next
 // export const funcd = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
 
 // })
-
-
-
