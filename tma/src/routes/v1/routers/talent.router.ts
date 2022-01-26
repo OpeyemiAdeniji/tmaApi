@@ -7,7 +7,7 @@ import {
     uploadTalent
 } from '../../../controllers/talent.controller';
 
-import Talent from '../../../models/Category.model'
+import Talent from '../../../models/Talent.model'
 import advancedResults from '../../../middleware/adanced.mw'
 const router: Router = express.Router({ mergeParams: true });
 import { protect, authorize } from '../../../middleware/auth.mw'

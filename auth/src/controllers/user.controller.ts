@@ -472,10 +472,9 @@ export const addBusiness = asyncHandler(async (req: Request, res: Response, next
 		location,
 		address,
 		websiteUrl,
+		type
 
 	} = req.body;
-
-	const { type } = req.query;
 
 	if(!callback){
 		return next(new ErrorResponse('Error', 400, ['callback url is required']));
@@ -483,6 +482,10 @@ export const addBusiness = asyncHandler(async (req: Request, res: Response, next
 
 	if(!type){
 		return next(new ErrorResponse('Error', 400, ['business type is required']));
+	}
+
+	if(type !== 'business' && type !== 'third-party'){
+		return next(new ErrorResponse('Invalid format', 400, ['business type is expected to be \'business\' or \'third-party\'']));
 	}
 
 	// validate
@@ -515,13 +518,13 @@ export const addBusiness = asyncHandler(async (req: Request, res: Response, next
 	// format phone number
 	let phoneStr: string
 	if(strIncludesEs6(phoneCode, '_')){
-		phoneStr = phoneCode.subString(3);
+		phoneStr = phoneCode.substring(3);
 	}else{
-		phoneStr = phoneCode.subString(1)
+		phoneStr = phoneCode.substring(1)
 	}
 	
 	// check if number exist
-	const phoneExists = await User.findOne({ phoneNumber: phoneStr + phoneNumber.subString(1)});
+	const phoneExists = await User.findOne({ phoneNumber: phoneStr + phoneNumber.substring(1)});
 	
 	if(phoneExists){
 		return next(new ErrorResponse('Error', 400, ['phone number already exists']));
@@ -540,7 +543,7 @@ export const addBusiness = asyncHandler(async (req: Request, res: Response, next
 		password, 
 		passwordType: 'generated',
 		savedPassword: password,
-		phoneNumber: phoneStr + phoneNumber.subString(1), 
+		phoneNumber: phoneStr + phoneNumber.substring(1), 
 		userType: type ? type : 'business',
         isSuper: false,
 		isActivated: false,
@@ -566,6 +569,7 @@ export const addBusiness = asyncHandler(async (req: Request, res: Response, next
 	await sendGrid(emailData);
 
 	const returnData = {
+		_id: user._id,
 		firstName: user.firstName,
 		lastName: user.lastName,
 		phoneNumber: user.phoneNumber,
@@ -575,7 +579,7 @@ export const addBusiness = asyncHandler(async (req: Request, res: Response, next
 			_id: role?._id,
 			name: role?.name
 		},
-		userType: user.userType,
+		userType: type,
 		industry: industry,
 		location: location,
 		address: address,
@@ -584,7 +588,7 @@ export const addBusiness = asyncHandler(async (req: Request, res: Response, next
 	}
 
 	// publish to NATS
-	await new UserCreated(nats.client).publish({ user: returnData, userType: returnData.userType, phoneCode: phoneCode })
+	await new UserCreated(nats.client).publish({ user: returnData, userType: type, phoneCode: phoneCode })
 
 	res.status(206).json({
 		error: true,

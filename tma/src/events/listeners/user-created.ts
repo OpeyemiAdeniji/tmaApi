@@ -36,7 +36,26 @@ class UserCreatedListener extends Listener {
 
             });
 
-            if(userType === 'business' || userType === 'third-party'){
+            if(userType === 'business'){
+
+                await Business.create({
+
+                    name: uc.firstName,
+                    industry: user.industry,
+                    email: uc.email,
+                    phoneNumber: uc.phoneNumber,
+                    websiteUrl: user.websiteUrl,
+                    businessType: userType,
+                    location: user.location.label,
+                    placeId: user.location.value.place_id,
+                    address: user.address,
+                    user: uc._id
+
+                });
+
+            }
+
+            if(userType === 'third-party'){
 
                 await Business.create({
 

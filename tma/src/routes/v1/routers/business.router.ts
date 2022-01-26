@@ -3,7 +3,9 @@ import express, { Router } from 'express'
 
 import {
     getBusinesses,
-    getBusiness
+    getThirdParties,
+    getBusiness,
+    getThirdParty
 } from '../../../controllers/business.controller';
 
 
@@ -22,6 +24,8 @@ const bizRoles = ['superadmin', 'admin', 'manager', 'business'];
 const allRoles = ['superadmin', 'admin', 'business', 'manager', 'talent', 'user'];
 
 router.get('/', vcd, protect, authorize(roles), advancedResults(Business), getBusinesses);
+router.get('/', vcd, protect, authorize(roles), advancedResults(Business), getThirdParties);
 router.get('/:id', vcd, protect, authorize(bizRoles), getBusiness);
+router.get('/third-party/:id', vcd, protect, authorize(bizRoles), getThirdParty);
 
 export default router;
