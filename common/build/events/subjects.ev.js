@@ -9,4 +9,5 @@ var Subjects;
     Subjects["LocationSaved"] = "tma.location.saved";
     Subjects["NotificationCreated"] = "tma.notification.created";
     Subjects["TalentApplied"] = "tma.talent.applied";
+    Subjects["TalentAdded"] = "tma.talent.added";
 })(Subjects = exports.Subjects || (exports.Subjects = {}));

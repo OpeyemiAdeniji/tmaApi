@@ -3,5 +3,6 @@ export declare enum Subjects {
     CountryFound = "tma.country.found",
     LocationSaved = "tma.location.saved",
     NotificationCreated = "tma.notification.created",
-    TalentApplied = "tma.talent.applied"
+    TalentApplied = "tma.talent.applied",
+    TalentAdded = "tma.talent.added"
 }
