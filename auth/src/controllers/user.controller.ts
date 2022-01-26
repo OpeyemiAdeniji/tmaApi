@@ -345,7 +345,7 @@ export const addTalent = asyncHandler(async (req: Request, res: Response, next: 
 
 	const existing = await User.findOne({email: email});
 
-	if(!existing){
+	if(existing){
 		return next(new ErrorResponse('Error', 403, ['email is already existing']));
 	}
 
@@ -364,9 +364,9 @@ export const addTalent = asyncHandler(async (req: Request, res: Response, next: 
 	// format phone number
 	let phoneStr: string
 	if(strIncludesEs6(phoneCode, '_')){
-		phoneStr = phoneCode.subString(3);
+		phoneStr = phoneCode.substring(3);
 	}else{
-		phoneStr = phoneCode.subString(1)
+		phoneStr = phoneCode.substring(1)
 	}
 
 	// check if number exist
@@ -393,7 +393,7 @@ export const addTalent = asyncHandler(async (req: Request, res: Response, next: 
 		password, 
 		passwordType: 'generated',
 		savedPassword: password,
-		phoneNumber: phoneStr + phoneNumber.subString(1), 
+		phoneNumber: phoneStr + phoneNumber.substring(1), 
 		userType: 'talent',
         isSuper: false,
 		isActivated: false,
