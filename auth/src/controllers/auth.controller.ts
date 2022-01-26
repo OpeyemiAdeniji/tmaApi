@@ -367,7 +367,6 @@ export const registerBusiness = asyncHandler(async (req: Request, res:Response, 
 
 })
 
-
 // @desc        Login user 
 // @route       POST /api/identity/v1/auth/login
 // @access      Public

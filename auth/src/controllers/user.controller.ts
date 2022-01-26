@@ -21,11 +21,17 @@ import Status from '../models/Status.model'
 import nats from '../events/nats';
 import UserCreated from '../events/publishers/user-created'
 
-
 // @desc           Get all users
 // @route          GET /api/v1/users
 // @access         Private
 export const getUsers = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
+	res.status(200).json(res.advancedResults);   
+})
+
+// @desc           Add All Business Manager
+// @route          GET /api/v1/users/manager
+// @access         Private
+export const getManagers = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
 	res.status(200).json(res.advancedResults);   
 })
 
@@ -40,6 +46,30 @@ export const getUser = asyncHandler(async (req: Request, res:Response, next: Nex
 	]);
 
 	console.log(user)
+	if(!user){
+		return next(new ErrorResponse(`Error!`, 404, ['Could not find user']))
+	}
+
+	res.status(200).json({
+		error: false,
+		errors: [],
+		message: `successful`,
+		data: user.isSuper ? [] : user,
+		status: 200
+	});
+
+})
+
+// @desc    Get a user
+// @route   GET /api/v1/users/manger/:id
+// @access  Private/Superadmin/Admin
+export const getManager = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
+	
+	const user = await User.findById(req.params.id).populate(
+	[
+		{ path: 'roles', select: '_id name resources' },
+	]);
+
 	if(!user){
 		return next(new ErrorResponse(`Error!`, 404, ['Could not find user']))
 	}
