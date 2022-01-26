@@ -329,7 +329,6 @@ export const sendInvite = asyncHandler(async (req: Request, res: Response, next:
     }
 
     const token = user.getInviteToken();
-    console.log(token, 'token')
 	await user.save({ validateBeforeSave: false });
 	user.save();
 

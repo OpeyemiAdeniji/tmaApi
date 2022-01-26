@@ -24,12 +24,17 @@ export const getBusinesses = asyncHandler(async (req: Request, res:Response, nex
 	res.status(200).json(res.advancedResults);   
 })
 
+// @desc           Get all third party businesses
+// @route          GET /api/tma/v1/businesses/third-party
+// @access         Private
+export const getThirdParties = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
+	res.status(200).json(res.advancedResults);   
+})
+
 // @desc           Get a businesses
-// @route          GET /api/tma/v1/businesses?type="business"
+// @route          GET /api/tma/v1/businesses/:id
 // @access         Private/Superadmin/Admin
 export const getBusiness = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
-
-	const {  type } = req.query;
 	
 	const business = await Business.findOne({ user: req.params.id }).populate([{ path: 'user' }])
 
@@ -37,22 +42,32 @@ export const getBusiness = asyncHandler(async (req: Request, res:Response, next:
 		return next(new ErrorResponse(`Error!`, 404, ['business does not exist']))
 	}
 
+	res.status(200).json({
+		error: false,
+		errors: [],
+		message: `successful`,
+		data: business,
+		status: 200
+	});
 
-    if(type){
+})
 
-		const user = await User.findById(business.user);
+// @desc           Get a businesses
+// @route          GET /api/tma/v1/businesses/third-party/:id
+// @access         Private/Superadmin/Admin
+export const getThirdParty = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
+	
+	const tPartyBusiness = await Business.findOne({ user: req.params.id }).populate([{ path: 'user' }])
 
-		if(user?.userType !== type.toString() ){
-			return next(new ErrorResponse(`Error!`, 404, ['business does not exist']))
-		}
-
+	if(!tPartyBusiness){
+		return next(new ErrorResponse(`Error!`, 404, ['third party business does not exist']))
 	}
 
 	res.status(200).json({
 		error: false,
 		errors: [],
 		message: `successful`,
-		data: business,
+		data: tPartyBusiness,
 		status: 200
 	});
 
