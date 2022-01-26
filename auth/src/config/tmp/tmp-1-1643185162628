@@ -1,0 +1,2 @@
+firstName,lastName,middleName,email,primarySkill,primaryLanguage,primaryFramework,primaryCloud,secondaryLanguage,secondaryFramework,secondaryCloud
+James,Chinedu,John,techblog68@gmail.com,Frontend Developer,Javascript,React Js,Google Cloud,"Java, Ruby, PHP, Swift","Vue Js, Next Js, Gatsby Js, Ember","Alibaba Cloud, IBM Cloud, Oracle Cloud, "

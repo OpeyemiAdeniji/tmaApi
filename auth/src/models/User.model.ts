@@ -38,7 +38,7 @@ interface IUserDoc extends mongoose.Document {
 	resetPasswordTokenExpire: Date | undefined;
 	emailCode: string | undefined;
 	emailCodeExpire: Date | undefined;
-	inviteToken: string | undefined | any;
+	inviteToken: string | undefined;
 	inviteTokenExpire: Date | undefined;
 
 	isSuper: boolean;

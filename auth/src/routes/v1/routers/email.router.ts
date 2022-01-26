@@ -6,7 +6,8 @@ import {
     sendWelcomeEmail,
     sendResetLink,
     resetPassword,
-    sendVerificationEmail
+    sendVerificationEmail,
+    sendInvite
 } from '../../../controllers/email.controller';
 
 
@@ -21,5 +22,6 @@ router.post('/activate/:id', vcd, protect, authorize(roles), sendActivationEmail
 router.post('/forgot-password/:id', vcd, sendResetLink);
 router.post('/reset-password/:token', vcd, protect, authorize(roles), resetPassword);
 router.post('/send-email-code', vcd, sendVerificationEmail);
+router.post('/send-invite', vcd, sendInvite);
 
 export default router;
