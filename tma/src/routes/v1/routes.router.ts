@@ -21,7 +21,6 @@ const router = express.Router();
 
 // define routes
 router.use('/users', userRoutes);
-router.use('/talents', talentRoutes);
 router.use('/languages', languageRoutes);
 router.use('/businesses', businessRoutes);
 router.use('/education', educationRoutes);
@@ -34,6 +33,7 @@ router.use('/industries', industryRoutes);
 router.use('/works', workRoutes);
 router.use('/tools', toolRoutes);
 router.use('/categories', categoryRoutes);
+router.use('/talents', talentRoutes);
 
 router.get('/', (req: Request, res: Response, next: NextFunction) => {
 

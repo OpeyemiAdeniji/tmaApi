@@ -86,6 +86,14 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 		frameworks,
 		clouds,
 		skills,
+		works, 
+		educations,
+		currentSalary,
+		gender,
+		resume,
+		jobType,
+		workType,
+		workCategory
 	} = req.body;
 
 	const user = await User.findById(req.params.id);
@@ -263,32 +271,88 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 		const talent = await Talent.findOne({user: user._id});
 
 		if(!talent){
-			return next (new ErrorResponse('Error', 404, ['application process should start from step 1']));
+			return next (new ErrorResponse('Error', 400, ['application process should start from step 1']));
 		}
 
 
 		if(applyStep === 2){
 
+			if(!works){
+				return next (new ErrorResponse('Error', 400, ['work data is required']));
+			}
+
+			if(typeof(works) !== 'object' || works.length <= 0){
+				return next (new ErrorResponse('Error', 400, ['work data is required to be anarray of data']));
+			}
+
+			const wValidate = await validateWorks(works);
+
+			if(wValidate.flag === false){
+				return next (new ErrorResponse('Error', 400, [`${wValidate.message}`]));
+			}
+
+			if(!educations){
+				return next (new ErrorResponse('Error', 400, ['education data is required']));
+			}
+
+			if(typeof(educations) !== 'object' || educations.length <= 0){
+				return next (new ErrorResponse('Error', 400, ['education data is required to be anarray of data']));
+			}
+
+			const eValidate = await validateEducation(educations);
+
+			if(eValidate.flag === false){
+				return next (new ErrorResponse('Error', 400, [`${eValidate.message}`]));
+			}
+
+			// save works
+			await addWorks(works, user, talent);
+
+			// save educations
+			await addEducations(educations, user, talent);
+
+
+			talent.applyStep = talent.applyStep + 1;
+			talent.currentSalary.value = currentSalary && currentSalary.value ? currentSalary.value : 0;
+			talent.currentSalary.currency = currentSalary && currentSalary.currency ? currentSalary.currency : '';
+			await talent.save();
+
+			await new TalentApplied(nats.client).publish({ talent: talent, user: user, step: applyStep + 1 });
+
+			res.status(200).json({
+				error: false,
+				errors: [],
+				data: talent,
+				message: `successful`,
+				status: 200
+			});
 
 
 		}
 
 		if(applyStep === 3){
 
-			
+			talent.firstName = firstName;
+			talent.lastName = lastName;
+			talent.middleName = middleName;
+			talent.gender = gender;
+			await talent.save();
 
-		}
+			const mime = resume.split(';base64')[0].split(':')[1];
 
-		if(applyStep === 4){
+			if(!mime || mime === '') {
+				return next(new ErrorResponse(`invalid format`, 400, ['resume data is is expected to be base64 string']));
+			}
 
-			
+			// upload file
+			const fileData = {
+				file: resume,
+				filename: user.email + '-' + 'resume',
+				mimeType: mime
+			}
 
-		}
-
-		// save works
-		// await addWorks(works, user, talent);
-
-			
+			const gData = await uploadBase64File(fileData);
+			talent.resumeUrl = gData.publicUrl;
 			talent.applyStep = talent.applyStep + 1;
 			await talent.save();
 
@@ -302,19 +366,51 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 				status: 200
 			});
 
-		
-		talent.applyStep = talent.applyStep + 1;
-		await talent.save();
+			
 
-		await new TalentApplied(nats.client).publish({ talent: talent, user: user, step: applyStep + 1 });
+		}
 
-		res.status(200).json({
-			error: false,
-			errors: [],
-			data: talent,
-			message: `successful`,
-			status: 200
-		});
+		if(applyStep === 4){
+
+			if(!jobType){
+				return next(new ErrorResponse(`Error`, 400, ['job type is reqiuired']));
+			}
+
+			if(!workCategory){
+				return next(new ErrorResponse(`Error`, 400, ['work category is reqiuired']));
+			}
+
+			if(!workCategory.type){
+				return next(new ErrorResponse(`Error`, 400, ['work category is reqiuired']));
+			}
+
+			if(!workCategory.availability && workCategory.type == 'part-time'){
+				return next(new ErrorResponse(`Error`, 400, ['work availability is reqiuired']));
+			}
+
+			talent.jobType = jobType;
+			talent.workCategory.type = workCategory.type;
+			talent.workCategory.availability = workCategory.availability;
+			talent.applyStep = talent.applyStep + 1;
+			await talent.save();
+
+			await new TalentApplied(nats.client).publish({ talent: talent, user: user, step: applyStep + 1 });
+
+			res.status(200).json({
+				error: false,
+				errors: [],
+				data: talent,
+				message: `successful`,
+				status: 200
+			});
+
+		}
+
+		if(applyStep >= 5){
+				
+			return next (new ErrorResponse('Error', 400, ['user already completed application process']));
+
+		}
 
 
 	}
