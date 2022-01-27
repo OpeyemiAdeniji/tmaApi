@@ -306,3 +306,48 @@ export const validateTalent = (data: any): object | any => {
 
     return { flag: flag, message: message }
 }
+
+export const validateSelected = async (data: any): Promise<object | any> => {
+
+    let flag: boolean = false;
+    let message: string = '';
+
+    if(data.length <= 0){
+        flag = false;
+        message = 'talent data cannot be empty'
+    }else{
+
+        for(let i = 0; i < data.length; i++){
+
+            const talent = await Talent.findById(data[i]);
+
+            if(talent){
+
+                if(talent.applyStep <= 4){
+
+                    flag = false;
+                    message = 'talent needs to complete application process'
+                     break;
+
+                }else{
+
+                    flag = true;
+                    message = ''
+                    continue;
+
+                }
+
+            }else{
+
+                flag = false;
+                message = 'one of the selected talents does not exist'
+                break;
+            }
+
+        }
+
+    }
+
+    return { flag: flag, message: message }
+
+}

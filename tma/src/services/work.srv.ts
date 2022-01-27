@@ -79,7 +79,7 @@ export const addWorks = async (works: Array<any>, user: any, talent: any): Promi
             const sd = await dayjs(works[i].startDate)
             const ed = await dayjs(works[i].endDate)
 
-            await Work.create({
+            const work = await Work.create({
 
                 companyName: works[i].companyName,
                 companyUrl: works[i].companyUrl,
@@ -93,6 +93,12 @@ export const addWorks = async (works: Array<any>, user: any, talent: any): Promi
                 talent: talent._id,
 
             })
+
+            user.works.push(work._id);
+            await user.save();
+
+            talent.works.push(work._id);
+            await talent.save();
 
         }
 

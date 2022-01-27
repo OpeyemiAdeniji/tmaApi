@@ -12,6 +12,7 @@ import { userLogger } from '../config/wiston';
 import { uploadBase64File } from '../utils/google.util'
 import { validateWorks, addWorks } from '../services/work.srv'
 import { validateEducation, addEducations } from '../services/education.srv'
+import { validateSelected } from '../services/talent.sv'
 
 import dayjs from 'dayjs'
 import customparse from 'dayjs/plugin/customParseFormat';
@@ -83,7 +84,11 @@ export const getTalent = asyncHandler(async (req: Request, res:Response, next: N
 		{path: 'currentlyMatched', select: '_id name websiteUrl'},
 		{ path: 'works' },
 		{ path: 'educations' },
-		{ path: 'skill' }
+		{ path: 'skills' },
+		{ path: 'tools' },
+		{ path: 'pCloud.type' },
+		{ path: 'pFramework.type' },
+		{ path: 'pLanguage.type' },
 	])
 
 	if(!talent){
@@ -544,6 +549,13 @@ export const selectTalent = asyncHandler(async(req: Request, res: Response, next
 
 	if(!talents.length || talents.length <= 0){
 		return next(new ErrorResponse('Error!', 400, ['talents data is required']));
+	}
+
+	// validate talent
+	const selectValidate = await validateSelected(talents);
+
+	if(selectValidate.flag === false){
+		return next(new ErrorResponse('Error!', 403, [`${selectValidate.message}`]));
 	}
 
 	const preselect = await Preselect.create({
