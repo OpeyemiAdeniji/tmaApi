@@ -21,12 +21,27 @@ import Status from '../models/Status.model'
 import nats from '../events/nats';
 import UserCreated from '../events/publishers/user-created'
 
-
 // @desc           Get all users
 // @route          GET /api/v1/users
 // @access         Private
 export const getUsers = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
 	res.status(200).json(res.advancedResults);   
+})
+
+// @desc           Add All Business Manager
+// @route          GET /api/v1/users/manager
+// @access         Private
+export const getManagers = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+
+	const users = await User.find({ userType: 'manager'});
+
+	res.status(200).json({
+		error: false,
+		errors: [],
+		data: users,
+		message: 'successful',
+		status: 200
+	})
 })
 
 // @desc    Get a user

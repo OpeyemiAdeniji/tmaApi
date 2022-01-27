@@ -43,7 +43,7 @@ export const getEducation = asyncHandler(async (req: Request, res: Response, nex
     })
 });
 
-// @desc           Get an Education
+// @desc           Get a Talent Education List
 // @route          GET /api/tma/v1/education/talent/:id
 // @access         Private/Superadmin/admin/talent
 export const getTalentEducationList = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {

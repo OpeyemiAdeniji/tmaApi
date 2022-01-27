@@ -4,12 +4,12 @@ import Category from '../models/Category.model';
 import Language from '../models/Language.model';
 import Framework from '../models/Framework.model';
 import Cloud from '../models/Cloud.model';
-import Tool from '../models/Tool.model';
-import { sendGrid } from '../utils/email.util';
 
-import { generate } from "../utils/random.util";
+import nats from '../events/nats';
+import TalentAdded from '../events/publishers/talent-added';
+import User from '../models/User.model';
 
-export const saveParsed = async (data: any, user: any ) => {
+export const saveParsed = async (data: any) => {
 
     let result = [];
     let flag, message, pwd
@@ -23,6 +23,7 @@ export const saveParsed = async (data: any, user: any ) => {
             message: validate.message,
             result: []
         }
+
     }else{
 
         for(let i = 0; i < data.length; i++){
@@ -38,33 +39,26 @@ export const saveParsed = async (data: any, user: any ) => {
 
             }else{
 
-                const gen = await generate(8, true)
-                pwd = '#Ts' + gen + '1/'
-
                 const talent = await Talent.create({
                     applyStep: 1, 
                     firstName: data[i].firstName,
                     lastName: data[i].lastName,
                     middleName: data[i].middleName,
-                    email: data[i].email,
-                    password: pwd,
-                    passwordType: 'generated',
-                    user: user._id
+                    email: data[i].email
                 })
 
-                let emailData = {
-                    template: 'email-verify',
-                    email: user.email,
-                    preheaderText: 'MYRIOI',
-                    emailTitle: 'Welcome to MYRIOI',
-                    emailSalute: 'Hello ' + user.firstName + ',',
-                    bodyOne: `MYRIOI has added you as a talent on their talent management platform. Thank you for joining our platform. 
-                    Please login to your dashboard with the details below. You will be forced to change your password immediately you login`,
-                    bodyTwo: `Email: ${user.email} \n Password: ${pwd}`,
-                    fromName: 'MYRIOI'
-                }
-            
-                await sendGrid(emailData);
+                const user = await User.create({
+
+                    _id: talent._id,
+                    id: talent._id,
+                    userId: talent._id,
+                    email: talent.email,
+                    firstName: talent.firstName,
+                    lastName: talent.lastName,
+                    middleName: talent.middleName,
+                    userType: 'talent'
+
+                })
 
                 // save the primary skill
                 const pSkill = await Skill.findOne({ name: data[i].primarySkill });
@@ -85,17 +79,6 @@ export const saveParsed = async (data: any, user: any ) => {
                     }
                 }
 
-                // save tool
-                const tool = await Tool.findOne({ name: data[i].tools });
-
-                if(tool){
-                    talent.tools.push(tool._id);
-                    await talent.save();
-
-                    tool.talents.push(talent._id);
-                    await tool.save();
-                }
-
                 // save the primary language
                 const pLang = await Language.findOne({ name: data[i].primaryLanguage });
 
@@ -114,11 +97,11 @@ export const saveParsed = async (data: any, user: any ) => {
 
                         for(let i = 0; i < languages.length; i++){
 
-                            const lang = await Language.findOne({ code: languages[i] });
+                            let lang = await Language.findOne({ code: languages[i] });
 
                             if(!lang){
 
-                                const lang = await Language.findOne({ name: languages[i] });
+                                 lang = await Language.findOne({ name: languages[i] });
 
                                 if (lang){
             
@@ -189,11 +172,11 @@ export const saveParsed = async (data: any, user: any ) => {
 
                         for(let i = 0; i < clouds.length; i++){
 
-                            const cloud = await Cloud.findOne({ code: clouds[i] });
+                            let cloud = await Cloud.findOne({ code: clouds[i] });
 
                             if(!cloud){
 
-                                const cloud = await Cloud.findOne({ name: clouds[i] });
+                                 cloud = await Cloud.findOne({ name: clouds[i] });
 
                                 if(cloud){
                                     talent.clouds.push({ type: cloud._id, strenth: 1 });
@@ -206,16 +189,20 @@ export const saveParsed = async (data: any, user: any ) => {
                                 await talent.save();
                             }
 
-                            result.push(talent)
-
-                            user.talent = talent._id;
-                            user.save();
-            
-                            flag = true;
-                            message = `successful`;
+                            
                         }
                     }
                 }
+
+                result.push(talent)
+
+                user.talent = talent._id;
+                await user.save();
+
+                flag = true;
+                message = `successful`;
+
+                await new TalentAdded(nats.client).publish({ user: user })
 
             }
         }
@@ -226,6 +213,8 @@ export const saveParsed = async (data: any, user: any ) => {
             result: result
         }
     }
+
+
 }
 
 export const validateTalent = (data: any): object | any => {
@@ -246,9 +235,8 @@ export const validateTalent = (data: any): object | any => {
         const secondaryLanguage = data[i].languages
         const secondaryFramework= data[i].frameworks
         const secondaryCloud = data[i].clouds
-        const tools = data[i].tools;
 
-        if(!firstName && !lastName && !middleName && !email && !primarySkill && !primaryLanguage && !primaryFramework && !primaryCloud && !tools && !secondaryLanguage && !secondaryFramework && !secondaryCloud){
+        if(!firstName && !lastName && !middleName && !email && !primarySkill && !primaryLanguage && !primaryFramework && !primaryCloud && !secondaryLanguage && !secondaryFramework && !secondaryCloud){
 
             flag = false;
             message = 'talent data does not have required fields';
@@ -292,11 +280,6 @@ export const validateTalent = (data: any): object | any => {
         }else if(primaryCloud === ''){
             flag = false;
             message = 'talent does not have a primary cloud';
-            break;
-
-        }else if(tools === ''){
-            flag = false;
-            message = 'talent does not have a tools';
             break;
 
         }else if(secondaryLanguage === ''){

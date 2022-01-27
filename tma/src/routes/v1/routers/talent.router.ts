@@ -2,9 +2,12 @@ import express, { Router } from 'express'
 
 import {
     getTalents,
+    getAllTalents,
     getTalent,
     apply,
-    uploadTalent
+    uploadTalent,
+    selectTalent,
+    viewSelectedTalents
 } from '../../../controllers/talent.controller';
 
 import Talent from '../../../models/Talent.model'
@@ -20,8 +23,11 @@ const limRoles = ['superadmin', 'admin', 'manager'];
 const allRoles = ['superadmin', 'admin', 'business', 'manager', 'talent', 'user'];
 
 router.get('/', vcd, protect, authorize(limRoles), advancedResults(Talent), getTalents);
+router.get('/get-talent', vcd, protect, authorize(limRoles), getAllTalents);
 router.get('/:id', vcd, protect, authorize(allRoles), getTalent);
 router.put('/apply/:id', vcd, protect, authorize(allRoles), apply);
-router.put('/upload/:id', vcd, protect, authorize(allRoles), uploadTalent);
+router.put('/upload/:id', vcd, protect, authorize(limRoles), uploadTalent);
+router.put('/preselect/:id', vcd, protect, authorize(limRoles), selectTalent);
+router.put('/preview', vcd, protect, authorize(limRoles), viewSelectedTalents);
 
 export default router;
