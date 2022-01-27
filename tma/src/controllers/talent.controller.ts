@@ -672,6 +672,44 @@ export const viewSelectedTalents = asyncHandler(async(req: Request, res: Respons
 })
 
 
+// @desc    Preselect Talent
+// @route   PUT /api/v1/talents/clear-preview/:id
+// @access  Private/Superadmin/Admin
+export const clearSelectedTalents = asyncHandler(async(req: Request, res: Response, next: NextFunction) => {
+
+	const business = await Business.findOne({ user: req.params.id });
+
+	if(!business){
+		return new ErrorResponse('Error', 400, ['business does not exist'])
+	}
+
+	// clear currently matched for all talents preselcted for business
+	for(let i = 0; i < business.preselects.length; i++){
+
+		const talent = await Talent.findById(business.preselects[i]);
+
+		if(talent){
+			talent.currentlyMatched = undefined;
+			await talent.save();
+		}
+
+	}
+
+	business.preselects = [];
+	await business.save();
+	
+	
+	res.status(200).json({
+		error: false,
+		errors: [],
+		data: [],
+		message: 'successful',
+		status: 200
+	})
+
+})
+
+
 
 /** 
  * snippet
