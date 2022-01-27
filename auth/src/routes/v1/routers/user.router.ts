@@ -3,6 +3,7 @@ import express, { Router } from 'express'
 
 import {
     getUsers,
+    getManagers,
     getUser,
     changePassword,
     getUserStatus,
@@ -25,6 +26,7 @@ const limRoles = ['superadmin', 'admin', 'manager'];
 const allRoles = ['superadmin', 'admin', 'business', 'manager', 'talent', 'user'];
 
 router.get('/', vcd, protect, authorize(roles), advanced(User), getUsers);
+router.get('/get-manager', vcd, protect, authorize(roles), getManagers);
 router.get('/:id', vcd, protect, authorize(allRoles), getUser);
 router.get('/status/:id', vcd, protect, authorize(allRoles), getUserStatus);
 router.post('/add-manager', vcd, protect, authorize(limRoles), addManager);

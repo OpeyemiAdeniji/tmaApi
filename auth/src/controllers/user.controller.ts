@@ -31,8 +31,17 @@ export const getUsers = asyncHandler(async (req: Request, res:Response, next: Ne
 // @desc           Add All Business Manager
 // @route          GET /api/v1/users/manager
 // @access         Private
-export const getManagers = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
-	res.status(200).json(res.advancedResults);   
+export const getManagers = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+
+	const users = await User.find({ userType: 'manager'});
+
+	res.status(200).json({
+		error: false,
+		errors: [],
+		data: users,
+		message: 'successful',
+		status: 200
+	})
 })
 
 // @desc    Get a user
@@ -46,30 +55,6 @@ export const getUser = asyncHandler(async (req: Request, res:Response, next: Nex
 	]);
 
 	console.log(user)
-	if(!user){
-		return next(new ErrorResponse(`Error!`, 404, ['Could not find user']))
-	}
-
-	res.status(200).json({
-		error: false,
-		errors: [],
-		message: `successful`,
-		data: user.isSuper ? [] : user,
-		status: 200
-	});
-
-})
-
-// @desc    Get a user
-// @route   GET /api/v1/users/manger/:id
-// @access  Private/Superadmin/Admin
-export const getManager = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
-	
-	const user = await User.findById(req.params.id).populate(
-	[
-		{ path: 'roles', select: '_id name resources' },
-	]);
-
 	if(!user){
 		return next(new ErrorResponse(`Error!`, 404, ['Could not find user']))
 	}
