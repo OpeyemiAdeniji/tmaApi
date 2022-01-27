@@ -48,7 +48,8 @@ export const getTalent = asyncHandler(async (req: Request, res:Response, next: N
 	
 	const talent = await Talent.findOne({ user: req.params.id }).populate([
 		{ path: 'user', select: '_id userId email' }, 
-		{path: 'businesses', select: '_id name websiteUrl'},
+		{path: 'matchedBusinesses', select: '_id name websiteUrl'},
+		{path: 'currentlyMatched', select: '_id name websiteUrl'},
 		{ path: 'works' },
 		{ path: 'educations' },
 		{ path: 'skill' }
