@@ -25,6 +25,7 @@ interface IBusinessDoc extends mongoose.Document{
     passwordType: string;
 
     talents: Array<mongoose.Schema.Types.ObjectId | any>;
+    favourites: Array<mongoose.Schema.Types.ObjectId | any>;
     user: mongoose.Schema.Types.ObjectId | any;
     interviews: Array<mongoose.Schema.Types.ObjectId | any>;
     preselects: Array<mongoose.Schema.Types.ObjectId | any>;
@@ -115,6 +116,13 @@ const BusinessSchema = new mongoose.Schema (
             {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'Preselect'
+            }
+        ],
+
+        favourites: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Talent'
             }
         ],
 

@@ -12,6 +12,7 @@ import { userLogger } from '../config/wiston';
 import { uploadBase64File } from '../utils/google.util'
 import { validateWorks, addWorks } from '../services/work.srv'
 import { validateEducation, addEducations } from '../services/education.srv'
+import { validateSelected } from '../services/talent.sv'
 
 import dayjs from 'dayjs'
 import customparse from 'dayjs/plugin/customParseFormat';
@@ -83,7 +84,11 @@ export const getTalent = asyncHandler(async (req: Request, res:Response, next: N
 		{path: 'currentlyMatched', select: '_id name websiteUrl'},
 		{ path: 'works' },
 		{ path: 'educations' },
-		{ path: 'skill' }
+		{ path: 'skills' },
+		{ path: 'tools' },
+		{ path: 'pCloud.type' },
+		{ path: 'pFramework.type' },
+		{ path: 'pLanguage.type' },
 	])
 
 	if(!talent){
@@ -546,6 +551,13 @@ export const selectTalent = asyncHandler(async(req: Request, res: Response, next
 		return next(new ErrorResponse('Error!', 400, ['talents data is required']));
 	}
 
+	// validate talent
+	const selectValidate = await validateSelected(talents);
+
+	if(selectValidate.flag === false){
+		return next(new ErrorResponse('Error!', 403, [`${selectValidate.message}`]));
+	}
+
 	const preselect = await Preselect.create({
 		description: description,
 		business: business._id,
@@ -653,6 +665,44 @@ export const viewSelectedTalents = asyncHandler(async(req: Request, res: Respons
 		error: false,
 		errors: [],
 		data: returnData,
+		message: 'successful',
+		status: 200
+	})
+
+})
+
+
+// @desc    Preselect Talent
+// @route   PUT /api/v1/talents/clear-preview/:id
+// @access  Private/Superadmin/Admin
+export const clearSelectedTalents = asyncHandler(async(req: Request, res: Response, next: NextFunction) => {
+
+	const business = await Business.findOne({ user: req.params.id });
+
+	if(!business){
+		return new ErrorResponse('Error', 400, ['business does not exist'])
+	}
+
+	// clear currently matched for all talents preselcted for business
+	for(let i = 0; i < business.preselects.length; i++){
+
+		const talent = await Talent.findById(business.preselects[i]);
+
+		if(talent){
+			talent.currentlyMatched = undefined;
+			await talent.save();
+		}
+
+	}
+
+	business.preselects = [];
+	await business.save();
+	
+	
+	res.status(200).json({
+		error: false,
+		errors: [],
+		data: [],
 		message: 'successful',
 		status: 200
 	})

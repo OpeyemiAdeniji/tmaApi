@@ -62,7 +62,7 @@ export const addEducations = async (data: Array<any>, user: any, talent: any): P
             const sd = await dayjs(data[i].startDate)
             const ed = await dayjs(data[i].endDate)
 
-            await Education.create({
+            const edu = await Education.create({
 
                 institutionName: data[i].institutionName,
                 degree: data[i].degree,
@@ -73,6 +73,12 @@ export const addEducations = async (data: Array<any>, user: any, talent: any): P
                 talent: talent._id,
 
             })
+
+            user.educations.push(edu._id);
+            await user.save();
+
+            talent.educations.push(edu._id);
+            await talent.save();
 
         }
 
