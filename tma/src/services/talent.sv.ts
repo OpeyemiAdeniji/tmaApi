@@ -4,12 +4,12 @@ import Category from '../models/Category.model';
 import Language from '../models/Language.model';
 import Framework from '../models/Framework.model';
 import Cloud from '../models/Cloud.model';
-import Tool from '../models/Tool.model';
-import { sendGrid } from '../utils/email.util';
 
-import { generate } from "../utils/random.util";
+import nats from '../events/nats';
+import TalentAdded from '../events/publishers/talent-added';
+import User from '../models/User.model';
 
-export const saveParsed = async (data: any, user: any ) => {
+export const saveParsed = async (data: any) => {
 
     let result = [];
     let flag, message, pwd
@@ -23,6 +23,7 @@ export const saveParsed = async (data: any, user: any ) => {
             message: validate.message,
             result: []
         }
+
     }else{
 
         for(let i = 0; i < data.length; i++){
@@ -38,16 +39,25 @@ export const saveParsed = async (data: any, user: any ) => {
 
             }else{
 
-                const gen = await generate(8, true)
-                pwd = '#Ts' + gen + '1/'
-
                 const talent = await Talent.create({
                     applyStep: 1, 
                     firstName: data[i].firstName,
                     lastName: data[i].lastName,
                     middleName: data[i].middleName,
-                    email: data[i].email,
-                    user: user._id
+                    email: data[i].email
+                })
+
+                const user = await User.create({
+
+                    _id: talent._id,
+                    id: talent._id,
+                    userId: talent._id,
+                    email: talent.email,
+                    firstName: talent.firstName,
+                    lastName: talent.lastName,
+                    middleName: talent.middleName,
+                    userType: 'talent'
+
                 })
 
                 // save the primary skill
@@ -189,24 +199,10 @@ export const saveParsed = async (data: any, user: any ) => {
                 user.talent = talent._id;
                 await user.save();
 
-                let emailData = {
-                    template: 'email-verify',
-                    email: user.email,
-                    preheaderText: 'MYRIOI',
-                    emailTitle: 'Welcome to MYRIOI',
-                    emailSalute: 'Hello ' + user.firstName + ',',
-                    bodyOne: `MYRIOI has added you as a talent on their talent management platform. Thank you for joining our platform. 
-                    Please login to your dashboard with the details below. You will be forced to change your password immediately you login`,
-                    bodyTwo: `Email: ${user.email} \n Password: ${pwd}`,
-                    fromName: 'MYRIOI'
-                }
-            
-                await sendGrid(emailData);
-
                 flag = true;
                 message = `successful`;
 
-                
+                await new TalentAdded(nats.client).publish({ user: user })
 
             }
         }
@@ -217,6 +213,8 @@ export const saveParsed = async (data: any, user: any ) => {
             result: result
         }
     }
+
+
 }
 
 export const validateTalent = (data: any): object | any => {

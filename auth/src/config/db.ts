@@ -5,6 +5,7 @@ import nats from '../events/nats';
 import CountryFound from '../events/listeners/country-found';
 import LocationSaved from '../events/listeners/location-saved';
 import TalentApplied from '../events/listeners/talent-applied';
+import TalentAdded from '../events/listeners/talent-added';
 
 const cert = `${__dirname.split('config')[0]}_data/ca-certificate.crt`;
 const cloudDBString = process.env.MONGODB_CLOUD_URI + `&tls=true&tlsCAFile=${cert}`
@@ -62,6 +63,7 @@ const listenNats = async (): Promise<void> => {
     await new CountryFound(nats.client).listen();
     await new LocationSaved(nats.client).listen();
     await new TalentApplied(nats.client).listen();
+    await new TalentAdded(nats.client).listen();
 
 }
 

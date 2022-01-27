@@ -41,6 +41,38 @@ export const getTalents = asyncHandler(async (req: Request, res:Response, next: 
 	res.status(200).json(res.advancedResults);   	
 })
 
+// @desc           Get all talents
+// @route          GET /api/v1/talents/get-talent
+// @access         Private
+export const getAllTalents = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+
+	const users = await User.find({ userType: 'talent'});
+
+	// find talents
+	let results: Array<any> = [];
+
+	for(let i = 0; i < users.length; i++){
+
+		const talent = await Talent.findOne({ user: users[i]});
+
+		if(talent){
+
+			results.push({ talent: talent, user: users[i]});
+		}
+
+		return results;
+
+	}
+
+	res.status(200).json({
+		error: false,
+		errors: [],
+		data: results,
+		message: 'successful',
+		status: 200
+	})
+})
+
 // @desc    Get a talent
 // @route   GET /api/v1/talents/:id
 // @access  Private/Superadmin/Admin
@@ -418,22 +450,6 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 
 	}
 
-
-	
-
-	
-
-	
-
-
-	res.status(200).json({
-		error: false,
-		errors: [],
-		data: { },
-		message: `successful`,
-		status: 200
-	});
-
 })
 
 // @desc    Upload Talent
@@ -473,7 +489,7 @@ export const uploadTalent = asyncHandler(async(req: Request, res: Response, next
 	}
 
 	// save all data
-	const saved = await saveParsed(data, user)
+	const saved = await saveParsed(data)
 
 	if(saved && saved.flag === false){
 		return next(new ErrorResponse('Error', 400, [`${saved.message}`]));

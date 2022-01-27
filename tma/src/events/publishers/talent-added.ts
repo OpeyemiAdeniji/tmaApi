@@ -3,7 +3,7 @@ import { Publisher, Subjects } from '@btffamily/tmaapp'
 
 class TalentAddedPublisher extends Publisher {
 
-    subject = Subjects.TalentApplied;
+    subject = Subjects.TalentAdded;
 
     constructor(client: Stan){
         super(client);
