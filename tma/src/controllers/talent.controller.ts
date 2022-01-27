@@ -140,43 +140,43 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 		return next (new ErrorResponse('Error', 404, ['talent application step is required']))
 	}
 
-	// // validate languages (P & S)
-	let pSkill: any;
-	pSkill = await Skill.findOne({ shortCode: primarySkill });
+	if(applyStep === 1){
 
-	if(applyStep <= 1 && !pSkill) {
 
-		pSkill = await Category.findOne({ code: primarySkill });
-		
-		if(!pSkill){
-			return next (new ErrorResponse('Error', 404, ['skill does not exist']))
+		// // validate languages (P & S)
+		let pSkill: any;
+		pSkill = await Skill.findOne({ shortCode: primarySkill });
+
+		if(applyStep <= 1 && !pSkill) {
+
+			pSkill = await Category.findOne({ code: primarySkill });
+			
+			if(!pSkill){
+				return next (new ErrorResponse('Error', 404, ['skill does not exist']))
+			}
+
 		}
 
-	}
+		// // validate language
+		const pLang = await Language.findOne({ name: primaryLanguage.name });
 
-	// // validate language
-	const pLang = await Language.findOne({ name: primaryLanguage.name });
+		if(primaryLanguage.name && !pLang) {
+			return next (new ErrorResponse('Error', 404, ['language does not exist']))
+		}
 
-	if(applyStep <= 1 && primaryLanguage.name && !pLang) {
-		return next (new ErrorResponse('Error', 404, ['language does not exist']))
-	}
+		// validate frameworks
+		const pFrame = await Framework.findOne({ name: primaryFramework.name });
 
-	// validate frameworks
-	const pFrame = await Framework.findOne({ name: primaryFramework.name });
+		if(primaryFramework.name && !pFrame) {
+			return next (new ErrorResponse('Error', 404, ['framework does not exist']))
+		}
 
-	if(applyStep <= 1 && primaryFramework.name && !pFrame) {
-		return next (new ErrorResponse('Error', 404, ['framework does not exist']))
-	}
+		// validate cloud platforms
+		const pCloud = await Cloud.findOne({ name: primaryCloud.name });
 
-	// validate cloud platforms
-	const pCloud = await Cloud.findOne({ name: primaryCloud.name });
-
-	if(applyStep <= 1 && primaryCloud.name && !pCloud) {
-		return next (new ErrorResponse('Error', 404, ['cloud platform does not exist']))
-	}
-
-
-	if(applyStep <= 1){
+		if(primaryCloud.name && !pCloud) {
+			return next (new ErrorResponse('Error', 404, ['cloud platform does not exist']))
+		}
 
 		const talent = await Talent.create({ 
 
@@ -188,7 +188,10 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 			primarySkill: pSkill._id,
 			pLanguage: { type: pLang?._id, strength: primaryLanguage.strength },
 			pFramework: { type: pFrame?._id, strength: primaryFramework.strength },
-			pCloud: { type: pCloud?._id, strentgh: primaryCloud.strength }
+			pCloud: { type: pCloud?._id, strentgh: primaryCloud.strength },
+			email: user.email,
+			user: user._id
+			
 		});
 
 
@@ -297,8 +300,6 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 
 
 	}
-	
-
 
 	if(applyStep > 1){
 
@@ -325,18 +326,14 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 				return next (new ErrorResponse('Error', 400, [`${wValidate.message}`]));
 			}
 
-			if(!educations){
-				return next (new ErrorResponse('Error', 400, ['education data is required']));
-			}
+			if(educations && typeof(educations) === 'object' && educations.length > 0){
 
-			if(typeof(educations) !== 'object' || educations.length <= 0){
-				return next (new ErrorResponse('Error', 400, ['education data is required to be anarray of data']));
-			}
+				const eValidate = await validateEducation(educations);
 
-			const eValidate = await validateEducation(educations);
+				if(eValidate.flag === false){
+					return next (new ErrorResponse('Error', 400, [`${eValidate.message}`]));
+				}
 
-			if(eValidate.flag === false){
-				return next (new ErrorResponse('Error', 400, [`${eValidate.message}`]));
 			}
 
 			// save works
