@@ -23,7 +23,7 @@ const limRoles = ['superadmin', 'admin', 'manager'];
 const allRoles = ['superadmin', 'admin', 'business', 'manager', 'talent', 'user'];
 
 router.get('/', vcd, protect, authorize(limRoles), advancedResults(Talent), getTalents);
-router.get('/get-talent', vcd, protect, authorize(limRoles), getAllTalents);
+router.get('/get-talents', vcd, protect, authorize(limRoles), getAllTalents);
 router.get('/:id', vcd, protect, authorize(allRoles), getTalent);
 router.put('/apply/:id', vcd, protect, authorize(allRoles), apply);
 router.put('/upload/:id', vcd, protect, authorize(limRoles), uploadTalent);

@@ -27,9 +27,34 @@ export const getBusinesses = asyncHandler(async (req: Request, res:Response, nex
 // @desc           Get all third party businesses
 // @route          GET /api/tma/v1/businesses/third-party
 // @access         Private
-export const getThirdParties = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
-	res.status(200).json(res.advancedResults);   
+export const getThirdParties = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+
+	const users = await User.find({ userType: 'third-party'});
+
+	// find talents
+	let results: Array<any> = [];
+
+	for(let i = 0; i < users.length; i++){
+
+		const business = await Business.findOne({ user: users[i]._id});
+
+		if(business){
+
+			results.push({ business: business, user: users[i]});
+		}
+
+	}
+
+	res.status(200).json({
+		error: false,
+		errors: [],
+		total: results.length,
+		data: results,
+		message: 'successful',
+		status: 200
+	})
 })
+
 
 // @desc           Get a businesses
 // @route          GET /api/tma/v1/businesses/:id

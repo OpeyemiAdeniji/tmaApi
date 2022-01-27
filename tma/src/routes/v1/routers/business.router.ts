@@ -24,7 +24,7 @@ const bizRoles = ['superadmin', 'admin', 'manager', 'business'];
 const allRoles = ['superadmin', 'admin', 'business', 'manager', 'talent', 'user'];
 
 router.get('/', vcd, protect, authorize(roles), advancedResults(Business), getBusinesses);
-router.get('/', vcd, protect, authorize(roles), advancedResults(Business), getThirdParties);
+router.get('/third-parties', vcd, protect, authorize(roles), getThirdParties);
 router.get('/:id', vcd, protect, authorize(bizRoles), getBusiness);
 router.get('/third-party/:id', vcd, protect, authorize(bizRoles), getThirdParty);
 

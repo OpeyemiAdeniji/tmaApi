@@ -53,11 +53,11 @@ export const getAllTalents = asyncHandler(async (req: Request, res: Response, ne
 
 	for(let i = 0; i < users.length; i++){
 
-		const talent = await Talent.findOne({ users: users[i]});
+		const talent = await Talent.findOne({ user: users[i]._id});
 
 		if(talent){
 
-			results.push({ talent: talent, users: users[i]});
+			results.push({ talent: talent, user: users[i]});
 		}
 
 	}

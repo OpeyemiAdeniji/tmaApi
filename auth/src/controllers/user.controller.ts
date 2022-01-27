@@ -28,7 +28,7 @@ export const getUsers = asyncHandler(async (req: Request, res:Response, next: Ne
 	res.status(200).json(res.advancedResults);   
 })
 
-// @desc           Add All Business Manager
+// @desc           Get All Business Manager
 // @route          GET /api/v1/users/manager
 // @access         Private
 export const getManagers = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
