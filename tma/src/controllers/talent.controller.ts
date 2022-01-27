@@ -53,20 +53,19 @@ export const getAllTalents = asyncHandler(async (req: Request, res: Response, ne
 
 	for(let i = 0; i < users.length; i++){
 
-		const talent = await Talent.findOne({ user: users[i]});
+		const talent = await Talent.findOne({ users: users[i]});
 
 		if(talent){
 
-			results.push({ talent: talent, user: users[i]});
+			results.push({ talent: talent, users: users[i]});
 		}
-
-		return results;
 
 	}
 
 	res.status(200).json({
 		error: false,
 		errors: [],
+		total: results.length,
 		data: results,
 		message: 'successful',
 		status: 200
