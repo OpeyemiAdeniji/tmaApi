@@ -144,7 +144,7 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 	}
 
 
-	if(applyStep <= 1){
+	if(applyStep === 1){
 
 		const talent = await Talent.create({ 
 
@@ -156,7 +156,9 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 			primarySkill: pSkill._id,
 			pLanguage: { type: pLang?._id, strength: primaryLanguage.strength },
 			pFramework: { type: pFrame?._id, strength: primaryFramework.strength },
-			pCloud: { type: pCloud?._id, strentgh: primaryCloud.strength }
+			pCloud: { type: pCloud?._id, strentgh: primaryCloud.strength },
+			email: user.email
+			
 		});
 
 
@@ -417,22 +419,6 @@ export const apply = asyncHandler(async (req: Request, res:Response, next: NextF
 
 
 	}
-
-
-	
-
-	
-
-	
-
-
-	res.status(200).json({
-		error: false,
-		errors: [],
-		data: { },
-		message: `successful`,
-		status: 200
-	});
 
 })
 
