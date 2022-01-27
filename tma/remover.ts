@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 import colors from 'colors'
 import { config } from 'dotenv'
 
-// env vars ////
+// env vars
 config();
 
 import Business from './src/models/Business.model'
