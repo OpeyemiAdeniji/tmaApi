@@ -17,7 +17,6 @@ import User from '../models/User.model'
 import Business from '../models/Business.model';
 import Talent from '../models/Talent.model';
 
-
 // @desc           Get all businesses
 // @route          GET /api/tma/v1/businesses
 // @access         Private
