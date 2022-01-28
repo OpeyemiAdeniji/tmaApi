@@ -3,9 +3,12 @@ import express, { Router } from 'express'
 
 import {
     getBusinesses,
+    getBusinessFavourites,
+    hireTalents,
     getThirdParties,
     getBusiness,
-    getThirdParty
+    getThirdParty,
+    addFavourite
 } from '../../../controllers/business.controller';
 
 
@@ -24,8 +27,11 @@ const bizRoles = ['superadmin', 'admin', 'manager', 'business'];
 const allRoles = ['superadmin', 'admin', 'business', 'manager', 'talent', 'user'];
 
 router.get('/', vcd, protect, authorize(roles), advancedResults(Business), getBusinesses);
+router.get('/get-favorites/:id', vcd, protect, authorize(bizRoles), getBusinessFavourites);
+router.post('/:id', vcd, protect, authorize(bizRoles), hireTalents);
 router.get('/third-parties', vcd, protect, authorize(roles), getThirdParties);
 router.get('/:id', vcd, protect, authorize(bizRoles), getBusiness);
 router.get('/third-party/:id', vcd, protect, authorize(bizRoles), getThirdParty);
+router.post('/add-favorite/:id', vcd, protect, authorize(bizRoles), addFavourite);
 
 export default router;

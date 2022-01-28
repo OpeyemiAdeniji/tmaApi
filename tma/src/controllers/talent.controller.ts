@@ -508,7 +508,7 @@ export const uploadTalent = asyncHandler(async(req: Request, res: Response, next
 
 })
 
-// @desc    Preselect Talent
+// @desc    Select Talent
 // @route   PUT /api/v1/talents/preselect/:id
 // @access  Private/Superadmin/Admin
 export const selectTalent = asyncHandler(async(req: Request, res: Response, next: NextFunction) => {
@@ -618,7 +618,7 @@ export const selectTalent = asyncHandler(async(req: Request, res: Response, next
 
 })
 
-// @desc    Preselect Talent
+// @desc    View Selected Talent
 // @route   PUT /api/v1/talents/preview
 // @access  Private/Superadmin/Admin
 export const viewSelectedTalents = asyncHandler(async(req: Request, res: Response, next: NextFunction) => {
@@ -672,7 +672,7 @@ export const viewSelectedTalents = asyncHandler(async(req: Request, res: Respons
 })
 
 
-// @desc    Preselect Talent
+// @desc    Clear Selected Talent
 // @route   PUT /api/v1/talents/clear-preview/:id
 // @access  Private/Superadmin/Admin
 export const clearSelectedTalents = asyncHandler(async(req: Request, res: Response, next: NextFunction) => {
@@ -708,8 +708,6 @@ export const clearSelectedTalents = asyncHandler(async(req: Request, res: Respon
 	})
 
 })
-
-
 
 /** 
  * snippet

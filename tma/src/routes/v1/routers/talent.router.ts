@@ -7,7 +7,8 @@ import {
     apply,
     uploadTalent,
     selectTalent,
-    viewSelectedTalents
+    viewSelectedTalents,
+    clearSelectedTalents
 } from '../../../controllers/talent.controller';
 
 import Talent from '../../../models/Talent.model'
@@ -28,6 +29,7 @@ router.get('/:id', vcd, protect, authorize(allRoles), getTalent);
 router.put('/apply/:id', vcd, protect, authorize(allRoles), apply);
 router.put('/upload/:id', vcd, protect, authorize(limRoles), uploadTalent);
 router.put('/preselect/:id', vcd, protect, authorize(limRoles), selectTalent);
-router.put('/preview', vcd, protect, authorize(limRoles), viewSelectedTalents);
+router.get('/preview', vcd, protect, authorize(limRoles), viewSelectedTalents);
+router.delete('/clear-preview/:id', vcd, protect, authorize(limRoles), clearSelectedTalents);
 
 export default router;

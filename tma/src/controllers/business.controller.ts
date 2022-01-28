@@ -99,7 +99,7 @@ export const getBusinessFavourites = asyncHandler(async (req: Request, res:Respo
 		error: false,
 		errors: [],
 		message: `successful`,
-		data: business.favourites,
+		data: business,
 		status: 200
 	});
 
@@ -127,7 +127,7 @@ export const getThirdParty = asyncHandler(async (req: Request, res:Response, nex
 })
 
 // @desc           Add favourite
-// @route          GET /api/tma/v1/businesses/add-favorite/:id
+// @route          POST /api/tma/v1/businesses/add-favorite/:id
 // @access         Private/Superadmin/Admin
 export const addFavourite = asyncHandler(async (req: Request, res:Response, next: NextFunction) => {
 	
@@ -168,6 +168,58 @@ export const addFavourite = asyncHandler(async (req: Request, res:Response, next
 		data: biz!.favourites,
 		status: 200
 	});
+
+})
+
+// @desc           Hire Talents
+// @route          POST /apsi/tma/v1/businesses/hire-talent/:id
+// @access         Private/Superadmin/Admin
+export const hireTalents = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+
+	const { email } = req.body;
+
+	if(!email){
+		return next(new ErrorResponse('Error!', 400, ['talent email is required']));
+	}
+
+	const user = await User.findById(req.params.id);
+
+	if(!user){
+		return next(new ErrorResponse(`Error!`, 404, ['user does not exist']));
+	}
+
+	const business = await Business.findOne({ user: user._id });
+	
+	if(!business){
+		return next(new ErrorResponse(`Error!`, 404, ['business does not exist']))
+	}
+
+	const talent = await Talent.findOne({ email: email });
+
+	if(!talent){
+		return next(new ErrorResponse(`Error!`, 404, ['talent does not exist']))
+	}
+
+	// send email to MYRIOI
+	let emailData = {
+		template: 'email-verify',
+		email: `${process.env.MYRIOI_EMAIL}`,
+		preheaderText: 'Interview Schedule',
+		emailTitle: 'Interview Schedule',
+		emailSalute: 'Hello Champ',
+		bodyOne: `${business.name} has selected ${talent.firstName} ${talent.lastName}, ${talent.email} as a talent to be interviewed`,
+		fromName: 'MYRIOI'
+	}
+
+	await sendGrid(emailData);
+
+	res.status(200).json({
+		error: false,
+		errors: [],
+		data: user,
+		message: 'successful',
+		status: 200
+	})
 
 })
 
